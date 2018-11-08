@@ -930,7 +930,7 @@ void RaceScene::ShowUI(float delta)
 	GameEngine& game = GameEngine::Instance();
 
 	glm::vec2 windowSize = game.GetWindowSize();
-	int a;
+
 	char str[16];
 
 	for (int i = 0; i < PlayerNum; i++) {
