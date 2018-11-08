@@ -1,0 +1,7 @@
+Night
+res/Texture/Ground/PlanePlaneField/goal.bmp
+res/Texture/Ground/PlanePlaneField/dirt.bmp
+res/Texture/Ground/PlanePlaneField/grass.bmp
+res/Texture/Ground/PlanePlaneField/flower.bmp
+res/Texture/Ground/PlanePlaneField/flower.bmp
+res/Texture/Map1UiC.dds
