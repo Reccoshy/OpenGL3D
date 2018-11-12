@@ -968,7 +968,7 @@ void RaceScene::ShowUI(float delta)
 
 		game.ImageColor(glm::vec4(0, 1, 0, 1));
 		game.ImageScale(glm::vec2(0.75));
-		game.AddImage(glm::vec2(windowSize.x - 310.0f, windowSize.y - 120.0f), "res/Texture/SpeedMeter.dds");
+		game.AddImage(glm::vec2(windowSize.x - 310.0f, windowSize.y - 120.0f), "res/Texture/SpeedMeter.dds", i);
 
 		snprintf(str, 16, "%06.2f", m_pPlayerCharacters[i]->Velocity());
 		game.FontScale(glm::vec2(1.5f));
@@ -976,7 +976,7 @@ void RaceScene::ShowUI(float delta)
 		game.AddString(glm::vec2(windowSize.x - 280.0f/*920.0f*/, windowSize.y - 60.0f/*840.0f*/), str, i);
 		
 		game.ImageScale(glm::vec2(0.75));
-		game.AddImage(glm::vec2(windowSize.x - 310.0f, windowSize.y - 70.0f), "res/Texture/SpeedMeter.dds");
+		game.AddImage(glm::vec2(windowSize.x - 310.0f, windowSize.y - 70.0f), "res/Texture/SpeedMeter.dds", i);
 
 		snprintf(str, 16, "%d Place", m_pPlayerCharacters[i]->GetRank());
 
@@ -1012,11 +1012,11 @@ void RaceScene::ShowUI(float delta)
 
 		this->ItemUI(glm::vec2(36.0, windowSize.y - 130.0f/*800.0*/), glm::vec2(1.0f), (ItemsCode)(m_pPlayerCharacters[i]->GetStockItemId()), i);
 		game.ImageScale(glm::vec2(0.75f));
-		game.AddImage(glm::vec2(8.0f, windowSize.y - 145.0f), "res/Texture/SpeedMeter.dds");
+		game.AddImage(glm::vec2(8.0f, windowSize.y - 145.0f), "res/Texture/SpeedMeter.dds", i);
 
 		this->ItemUI(glm::vec2(36.0, windowSize.y - 80.0f/*830.0*/), glm::vec2(2), (ItemsCode)(m_pPlayerCharacters[i]->GetItemId()), i);
 		game.ImageScale(glm::vec2(1.1f, 1.0f));
-		game.AddImage(glm::vec2(8.0, windowSize.y - 100.0f), "res/Texture/SpeedMeter.dds");
+		game.AddImage(glm::vec2(8.0, windowSize.y - 100.0f), "res/Texture/SpeedMeter.dds", i);
 
 
 		for (int j = 0, line = 0; j < m_pPlayerCharacters[i]->GetPlayerLapTime().size(); j++, line++) {

@@ -109,7 +109,7 @@ namespace UITexture {
 
 		glm::u16vec2 uv[2];
 		uv[0] = glm::vec2(0,0) * reciprocalScale * 65535.0f;
-		uv[1] = texSize * reciprocalScale * 65535.0f;
+		uv[1] = texSize * camScale * reciprocalScale * 65535.0f;
 
 		// 左上を原点とするピクセル座標系からOpenGLのクリップ座標系へ変換.
 		glm::vec2 pos = ((position * camScale * posRatio + camOffset) * pixelSizeInClipCoord - 1.0f) * glm::vec2(1.0f, -1.0f);

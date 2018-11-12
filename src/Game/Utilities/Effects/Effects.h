@@ -11,6 +11,7 @@ struct CameraData;
 
 class Effect {
 public:
+
 	void Init(glm::vec2 size);
 
 	void AddEffect(glm::vec3 pos, glm::vec2 s, glm::vec4 color, const char* imageName);

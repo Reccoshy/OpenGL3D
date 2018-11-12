@@ -35,23 +35,17 @@ void Effect::AddEffect(glm::vec3 pos, glm::vec2 s, glm::vec4 color, const char* 
 	TexturePtr tex = game.GetTexture(imageName);
 	textures.push_back(tex);
 
-	glm::vec3 camPos = game.GetCameraInfo(0).position;
-
-	float distance = glm::distance(camPos, pos);
-
-	float sizeRate = 1 / distance;
-
-	effects[0].position = glm::vec3(sizeRate * scale[m_effectNum - 1].x / 2, sizeRate * scale[m_effectNum - 1].y / 2, 0);
+	effects[0].position = glm::vec3(scale[m_effectNum - 1].x / 2, scale[m_effectNum - 1].y / 2, 0);
 	effects[0].uv = glm::vec2(0, 0);
-	effects[1].position = glm::vec3(sizeRate * scale[m_effectNum - 1].x / 2, sizeRate * -scale[m_effectNum - 1].y / 2, 0);
+	effects[1].position = glm::vec3(scale[m_effectNum - 1].x / 2, -scale[m_effectNum - 1].y / 2, 0);
 	effects[1].uv = glm::vec2(0, 1);
-	effects[2].position = glm::vec3(sizeRate * -scale[m_effectNum - 1].x / 2, sizeRate * scale[m_effectNum - 1].y / 2, 0);
+	effects[2].position = glm::vec3(-scale[m_effectNum - 1].x / 2, scale[m_effectNum - 1].y / 2, 0);
 	effects[2].uv = glm::vec2(1, 0);
-	effects[3].position = glm::vec3(sizeRate * -scale[m_effectNum - 1].x / 2, sizeRate * scale[m_effectNum - 1].y / 2, 0);
+	effects[3].position = glm::vec3(-scale[m_effectNum - 1].x / 2, scale[m_effectNum - 1].y / 2, 0);
 	effects[3].uv = glm::vec2(1, 0);
-	effects[4].position = glm::vec3(sizeRate * scale[m_effectNum - 1].x / 2, sizeRate * -scale[m_effectNum - 1].y / 2, 0);
+	effects[4].position = glm::vec3(scale[m_effectNum - 1].x / 2, -scale[m_effectNum - 1].y / 2, 0);
 	effects[4].uv = glm::vec2(0, 1);
-	effects[5].position = glm::vec3(sizeRate * -scale[m_effectNum - 1].x / 2, sizeRate * -scale[m_effectNum - 1].y / 2, 0);
+	effects[5].position = glm::vec3(-scale[m_effectNum - 1].x / 2, -scale[m_effectNum - 1].y / 2, 0);
 	effects[5].uv = glm::vec2(1, 1);
 
 	for (int i = 0; i < 6; i++) {
@@ -81,24 +75,27 @@ void Effect::AddEffect(glm::vec3 pos, glm::vec2 s, glm::vec4 color, const char* 
 void Effect::Draw(int index)
 {
 	GameEngine& game = GameEngine::Instance();
-
 	GameEngine::CameraData camera = game.GetCameraInfo(index);
 
 	program->UseProgram();
 
 	for (int i = 0; i < m_effectNum; i++) {
 
-	double radianFlat = atan2(camera.position.x - positions[i].x, camera.position.z - positions[i].z);
-	float degreeFlat = glm::degrees(radianFlat);
-	glm::quat q = glm::quat(glm::vec3(0, glm::radians(degreeFlat + 180), 0));
+		double radianFlat = atan2(camera.position.x - positions[i].x, camera.position.z - positions[i].z);
+		float degreeFlat = glm::degrees(radianFlat);
+		glm::quat q = glm::quat(glm::vec3(0, glm::radians(degreeFlat + 180), 0));
 
-	glDepthMask(false);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		float distance = glm::distance(camera.position, positions[i]);
+		float sizeRate = 1 / distance;
+		glm::vec3 scale = glm::vec3(sizeRate);
+
+		glDepthMask(false);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		const glm::mat4 t = glm::translate(glm::mat4(), positions[i]);
 		const glm::mat4 r = glm::mat4_cast(q);
-		const glm::mat4 s = glm::scale(glm::mat4(), glm::vec3(1));
+		const glm::mat4 s = glm::scale(glm::mat4(), glm::vec3(scale));
 		glm::mat4 matM = t * r * s;
 
 		const glm::mat4x4 matProj = glm::perspective(glm::radians(45.0f),

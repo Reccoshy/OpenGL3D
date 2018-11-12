@@ -96,7 +96,7 @@ int main(){
 		"res/Data/StageData/PlanePlaneField/TestCheckPoint1.txt",
 		"res/Data/StageData/PlanePlaneField/TestItems1.txt",
 		"res/Data/StageData/PlanePlaneField/TestStageTextures1.txt",
-		0, 2));
+		3, 2));
 	
 	/*
 	game.UpdateFunc(RaceScene("res/Data/StageData/StarLightTown/Stage.txt",
