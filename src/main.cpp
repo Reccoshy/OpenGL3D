@@ -33,6 +33,7 @@ int main(){
 	game.LoadTextureFromFile("res/Texture/Ground/PlanePlaneField/grass.bmp");
 	game.LoadTextureFromFile("res/Texture/Ground/PlanePlaneField/flower.bmp");		
 	game.LoadTextureFromFile("res/Texture/Ground/PlanePlaneField/testMap.bmp");
+	game.LoadTextureFromFile("res/Texture/Sparkle.bmp");
 
 	game.LoadTextureFromFile("res/Model/Toroid.Normal.bmp");
 	game.LoadTextureFromFile("res/Model/Dummy.Normal.bmp");
@@ -41,6 +42,7 @@ int main(){
 	game.LoadTextureFromFile("res/Model/Ground.bmp");
 	game.LoadTextureFromFile("res/Model/dainamaito.bmp");
 	game.LoadTextureFromFile("res/Model/Tree1.bmp");
+
 
 	game.LoadTextureFromFile("res/Model/Test.bmp");
 

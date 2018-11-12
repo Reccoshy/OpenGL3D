@@ -3,6 +3,7 @@
 #include "../../Scene/RaceScene.h"
 #include <iostream>
 #include <math.h>
+#include <stdio.h>
 #include "../../../GameEngine.h"
 #include "../../Entity/Goal/Goal.h"
 #include "../../Entity/Item/Item.h"
@@ -45,8 +46,6 @@ bool CPlayerCharacter::Init(glm::vec3 pos, int goalNum, float r, int PlayerIndex
 	m_pBarrier->Scale(glm::vec3(0.02f));
 	m_pBarrier->ToggleVisibility(false);
 
-	m_goals.resize(g.size());
-
 	this->m_Shadow.init(this->Position(), 0.01f);
 
 	this->m_pRaceScene = pScene;
@@ -63,7 +62,7 @@ bool CPlayerCharacter::Init(glm::vec3 pos, int goalNum, float r, int PlayerIndex
 	}
 
 	for (int i = 0; i < g.size(); i++) {
-		this->m_goals[i] = g[i];
+		this->m_goals.push_back(g[i]);
 	}
 
 	return true;
@@ -110,11 +109,14 @@ void CPlayerCharacter::PassCheckPoint(int passedIndex, float time)
 
 void CPlayerCharacter::PassGoal(float Time)
 {
-	m_lapTime.resize(m_lap);
-	m_lapTime[m_lap - 1] = Time;
-	for (int i = 0; i < m_lapTime.size() - 1; i++) {
-		m_lapTime[m_lap - 1] -= m_lapTime[m_lap - 2 - i];
+	float LapTime = Time;
+
+	for (int i = 0; i < m_lapTime.size(); i++) {
+		LapTime -= m_lapTime[i - 1];
 	}
+
+	m_lapTime.push_back(LapTime);
+
 
 	m_lap += 1;
 
@@ -187,8 +189,7 @@ void CPlayerCharacter::inputFunc(float delta)
 		}
 	}
 	if (gamePad.buttonDown & GamePad::B) {
-		this->itemId = 0;
-		this->m_stockItems = 2;
+		this->PassGoal(m_FinishTime);
 	}
 
 	if (gamePad.buttonDown & GamePad::Y) {

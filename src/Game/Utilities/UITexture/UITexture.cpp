@@ -121,16 +121,16 @@ namespace UITexture {
 		if (tex && texSize.x && texSize.y) { // 表示できないデータなら無視する.
 			const glm::vec2 size = texSize * baseScale * scale * camScale;
 			const glm::vec2 offsetedPos = pos + baseScale * scale * camScale;
-			p[0].position = offsetedPos + glm::vec2(-size.x / 2, -size.y / 2);
+			p[0].position = offsetedPos + glm::vec2(0, -size.y);
 			p[0].uv = uv[0];
 			p[0].color = color;
-			p[1].position = offsetedPos + glm::vec2(size.x / 2, -size.y / 2);
+			p[1].position = offsetedPos + glm::vec2(size.x, -size.y);
 			p[1].uv = glm::u16vec2(uv[1].x, uv[0].y);
 			p[1].color = color;
-			p[2].position = offsetedPos + glm::vec2(size.x / 2, size.y / 2);
+			p[2].position = offsetedPos + glm::vec2(size.x, 0);
 			p[2].uv = uv[1];
 			p[2].color = color;
-			p[3].position = offsetedPos + glm::vec2(-size.x / 2, size.y / 2);
+			p[3].position = offsetedPos;
 			p[3].uv = glm::u16vec2(uv[0].x, uv[1].y);
 			p[3].color = color;
 			p += 4;

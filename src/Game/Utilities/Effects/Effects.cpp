@@ -22,9 +22,6 @@ void Effect::AddEffect(glm::vec3 pos, glm::vec2 s, glm::vec4 color, const char* 
 
 	positions.push_back(pos);
 	scale.push_back(s);
-	
-	effectsVao.resize(m_effectNum);
-	effectsVbo.resize(m_effectNum);
 
 	glm::u8vec4 imageColor = glm::clamp(color, 0.0f, 1.0f) * 255.0f;
 

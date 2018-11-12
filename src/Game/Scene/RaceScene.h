@@ -103,7 +103,7 @@ private:
 	std::vector<FakeItem*> m_pFakeItems;
 	std::vector<Explosion*> m_pExplodes;
 
-	std::vector<EffectDestroy> m_effectExplodes;
+	std::vector<EffectDestroy*> m_pEffectExplodes;
 
 	std::vector<AccelDust*> m_pAccelDusts;
 

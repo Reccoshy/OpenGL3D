@@ -144,8 +144,8 @@ void RaceScene::SpawnFakeItem(glm::vec3 pos)
 
 void RaceScene::SpawnEffectExplode(glm::vec3 pos)
 {
-	m_effectExplodes.resize(m_effectExplodes.size() + 1);
-	m_effectExplodes[m_effectExplodes.size() - 1].Init(pos);
+	m_pEffectExplodes.push_back(new EffectDestroy);
+	m_pEffectExplodes.back()->Init(pos);
 }
 
 void RaceScene::SpawnEffectAccelDust(glm::vec3 pos)
@@ -269,9 +269,8 @@ void RaceScene::Init()
 	game.AddEntity(EntityGroupId_Others, glm::vec3(0, 0, 100), "Tree 1", "res/Model/Tree1.bmp", nullptr, true);
 
 	std::vector<glm::vec3> pos;
-	for (int i = 0; i < m_pGoals.size(); i++) {
-		pos.resize(i + 1);
-		pos[i] = m_pGoals[i]->Position();
+	for (int i = 0; i < m_pGoals.size(); i++) {	
+		pos.push_back(glm::vec3(m_pGoals[i]->Position()));
 	}
 
 	for (int i = 0; i < 4; i++) {
@@ -363,11 +362,11 @@ void RaceScene::EndFunc()
 	}
 	DeleteAll(m_pExplodes);
 
-	for (int i = 0; i < m_effectExplodes.size(); i++) {
-		m_effectExplodes[i].Destroy();
-	}
-	m_effectExplodes.clear();
-	m_effectExplodes.resize(0);
+	for (int i = 0; i < m_pEffectExplodes.size(); i++) {
+		m_pEffectExplodes[i]->Destroy();
+	};
+
+	DeleteAll(m_pEffectExplodes);
 
 	DeleteAll(m_pAccelDusts);
 	
@@ -659,8 +658,8 @@ void RaceScene::ItemUpdate(float delta)
 		m_pFakeItems[i]->Update(delta);
 	}
 
-	for (int i = 0; i < m_effectExplodes.size(); i++) {
-		m_effectExplodes[i].Update(delta);
+	for (int i = 0; i < m_pEffectExplodes.size(); i++) {
+		m_pEffectExplodes[i]->Update(delta);
 	}
 }
 
@@ -726,6 +725,13 @@ void RaceScene::DeleteCheck()
 	for (int i = 0; m_pExplodes.size(); i++) {
 		if (m_pExplodes[i]->IsActive()) {
 			Remove(m_pExplodes, i);
+			i--;
+		}
+	}
+
+	for (int i = 0; i < m_pEffectExplodes.size(); i++) {
+		if (m_pEffectExplodes[i]->IsActive()) {
+			Remove(m_pEffectExplodes, i);
 			i--;
 		}
 	}
@@ -1058,15 +1064,24 @@ void RaceScene::ShowUI(float delta)
 		if (this->CountDown > 0.0) {
 
 			snprintf(str, 16, "%01.0f", CountDown + 0.5f);
+
+			game.FontColor(glm::vec4(0, 0, 0, 1));
+			game.FontScale(glm::vec2(5.0f + CountDownSize));
+			game.AddString(glm::vec2(windowSize * 0.45f + CountDownSize * -10 + glm::vec2(10.0f)), str, 0, true);
+
 			game.FontColor(glm::vec4(1, 1, 0, 1));
 			game.FontScale(glm::vec2(5.0f + CountDownSize));
-			game.AddString(glm::vec2(windowSize * 0.4f/*600*/ /*400*/), str, 0, true);
+			game.AddString(glm::vec2(windowSize * 0.45f + CountDownSize * -10), str, 0, true);
 		}
 		else
 		{
+			game.FontColor(glm::vec4(0, 0, 0, 1));
+			game.FontScale(glm::vec2(5));
+			game.AddString(glm::vec2(windowSize * 0.4f + glm::vec2(10.0f)), "go!", 0, true);
+
 			game.FontColor(glm::vec4(1, 1, 0, 1));
 			game.FontScale(glm::vec2(5));
-			game.AddString(glm::vec2(windowSize * 0.4f/*550, 400*/), "GO!", 0, true);
+			game.AddString(glm::vec2(windowSize * 0.4f), "go!", 0, true);
 		}
 	}
 
