@@ -344,14 +344,11 @@ bool GameEngine::Init(int w, int h, const char* title, bool fullScreen)
 	rand.seed(std::random_device()());
 
 	fontRenderer.Init(1024, glm::vec2(static_cast<float>(w), static_cast<float>(h)), 32);
-	if (!uiRenderer.Init(1024, glm::vec2(static_cast<float>(w), static_cast<float>(h)), 32) || 
-		!frontUiRenderer.Init(1024, glm::vec2(static_cast<float>(w), static_cast<float>(h)), 32))
+	if (!uiRenderer.Init(1024, glm::vec2(static_cast<float>(w), static_cast<float>(h))) || 
+		!frontUiRenderer.Init(1024, glm::vec2(static_cast<float>(w), static_cast<float>(h))))
 		return false;
 
 	m_effect.Init(glm::vec2(width, height));
-
-	//uiRenderer.LoadFromFile("res/Font.fnt");
-	//frontUiRenderer.LoadFromFile("res/Font.fnt");
 
 	isInitialized = true;
 	return true;

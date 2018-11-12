@@ -27,29 +27,28 @@ namespace UITexture {
 
 	@param maxChar	最大描画文字数(0~16384の間の数値).
 	@param screen	描画先スクリーンの大きさ(ピクセル単位).
-	@param fontSize	画面に表示されるフォントサイズ(ピクセル単位).
 
 	@retval true	初期化成功.
 	@retval false	初期化失敗.
 	*/
-	bool Renderer::Init(size_t maxChar, const glm::vec2& screen, glm::f32 fontSize)
+	bool Renderer::Init(size_t maxImage, const glm::vec2& screen)
 	{
-		if (maxChar > (USHRT_MAX + 1) / 4) {
-			std::cerr << "WARNING: " << maxChar << "は設定可能な最大文字数を越えています" << std::endl;
-			maxChar = (USHRT_MAX + 1) / 4;
+		if (maxImage > (USHRT_MAX + 1) / 4) {
+			std::cerr << "WARNING: " << maxImage << "は設定可能な最大画像数を越えています" << std::endl;
+			maxImage = (USHRT_MAX + 1) / 4;
 		}
-		vboCapacity = static_cast<GLsizei>(4 * maxChar);
+		vboCapacity = static_cast<GLsizei>(4 * maxImage);
 		vbo.Init(GL_ARRAY_BUFFER, sizeof(Vertex) * vboCapacity, nullptr, GL_STREAM_DRAW);
 		{
 			std::vector<GLushort> tmp;
-			tmp.resize(maxChar * 6);
+			tmp.resize(maxImage * 6);
 			GLushort* p = tmp.data();
-			for (GLushort i = 0; i < maxChar * 4; i += 4) {
+			for (GLushort i = 0; i < maxImage * 4; i += 4) {
 				for (GLushort n : { 0, 1, 2, 2, 3, 0 }) {
 					*(p++) = i + n;
 				}
 			}
-			ibo.Init(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLushort) * 6 * maxChar, tmp.data(),
+			ibo.Init(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLushort) * 6 * maxImage, tmp.data(),
 				GL_STATIC_DRAW);
 		}
 		vao.Init(vbo.Id(), ibo.Id());
@@ -62,116 +61,29 @@ namespace UITexture {
 			offsetof(Vertex, color));
 		vao.Unbind();
 
-		progFont = Shader::Program::Create("Res/UITexture.vert", "Res/UITexture.frag");
-		if (!progFont) {
+		m_progUITex = Shader::Program::Create("Res/UITexture.vert", "Res/UITexture.frag");
+		if (!m_progUITex) {
 			return false;
 		}
 
 		windowSize = screen;
 
-		normalFontSize = fontSize;
 		pixelSizeInClipCoord = 2.0f / screen;
+		
+		baseScale = 2.0f / windowSize;
+
 		return true;
 	}
 
-	/*
-	フォントファイルを読み込む.
-
-	@param filename	ファイル名.
-
-	@retval true	読み込み成功.
-	@retval false	読み込み失敗.
-	*/
-	bool Renderer::LoadFromFile(const char* filename)
-	{
-		const std::unique_ptr<FILE, decltype(&fclose)> fp(fopen(filename, "r"), fclose);
-		if (!fp) {
-			std::cerr << "ERROR: '" << filename << "'のオープンに失敗" << std::endl;
-			return false;
-		}
-
-		int line = 1; ///< フォントファイルの処理中の行.
-		float size;
-		int ret = fscanf(fp.get(),
-			"info face=%*s size=%f bold=%*d italic=%*d charset=%*s unicode=%*d"
-			" stretchH=%*d smooth=%*d aa=%*d padding=%*d,%*d,%*d,%*d spacing=%*d,%*d", &size);
-		if (ret < 1) {
-			std::cerr << "ERROR: '" << filename << "'の読み込みに失敗(line=" << line <<
-				")" << std::endl;
-			return false;
-		}
-		baseScale = (normalFontSize / size) * pixelSizeInClipCoord;
-		++line;
-
-		glm::vec2 scale;
-		ret = fscanf(fp.get(),
-			" common lineHeight=%*d base=%*d scaleW=%f scaleH=%f pages=%*d packed=%*d",
-			&scale.x, &scale.y);
-		if (ret < 2) {
-			std::cerr << "ERROR: '" << filename << "'の読み込みに失敗(line=" << line <<
-				")" << std::endl;
-			return false;
-		}
-		const glm::vec2 reciprocalScale(1.0f / scale);
-		++line;
-
-		char tex[128];
-		ret = fscanf(fp.get(), " page id=%*d file=%127s", tex);
-		if (ret < 1) {
-			std::cerr << "ERROR: '" << filename << "'の読み込みに失敗(line=" << line <<
-				")" << std::endl;
-			return false;
-		}
-		//texFilename = "Res/";
-		//texFilename += std::string(tex + 1, tex + strlen(tex) - 1);
-		++line;
-
-		int charCount;
-		ret = fscanf(fp.get(), " chars count=%d", &charCount);
-		if (ret < 1) {
-			std::cerr << "ERROR: '" << filename << "'の読み込みに失敗(line=" << line <<
-				")" << std::endl;
-			return false;
-		}
-		++line;
-
-		fontList.resize(128); // ASCIIフォントだけの場合128文字あれば十分のはず.
-		for (int i = 0; i < charCount; ++i) {
-			FontInfo font;
-			glm::vec2 uv;
-			ret = fscanf(fp.get(),
-				" char id=%d x=%f y=%f width=%f height=%f xoffset=%f yoffset=%f xadvance=%*d"
-				" page=%*d chnl=%*d", &font.id, &uv.x, &uv.y, &font.size.x, &font.size.y,
-				&font.offset.x, &font.offset.y);
-			if (ret < 8) {
-				std::cerr << "ERROR: '" << filename << "'の読み込みに失敗(line=" << line <<
-					")" << std::endl;
-				return false;
-			}
-			font.offset.y *= -1;
-			uv.y = scale.y - uv.y - font.size.y;
-			font.uv[0] = uv * reciprocalScale * 65535.0f;
-			font.uv[1] = (uv + font.size) * reciprocalScale * 65535.0f;
-			if (font.id < 128) {
-				fontList[font.id] = font;
-			}
-			++line;
-		}
-		// テクスチャを読み込む.
-		//if (!GameEngine::Instance().LoadTextureFromFile(texFilename.c_str())) {
-		//	return false;
-		//}
-		return true;
-	}
+	
 
 	bool Renderer::SetTexture(const glm::vec2& position, const char* str, int CameraIndex, int cameraNum, bool SingleCamWrite)
 	{
 		if (!GameEngine::Instance().LoadTextureFromFile(str)) {
 			return false;
 		}
-		texFilename.resize(texFilename.size() + 1);
-		texFilename[texFilename.size() - 1] = str;
-
+		texFilename.push_back(str);
+		
 		glm::vec2 camOffset = glm::vec2(0);
 		glm::vec2 camScale = glm::vec2(1);
 		glm::vec2 posRatio = glm::vec2(1);
@@ -190,7 +102,7 @@ namespace UITexture {
 			}
 		}
 
-		TexturePtr tex = GameEngine::Instance().GetTexture(texFilename[texFilename.size() - 1].c_str());
+		TexturePtr tex = GameEngine::Instance().GetTexture(texFilename.back().c_str());
 
 		glm::vec2 texSize = glm::vec2(tex->Width() * scale.x, tex->Height() * scale.y);
 		const glm::vec2 reciprocalScale(1.0f / scale);
@@ -199,33 +111,32 @@ namespace UITexture {
 		uv[0] = glm::vec2(0,0) * reciprocalScale * 65535.0f;
 		uv[1] = texSize * reciprocalScale * 65535.0f;
 
-
 		// 左上を原点とするピクセル座標系からOpenGLのクリップ座標系へ変換.
 		glm::vec2 pos = ((position * camScale * posRatio + camOffset) * pixelSizeInClipCoord - 1.0f) * glm::vec2(1.0f, -1.0f);
 		Vertex* p = pVBO + vboSize;
 		if (vboSize + 4 > vboCapacity) { // VBOに空きがなければ終了.
 			return false;
 		}
-		//FontInfo& font = fontList[0];
+
 		if (tex && texSize.x && texSize.y) { // 表示できないデータなら無視する.
 			const glm::vec2 size = texSize * baseScale * scale * camScale;
-			const glm::vec2 offsetedPos = pos + /*font.offset * */ baseScale * scale * camScale;
-			p[0].position = offsetedPos + glm::vec2(0, -size.y);
-			p[0].uv = uv[0];//font.uv[0];
+			const glm::vec2 offsetedPos = pos + baseScale * scale * camScale;
+			p[0].position = offsetedPos + glm::vec2(-size.x / 2, -size.y / 2);
+			p[0].uv = uv[0];
 			p[0].color = color;
-			p[1].position = offsetedPos + glm::vec2(size.x, -size.y);
+			p[1].position = offsetedPos + glm::vec2(size.x / 2, -size.y / 2);
 			p[1].uv = glm::u16vec2(uv[1].x, uv[0].y);
 			p[1].color = color;
-			p[2].position = offsetedPos + glm::vec2(size.x, 0);
+			p[2].position = offsetedPos + glm::vec2(size.x / 2, size.y / 2);
 			p[2].uv = uv[1];
 			p[2].color = color;
-			p[3].position = offsetedPos;
+			p[3].position = offsetedPos + glm::vec2(-size.x / 2, size.y / 2);
 			p[3].uv = glm::u16vec2(uv[0].x, uv[1].y);
 			p[3].color = color;
 			p += 4;
 			vboSize += 4;
 		}
-	//	pos.x += font.xadvance * baseScale.x * scale.x * camScale.x; // 次の文字の表示位置へ移動.
+
 		return true;
 	}
 
@@ -290,14 +201,13 @@ namespace UITexture {
 		glDisable(GL_DEPTH_TEST);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		progFont->UseProgram();
+		m_progUITex->UseProgram();
 		for (int i = 0; i < texFilename.size(); i++) {
-			progFont->BindTexture(GL_TEXTURE0, GL_TEXTURE_2D, GameEngine::Instance().GetTexture(texFilename[i].c_str())->Id());
+			m_progUITex->BindTexture(GL_TEXTURE0, GL_TEXTURE_2D, GameEngine::Instance().GetTexture(texFilename[i].c_str())->Id());
 			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, reinterpret_cast<const GLint*>(12 * i));
 		}
 		vao.Unbind();
 
 		this->texFilename.clear();
-		this->texFilename.resize(0);
 	}
 }
