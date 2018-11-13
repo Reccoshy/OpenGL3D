@@ -15,6 +15,7 @@
 #include "../Entity/EffectDestroy/EffectDestroy.h"
 #include "../Utilities/MiniMap/MiniMap.h"
 #include "../Effects/AccelDust/AccelDust.h"
+#include "../Effects/ItemGetEffect/ItemGetEffect.h"
 #include <vector>
 
 
@@ -68,6 +69,7 @@ public:
 	void SpawnEffectExplode(glm::vec3 pos);
 
 	void SpawnEffectAccelDust(glm::vec3 pos);
+	void SpawnEffectItemGetSparkle(glm::vec3 pos);
 
 	bool BestTimeCheck(float Time);
 	
@@ -106,6 +108,7 @@ private:
 	std::vector<EffectDestroy*> m_pEffectExplodes;
 
 	std::vector<AccelDust*> m_pAccelDusts;
+	std::vector<CitemGetEffect*> m_pItemGetEffects;
 
 	CommandSelect resultCommand;
 

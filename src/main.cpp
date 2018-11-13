@@ -33,7 +33,6 @@ int main(){
 	game.LoadTextureFromFile("res/Texture/Ground/PlanePlaneField/grass.bmp");
 	game.LoadTextureFromFile("res/Texture/Ground/PlanePlaneField/flower.bmp");		
 	game.LoadTextureFromFile("res/Texture/Ground/PlanePlaneField/testMap.bmp");
-	game.LoadTextureFromFile("res/Texture/Sparkle.bmp");
 
 	game.LoadTextureFromFile("res/Model/Toroid.Normal.bmp");
 	game.LoadTextureFromFile("res/Model/Dummy.Normal.bmp");
@@ -76,6 +75,8 @@ int main(){
 	game.LoadTextureFromFile("res/Texture/ArrorR.dds");
 	game.LoadTextureFromFile("res/Texture/SpeedMeter.dds");
 
+	game.LoadTextureFromFile("res/Texture/itemGetSparkle.dds");
+
 	game.LoadMeshFromFile("res/Model/CartoonLowPolyTrees.fbx");
 	game.LoadMeshFromFile("res/Model/Toroid.fbx");
 	game.LoadMeshFromFile("res/Model/Player.fbx");
@@ -96,7 +97,7 @@ int main(){
 		"res/Data/StageData/PlanePlaneField/TestCheckPoint1.txt",
 		"res/Data/StageData/PlanePlaneField/TestItems1.txt",
 		"res/Data/StageData/PlanePlaneField/TestStageTextures1.txt",
-		3, 2));
+		0, 2));
 	
 	/*
 	game.UpdateFunc(RaceScene("res/Data/StageData/StarLightTown/Stage.txt",

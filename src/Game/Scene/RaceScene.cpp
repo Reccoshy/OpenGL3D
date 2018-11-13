@@ -154,6 +154,12 @@ void RaceScene::SpawnEffectAccelDust(glm::vec3 pos)
 	m_pAccelDusts.back()->Init(pos);
 }
 
+void RaceScene::SpawnEffectItemGetSparkle(glm::vec3 pos)
+{
+	m_pItemGetEffects.push_back(new CitemGetEffect);
+	m_pItemGetEffects.back()->Init(pos, glm::vec4(0, 1, 1, 0.5f));
+}
+
 bool RaceScene::BestTimeCheck(float Time)
 {
 	FILE *fp = fopen(bestTimeFileName, "wb");//バイナリファイルを開く
@@ -365,11 +371,11 @@ void RaceScene::EndFunc()
 	for (int i = 0; i < m_pEffectExplodes.size(); i++) {
 		m_pEffectExplodes[i]->Destroy();
 	};
-
 	DeleteAll(m_pEffectExplodes);
 
 	DeleteAll(m_pAccelDusts);
-	
+	DeleteAll(m_pItemGetEffects);
+
 	game.RemoveGroundTexture();
 
 	game.StopAllSound();
@@ -447,6 +453,7 @@ void RaceScene::UpdateResult(float delta)
 		this->ShowUI(delta);
 		m_resultWaitTime -= delta;
 		this->RankingUI();
+		Time += delta;
 
 	}
 	else
@@ -615,9 +622,6 @@ void RaceScene::ItemUpdate(float delta)
 {
 	for (int i = 0; i < m_pItems.size(); i++) {
 		this->m_pItems[i]->Update(delta);
-		for (int j = 0; j < m_pPlayerCharacters.size(); j++) {
-			this->m_pPlayerCharacters[j]->ObtainItem(this->m_pItems[i]->CollisionCheck(m_pPlayerCharacters[j]->Position(), m_pPlayerCharacters[j]->Radius()));
-		}
 	}
 
 	for (int i = 0; i < m_pGoals.size(); i++) {
@@ -673,6 +677,18 @@ void RaceScene::UpdateEffects(float delta)
 
 		if (!m_pAccelDusts[i]->ActiveCheck()) {
 			Remove(m_pAccelDusts, i);
+			i--;
+		}
+	}
+
+	for (int i = 0; i < m_pItemGetEffects.size(); i++) {
+		if (!m_pausing) {
+			m_pItemGetEffects[i]->Update(delta);
+		}
+		m_pItemGetEffects[i]->Draw();
+
+		if (!m_pItemGetEffects[i]->IsActive()) {
+			Remove(m_pItemGetEffects, i);
 			i--;
 		}
 	}
@@ -759,6 +775,15 @@ void RaceScene::CollisionChecks()
 
 	for (int i = 0; i < m_pPlayerCharacters.size(); i++) {
 		
+		for (int j = 0; j < m_pItems.size(); j++) {
+			int itemId = this->m_pItems[j]->CollisionCheck(m_pPlayerCharacters[i]->Position(), m_pPlayerCharacters[i]->Radius());
+
+			if (itemId != -1) {
+				this->m_pPlayerCharacters[i]->ObtainItem(itemId);
+				SpawnEffectItemGetSparkle(m_pItems[j]->Position());
+			}
+		}
+
 		for (int j = 0; j < m_pObstacles.size(); j++) {
 			m_pPlayerCharacters[i]->CollisionCheckAndBounce(
 				m_pObstacles[j]->Position(), m_pObstacles[j]->Radius());

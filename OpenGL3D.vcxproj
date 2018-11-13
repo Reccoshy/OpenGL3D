@@ -136,6 +136,8 @@
     <ClCompile Include="src\Font.cpp" />
     <ClCompile Include="src\GameEngine.cpp" />
     <ClCompile Include="src\Game\Effects\AccelDust\AccelDust.cpp" />
+    <ClCompile Include="src\Game\Effects\ItemGetEffect\ItemGetEffect.cpp" />
+    <ClCompile Include="src\Game\Effects\Particle.cpp" />
     <ClCompile Include="src\Game\Entity\EffectDestroy\EffectDestroy.cpp" />
     <ClCompile Include="src\Game\Entity\Goal\Goal.cpp" />
     <ClCompile Include="src\Game\Entity\Item\Bomb\Bomb.cpp" />
@@ -200,6 +202,8 @@
     <ClInclude Include="src\GameEngine.h" />
     <ClInclude Include="src\Gamepad.h" />
     <ClInclude Include="src\Game\Effects\AccelDust\AccelDust.h" />
+    <ClInclude Include="src\Game\Effects\ItemGetEffect\ItemGetEffect.h" />
+    <ClInclude Include="src\Game\Effects\Particle.h" />
     <ClInclude Include="src\Game\Entity\EffectDestroy\EffectDestroy.h" />
     <ClInclude Include="src\Game\Entity\Goal\Goal.h" />
     <ClInclude Include="src\Game\Entity\Item\Bomb\Bomb.h" />

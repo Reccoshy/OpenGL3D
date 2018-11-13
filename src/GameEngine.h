@@ -57,7 +57,7 @@ public:
 	const glm::vec4& AmbientLight() const;
 	void Camera(const CameraData& cam, int index);
 	const CameraData& Camera(int index) const;
-	std::mt19937& Rand();
+	
 	const GamePad& GetGamePad(int i) const;
 	void CollisionHandler(int gid0, int gid1, Entity::CollisionHandlerType handler);
 	const Entity::CollisionHandlerType& CollisionHandler(int gid0, int gid1) const;
@@ -85,7 +85,6 @@ public:
 	bool FrontAddImage(const glm::vec2& pos, char* str, int cameraIndex = 0, bool singleCamWrite = false) {
 		return frontUiRenderer.SetTexture(pos, str, cameraIndex, CameraNum, singleCamWrite);
 	}
-
 
 	void ImageScale(const glm::vec2& scale) {
 		uiRenderer.Scale(scale);
@@ -118,6 +117,9 @@ public:
 	void SetCameraNum(int i);
 
 	void AddEffect(glm::vec3 pos, glm::vec2 scale, glm::vec4 color, const char* imageName);
+
+	int GetRandomInt(int maxInt, int minInt);
+	float GetRandomFloat(float maxFloat, float minFloat, float acuuracy = 100.0f);
 
 	double& Variable(const char* name) { return variable[name]; }
 
@@ -195,7 +197,6 @@ private:
 
 	InterfaceBlock::LightData lightData;
 	CameraData camera[4];
-	std::mt19937 rand;
 
 	std::unordered_map<std::string, double> variable;
 };

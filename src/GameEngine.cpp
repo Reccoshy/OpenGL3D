@@ -5,6 +5,8 @@
 #include "Audio.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
+#include <stdio.h>
+#include <time.h>
 
 namespace {
 
@@ -341,14 +343,14 @@ bool GameEngine::Init(int w, int h, const char* title, bool fullScreen)
 	shaderMap["ColorFilter"]->UniformBlockBinding(*uboPostEffect);
 	const Shader::ProgramPtr& progColorFilter = shaderMap.find("ColorFilter")->second;
 
-	rand.seed(std::random_device()());
-
 	fontRenderer.Init(1024, glm::vec2(static_cast<float>(w), static_cast<float>(h)), 32);
 	if (!uiRenderer.Init(1024, glm::vec2(static_cast<float>(w), static_cast<float>(h))) || 
 		!frontUiRenderer.Init(1024, glm::vec2(static_cast<float>(w), static_cast<float>(h))))
 		return false;
 
 	m_effect.Init(glm::vec2(width, height));
+
+	srand(time(NULL));
 
 	isInitialized = true;
 	return true;
@@ -589,16 +591,6 @@ const GameEngine::CameraData& GameEngine::Camera(int index) const
 	return camera[index];
 }
 
-/*
-乱数オブジェクトを取得する.
-
-@return 乱数オブジェクト.
-*/
-std::mt19937& GameEngine::Rand()
-{
-	return rand;
-}
-
 const GamePad & GameEngine::GetGamePad(int i) const
 {
 	return GLFWEW::Window::instance().GetGamePad(i);
@@ -777,6 +769,26 @@ void GameEngine::SetCameraNum(int num)
 void GameEngine::AddEffect(glm::vec3 pos, glm::vec2 scale, glm::vec4 color, const char * imageName)
 {
 	m_effect.AddEffect(pos, scale, color, imageName);
+}
+
+int GameEngine::GetRandomInt(int maxInt, int minInt)
+{
+	int result = rand() % (maxInt - minInt);
+
+	result += minInt;
+
+	return result;
+}
+
+float GameEngine::GetRandomFloat(float maxFloat, float minFloat, float acuracy)
+{
+	int devide = maxFloat * acuracy - minFloat * acuracy;
+
+	float result = rand() % devide;
+
+	result = result / acuracy + minFloat;
+
+	return result;
 }
 
 GameEngine::~GameEngine()

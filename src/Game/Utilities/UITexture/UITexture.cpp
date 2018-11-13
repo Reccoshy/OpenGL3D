@@ -86,7 +86,6 @@ namespace UITexture {
 		
 		glm::vec2 camOffset = glm::vec2(0);
 		glm::vec2 camScale = glm::vec2(1);
-		glm::vec2 posRatio = glm::vec2(1);
 
 		if (!SingleCamWrite) {
 			if (cameraNum >= 3) {
@@ -97,7 +96,6 @@ namespace UITexture {
 			else if (cameraNum >= 2) {
 				camScale = glm::vec2(1.0f, 0.5f);
 
-				posRatio = glm::vec2(2, 1);
 				camOffset = glm::vec2(0, windowSize.y * 0.5 * CameraIndex);
 			}
 		}
@@ -112,7 +110,7 @@ namespace UITexture {
 		uv[1] = texSize * camScale * reciprocalScale * 65535.0f;
 
 		// 左上を原点とするピクセル座標系からOpenGLのクリップ座標系へ変換.
-		glm::vec2 pos = ((position * camScale * posRatio + camOffset) * pixelSizeInClipCoord - 1.0f) * glm::vec2(1.0f, -1.0f);
+		glm::vec2 pos = ((position * camScale + camOffset) * pixelSizeInClipCoord - 1.0f) * glm::vec2(1.0f, -1.0f);
 		Vertex* p = pVBO + vboSize;
 		if (vboSize + 4 > vboCapacity) { // VBOに空きがなければ終了.
 			return false;

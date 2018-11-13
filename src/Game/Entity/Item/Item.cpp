@@ -1,8 +1,6 @@
 #include "Item.h"
 #include "../../../../res/Sound/Sound.h"
 #include "../../../GameEngine.h"
-#include <stdio.h>
-#include <Time.h>
 
 bool Item::Init(glm::vec3 pos, int Id)
 {
