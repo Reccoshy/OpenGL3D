@@ -114,7 +114,7 @@ ItemUsageType Item::GetItemType(ItemsCode item)
 		return ItemUsageType::NONE;
 		break;
 	case ItemsCode::WINDELECTRO:
-		return ItemUsageType::NONE;
+		return ItemUsageType::BACK_SET;
 		break;
 	case ItemsCode::AIMMISSILE2:
 		return ItemUsageType::FRONT_ATTACK;

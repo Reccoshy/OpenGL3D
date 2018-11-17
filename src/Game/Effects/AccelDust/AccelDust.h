@@ -21,7 +21,7 @@ private:
 
 	glm::vec3 m_position;
 
-	glm::vec4 m_color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	glm::vec4 m_color = glm::vec4(0.5f, 0.5f, 0.0f, 0.5f);
 
 	bool m_active = false;
 };

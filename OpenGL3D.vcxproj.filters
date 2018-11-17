@@ -100,6 +100,15 @@
     <Filter Include="Game\Effects\ItemGetEffect">
       <UniqueIdentifier>{20a492ce-74ec-432d-8692-1e2bb4fb4be5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Effects\SpeedUpEffect">
+      <UniqueIdentifier>{1cc75595-7caf-4fca-a19e-4da9d81c312e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Effects\MissileEffect">
+      <UniqueIdentifier>{d78f1412-3e95-4d74-9f22-682c90febe8a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Effects\PlayerRespawn">
+      <UniqueIdentifier>{f1b4f544-2abc-4b28-9cba-ba4a8c51d7ee}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -206,6 +215,12 @@
     </ClCompile>
     <ClCompile Include="src\Game\Effects\ItemGetEffect\ItemGetEffect.cpp">
       <Filter>Game\Effects\ItemGetEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\Effects\SpeedUpEffect\SpeedUpEffect.cpp">
+      <Filter>Game\Effects\SpeedUpEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\Effects\PlayerRespawn\RespawnEffect.cpp">
+      <Filter>Game\Effects\PlayerRespawn</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -394,6 +409,12 @@
     </ClInclude>
     <ClInclude Include="src\Game\Effects\Particle.h">
       <Filter>Game\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\Effects\SpeedUpEffect\SpeedUpEffect.h">
+      <Filter>Game\Effects\SpeedUpEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\Effects\PlayerRespawn\RespawnEffect.h">
+      <Filter>Game\Effects\PlayerRespawn</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

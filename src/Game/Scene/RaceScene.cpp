@@ -154,10 +154,25 @@ void RaceScene::SpawnEffectAccelDust(glm::vec3 pos)
 	m_pAccelDusts.back()->Init(pos);
 }
 
-void RaceScene::SpawnEffectItemGetSparkle(glm::vec3 pos)
+void RaceScene::SpawnEffectItemGetSparkle(glm::vec3 pos, glm::vec4 color)
 {
 	m_pItemGetEffects.push_back(new CitemGetEffect);
-	m_pItemGetEffects.back()->Init(pos, glm::vec4(0, 1, 1, 0.5f));
+	m_pItemGetEffects.back()->Init(pos, color);
+}
+
+void RaceScene::SpawnEffectSpeedUp(glm::vec3 pos, float yRot, float speed)
+{
+	GameEngine& game = GameEngine::Instance();
+
+	m_pSpeedUpEffects.push_back(new SpeedUpEffect);
+	glm::vec3 vel = pos - calcPosition(pos, yRot + game.GetRandomFloat(50, -50), game.GetRandomFloat(50, 0), 10);
+	m_pSpeedUpEffects.back()->Init(pos, glm::vec4(0, 1, 0, 0.5), vel);
+}
+
+void RaceScene::SpawnEffectRespawn(glm::vec3 pos, float lifeTime)
+{
+	m_pRespawnEffects.push_back(new RespawnEffect);
+	m_pRespawnEffects.back()->Init(pos, lifeTime);
 }
 
 bool RaceScene::BestTimeCheck(float Time)
@@ -375,6 +390,8 @@ void RaceScene::EndFunc()
 
 	DeleteAll(m_pAccelDusts);
 	DeleteAll(m_pItemGetEffects);
+	DeleteAll(m_pSpeedUpEffects);
+	DeleteAll(m_pRespawnEffects);
 
 	game.RemoveGroundTexture();
 
@@ -692,6 +709,30 @@ void RaceScene::UpdateEffects(float delta)
 			i--;
 		}
 	}
+
+	for (int i = 0; i < m_pSpeedUpEffects.size(); i++) {
+		if (!m_pausing) {
+			m_pSpeedUpEffects[i]->Update(delta);
+		}
+		m_pSpeedUpEffects[i]->Draw();
+
+		if (!m_pSpeedUpEffects[i]->IsActive()) {
+			Remove(m_pSpeedUpEffects, i);
+			i--;
+		}
+	}
+
+	for (int i = 0; i < m_pRespawnEffects.size(); i++) {
+		if (!m_pausing) {
+			m_pRespawnEffects[i]->Update(delta);
+		}
+		m_pRespawnEffects[i]->Draw();
+
+		if (!m_pRespawnEffects[i]->IsActive()) {
+			Remove(m_pRespawnEffects, i);
+			i--;
+		}
+	}
 }
 
 void RaceScene::DeleteCheck()
@@ -780,7 +821,7 @@ void RaceScene::CollisionChecks()
 
 			if (itemId != -1) {
 				this->m_pPlayerCharacters[i]->ObtainItem(itemId);
-				SpawnEffectItemGetSparkle(m_pItems[j]->Position());
+				SpawnEffectItemGetSparkle(m_pItems[j]->Position(), glm::vec4(0, 1, 1, 0.5f));
 			}
 		}
 

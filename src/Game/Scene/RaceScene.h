@@ -16,6 +16,8 @@
 #include "../Utilities/MiniMap/MiniMap.h"
 #include "../Effects/AccelDust/AccelDust.h"
 #include "../Effects/ItemGetEffect/ItemGetEffect.h"
+#include "../Effects/SpeedUpEffect/SpeedUpEffect.h"
+#include "../Effects/PlayerRespawn/RespawnEffect.h"
 #include <vector>
 
 
@@ -69,7 +71,9 @@ public:
 	void SpawnEffectExplode(glm::vec3 pos);
 
 	void SpawnEffectAccelDust(glm::vec3 pos);
-	void SpawnEffectItemGetSparkle(glm::vec3 pos);
+	void SpawnEffectItemGetSparkle(glm::vec3 pos, glm::vec4 color);
+	void SpawnEffectSpeedUp(glm::vec3 pos, float yRot, float speed);
+	void SpawnEffectRespawn(glm::vec3 pos, float lifeTime);
 
 	bool BestTimeCheck(float Time);
 	
@@ -109,6 +113,8 @@ private:
 
 	std::vector<AccelDust*> m_pAccelDusts;
 	std::vector<CitemGetEffect*> m_pItemGetEffects;
+	std::vector<SpeedUpEffect*> m_pSpeedUpEffects;
+	std::vector<RespawnEffect*> m_pRespawnEffects;
 
 	CommandSelect resultCommand;
 

@@ -138,6 +138,8 @@
     <ClCompile Include="src\Game\Effects\AccelDust\AccelDust.cpp" />
     <ClCompile Include="src\Game\Effects\ItemGetEffect\ItemGetEffect.cpp" />
     <ClCompile Include="src\Game\Effects\Particle.cpp" />
+    <ClCompile Include="src\Game\Effects\PlayerRespawn\RespawnEffect.cpp" />
+    <ClCompile Include="src\Game\Effects\SpeedUpEffect\SpeedUpEffect.cpp" />
     <ClCompile Include="src\Game\Entity\EffectDestroy\EffectDestroy.cpp" />
     <ClCompile Include="src\Game\Entity\Goal\Goal.cpp" />
     <ClCompile Include="src\Game\Entity\Item\Bomb\Bomb.cpp" />
@@ -204,6 +206,8 @@
     <ClInclude Include="src\Game\Effects\AccelDust\AccelDust.h" />
     <ClInclude Include="src\Game\Effects\ItemGetEffect\ItemGetEffect.h" />
     <ClInclude Include="src\Game\Effects\Particle.h" />
+    <ClInclude Include="src\Game\Effects\PlayerRespawn\RespawnEffect.h" />
+    <ClInclude Include="src\Game\Effects\SpeedUpEffect\SpeedUpEffect.h" />
     <ClInclude Include="src\Game\Entity\EffectDestroy\EffectDestroy.h" />
     <ClInclude Include="src\Game\Entity\Goal\Goal.h" />
     <ClInclude Include="src\Game\Entity\Item\Bomb\Bomb.h" />

@@ -76,6 +76,7 @@ int main(){
 	game.LoadTextureFromFile("res/Texture/SpeedMeter.dds");
 
 	game.LoadTextureFromFile("res/Texture/itemGetSparkle.dds");
+	game.LoadTextureFromFile("res/Texture/Respawn.dds");
 
 	game.LoadMeshFromFile("res/Model/CartoonLowPolyTrees.fbx");
 	game.LoadMeshFromFile("res/Model/Toroid.fbx");

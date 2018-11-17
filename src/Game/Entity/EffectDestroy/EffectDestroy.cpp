@@ -8,8 +8,6 @@ bool EffectDestroy::Init(glm::vec3 pos)
 
 	m_pEntity = game.AddEntity(0, pos, "Blast", "res/Model/Toroid.bmp", nullptr);
 
-	
-
 	return true;
 }
 

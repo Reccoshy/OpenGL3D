@@ -117,7 +117,6 @@ void CPlayerCharacter::PassGoal(float Time)
 
 	m_lapTime.push_back(LapTime);
 
-
 	m_lap += 1;
 
 	if (m_lap > m_pRaceScene->GetLapNum()) {
@@ -189,7 +188,7 @@ void CPlayerCharacter::inputFunc(float delta)
 		}
 	}
 	if (gamePad.buttonDown & GamePad::B) {
-		this->PassGoal(m_FinishTime);
+		this->Dead();
 	}
 
 	if (gamePad.buttonDown & GamePad::Y) {
@@ -375,6 +374,9 @@ void CPlayerCharacter::ItemStateUpdate(float delta)
 	}
 	if (CurrentSpeedUpTime > 0) {
 		CurrentSpeedUpTime -= delta;
+
+		m_pRaceScene->SpawnEffectSpeedUp(Position(), Yrot(), m_acctualSpeed);
+
 		if (CurrentSpeedUpTime <= 0) {
 			CurrentSpeedUpTime = 0;
 		}
@@ -609,8 +611,9 @@ void CPlayerCharacter::Dead()
 		CurrentRespawnTime = RespawnTime;
 
 		m_pRaceScene->SpawnEffectExplode(this->Position());
-
 		this->m_entity->ToggleVisibility(false);
+
+		m_pRaceScene->SpawnEffectRespawn(Position(), RespawnTime);
 	}
 }
 
@@ -857,7 +860,7 @@ void CPlayerCharacter::CameraUpdate(float delta)
 			cameraGoalTurn += delta * 30;
 		}
 
-		glm::vec3 pos = CalcPosition(Position(), Yrot() + CameraYDif + cameraGoalTurn,/* 89*/15, /*200*/20);
+		glm::vec3 pos = CalcPosition(Position(), Yrot() + CameraYDif + cameraGoalTurn,/* 89*/15, /*200*/20 + CurrentSpeedUpTime);
 		game.Camera({ { pos },{ this->Position() },{ 0, 1, 0 } }, m_playerIndex);
 	}
 }
