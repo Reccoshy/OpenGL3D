@@ -729,8 +729,13 @@ void RaceScene::UpdateEffects(float delta)
 		m_pRespawnEffects[i]->Draw();
 
 		if (!m_pRespawnEffects[i]->IsActive()) {
+
+			SpawnEffectItemGetSparkle(m_pRespawnEffects[i]->Position(), glm::vec4(1, 1, 0, 1));
+			SpawnEffectItemGetSparkle(m_pRespawnEffects[i]->Position(), glm::vec4(0, 1, 1, 1));
+
 			Remove(m_pRespawnEffects, i);
 			i--;
+
 		}
 	}
 }

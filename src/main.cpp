@@ -76,7 +76,15 @@ int main(){
 	game.LoadTextureFromFile("res/Texture/SpeedMeter.dds");
 
 	game.LoadTextureFromFile("res/Texture/itemGetSparkle.dds");
-	game.LoadTextureFromFile("res/Texture/Respawn.dds");
+	game.LoadTextureFromFile("res/Texture/respawn1.dds");
+	game.LoadTextureFromFile("res/Texture/respawn2.dds");
+	game.LoadTextureFromFile("res/Texture/respawn3.dds");
+	game.LoadTextureFromFile("res/Texture/respawn4.dds");
+	game.LoadTextureFromFile("res/Texture/respawn5.dds");
+	game.LoadTextureFromFile("res/Texture/respawn6.dds");
+	game.LoadTextureFromFile("res/Texture/respawn7.dds");
+	game.LoadTextureFromFile("res/Texture/respawn8.dds");
+	game.LoadTextureFromFile("res/Texture/respawn9.dds");
 
 	game.LoadMeshFromFile("res/Model/CartoonLowPolyTrees.fbx");
 	game.LoadMeshFromFile("res/Model/Toroid.fbx");
