@@ -4,6 +4,7 @@
 #include <vector>
 #include "../../../Entity.h"
 #include "../../Utilities/CommandSelect/CommandSelect.h"
+#include "../../Utilities/UITexture/BlackFilter/BlackFilter.h"
 #pragma warning(disable:4996)
 
 enum class ShowingMenu{
@@ -41,16 +42,13 @@ private:
 
 	ShowingMenu m_menu = ShowingMenu::PlayerSelect;
 
-	float m_waitTime = 1.0f;
-	float m_UIAlpha = 1.0f;
-
 	float m_bestLap = 0.0f;
 
 	float m_time = 0.0f;
 
+	BlackFilter blackFilter;
+
 	bool m_activeInput = false;
-	
-	bool m_sceneChanging = false;
 
 	FromStageSelectNextScene m_nextScene = FromStageSelectNextScene::NONE;
 
@@ -75,6 +73,5 @@ private:
 	void InputFunc();
 	void ShowTextUI(float delta);
 
-	void SceneChangeReady();
 	void SceneChanger(float delta);
 };

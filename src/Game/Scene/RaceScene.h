@@ -18,6 +18,7 @@
 #include "../Effects/ItemGetEffect/ItemGetEffect.h"
 #include "../Effects/SpeedUpEffect/SpeedUpEffect.h"
 #include "../Effects/PlayerRespawn/RespawnEffect.h"
+#include "../Utilities/UITexture/BlackFilter/BlackFilter.h"
 #include <vector>
 
 
@@ -146,11 +147,13 @@ private:
 
 	bool m_activeInput = true;
 
-	bool m_sceneChanging = false;
+	//bool m_sceneChanging = false;
 
-	float m_UIAlpha = 1.0f;
+	//float m_UIAlpha = 1.0f;
 
-	float m_waitTime = 1.0f;
+	//float m_waitTime = 1.0f;
+
+	BlackFilter blackFilter;
 
 	glm::vec4 rankColor[5] = {
 		glm::vec4(0, 0, 0, 1),

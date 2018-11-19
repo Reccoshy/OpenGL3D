@@ -18,6 +18,15 @@ void Effect::AddEffect(glm::vec3 pos, glm::vec2 s, glm::vec4 color, const char* 
 {
 	GameEngine& game = GameEngine::Instance();
 
+	TexturePtr tex = game.GetTexture(imageName);
+
+	if (!tex) {
+		std::cout << "テクスチャの読み込み失敗" << imageName << std::endl;
+
+		return;
+	}
+	textures.push_back(tex);
+
 	m_effectNum++;
 
 	positions.push_back(pos);
@@ -31,9 +40,6 @@ void Effect::AddEffect(glm::vec3 pos, glm::vec2 s, glm::vec4 color, const char* 
 		glm::vec2 uv;
 		glm::u8vec4 c;
 	}effects[6];
-
-	TexturePtr tex = game.GetTexture(imageName);
-	textures.push_back(tex);
 
 	effects[0].position = glm::vec3(scale[m_effectNum - 1].x / 2, scale[m_effectNum - 1].y / 2, 0);
 	effects[0].uv = glm::vec2(0, 0);
@@ -131,13 +137,10 @@ void Effect::EndClear()
 	m_effectNum = 0;
 
 	positions.clear();
-
 	scale.clear();
-
 	textures.clear();
 	
 	effectsVao.clear();
-	
 	effectsVbo.clear();
 	
 	glDisable(GL_DEPTH_TEST);

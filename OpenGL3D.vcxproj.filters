@@ -109,6 +109,12 @@
     <Filter Include="Game\Effects\PlayerRespawn">
       <UniqueIdentifier>{f1b4f544-2abc-4b28-9cba-ba4a8c51d7ee}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Utilities\UITexture\BlackFilter">
+      <UniqueIdentifier>{8596db21-45d1-4662-a5d1-0f4e9c41ef2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Effects\PlayerIcon">
+      <UniqueIdentifier>{56044b25-fcc3-464f-a04d-644faabf98a7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -221,6 +227,12 @@
     </ClCompile>
     <ClCompile Include="src\Game\Effects\PlayerRespawn\RespawnEffect.cpp">
       <Filter>Game\Effects\PlayerRespawn</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\Utilities\UITexture\BlackFilter\BlackFilter.cpp">
+      <Filter>Game\Utilities\UITexture\BlackFilter</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\Effects\PlayerIcon\PlayerIcon.cpp">
+      <Filter>Game\Effects\PlayerIcon</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -415,6 +427,12 @@
     </ClInclude>
     <ClInclude Include="src\Game\Effects\PlayerRespawn\RespawnEffect.h">
       <Filter>Game\Effects\PlayerRespawn</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\Utilities\UITexture\BlackFilter\BlackFilter.h">
+      <Filter>Game\Utilities\UITexture\BlackFilter</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\Effects\PlayerIcon\PlayerIcon.h">
+      <Filter>Game\Effects\PlayerIcon</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

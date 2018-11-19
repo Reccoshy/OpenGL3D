@@ -15,7 +15,7 @@ int main(){
 	srand(time(NULL));
 
 	GameEngine& game = GameEngine::Instance();
-	if (!game.Init(/*1200*/ 1920, /*900*/ 1080, "OpenGL Tutorial", false)) {
+	if (!game.Init(1920, 1080, "OpenGL Tutorial", false)) {
 		system("pause");
 		return 1;
 	}
@@ -76,6 +76,7 @@ int main(){
 	game.LoadTextureFromFile("res/Texture/SpeedMeter.dds");
 
 	game.LoadTextureFromFile("res/Texture/itemGetSparkle.dds");
+
 	game.LoadTextureFromFile("res/Texture/respawn1.dds");
 	game.LoadTextureFromFile("res/Texture/respawn2.dds");
 	game.LoadTextureFromFile("res/Texture/respawn3.dds");

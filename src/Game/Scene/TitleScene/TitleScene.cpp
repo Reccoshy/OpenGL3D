@@ -32,6 +32,8 @@ bool TitleScene::Init()
 
 	this->commandSelect.InitCommand(2);
 
+	blackFilter.Init();
+
 	m_pPlayerCharacter = game.AddEntity(0, glm::vec3(0, 0, 0), "Aircraft", "res/Model/Player.bmp", nullptr);
 
 	game.Camera({ { 3, 3, -8 },{ 2, 1, 0 },{ 0, 1, 0 } }, 0);
@@ -70,6 +72,10 @@ void TitleScene::InputFunc()
 {
 	GameEngine& game = GameEngine::Instance();
 
+	if (blackFilter.IsInAction()) {
+		return;
+	}
+
 	GamePad gamepad = game.GetGamePad(0);
 
 	if (gamepad.buttonDown & GamePad::A || gamepad.buttonDown & GamePad::START) {
@@ -77,17 +83,11 @@ void TitleScene::InputFunc()
 		game.PlayAudio(SEUI, CRI_SOUND_DECISION);
 
 		if (commandSelect.getIndex() == 0) {
-			this->m_activeInputFlag = false;
-			this->m_sceneChanging = true;
-
-			m_nextScene = FromTitleNextScene::ToStageSelect;
+			blackFilter.SetNextScene(NEXT_SCENE::StageSelect);
 		}
 		else if (commandSelect.getIndex() == 1) {
 			
-			this->m_activeInputFlag = false;
-			this->m_sceneChanging = true;
-
-			m_nextScene = FromTitleNextScene::EndGame;
+			blackFilter.SetNextScene(NEXT_SCENE::EndGame);
 		}
 	}
 
@@ -140,48 +140,26 @@ void TitleScene::ShowTextUI()
 	game.AddString(glm::vec2(300,600), "end");
 
 	game.AddImage(glm::vec2(250, 575), "res/Texture/SpeedMeter.dds");
-
-	game.FrontImageColor(glm::vec4(0, 0, 0, m_UIAlpha));
-	game.FrontImageScale(glm::vec2(4));
-	game.FrontAddImage(glm::vec2(0,0), "res/Model/Player.bmp");
 }
 
 void TitleScene::SceneChanger(float delta)
 {
 	GameEngine& game = GameEngine::Instance();
 
-	if (m_sceneChanging) {
-		if (m_UIAlpha < 1.0f) {
-			m_UIAlpha += delta;
-			if (m_UIAlpha >= 1.0f) {
-				m_UIAlpha = 1.0f;
-			}
-		}
-	}
-	else {
-		if (m_UIAlpha > 0.0f) {
-			m_UIAlpha -= delta;
-			if (m_UIAlpha < 0.0f) {
-				m_UIAlpha = 0.0f;
-				this->m_activeInputFlag = true;
-			}
-		}
-	}
+	blackFilter.Update(delta);
 
-	if (m_sceneChanging && m_UIAlpha >= 1.0f) {
+	switch (blackFilter.NextScene())
+	{
+	case StageSelect:
+		this->EndFunc();
+		game.UpdateFunc(StageSelectScene());
+		break;
 
-		if (m_waitTime >= 0.0f) {
-			m_waitTime -= delta;
-		}
-		else {
-			if (m_nextScene == FromTitleNextScene::ToStageSelect) {
-				this->EndFunc();
-				game.UpdateFunc(StageSelectScene());
-			}
-			else if (m_nextScene == FromTitleNextScene::EndGame) {
-				this->EndFunc();
-				game.EndGame();
-			}
-		}
+	case EndGame:
+		this->EndFunc();
+		game.EndGame();
+		break;
+	default:
+		break;
 	}
 }

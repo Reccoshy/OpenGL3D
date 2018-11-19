@@ -31,7 +31,7 @@ bool StageSelectScene::Init()
 
 	game.Camera({ { 3, 3, -8 },{ 2, 1, 0 },{ 0, 1, 0 } }, 0);
 
-	m_stageSelect.InitCommand(1);
+	m_stageSelect.InitCommand(2);
 	m_playerNum.InitCommand(4);
 	m_lapSelect.InitCommand(99, 2);
 
@@ -135,7 +135,7 @@ bool StageSelectScene::LoadHighScore()
 
 void StageSelectScene::InputFunc()
 {
-	if (m_activeInput) {
+	if (m_activeInput && !blackFilter.IsInAction()) {
 
 		GameEngine& game = GameEngine::Instance();
 
@@ -171,15 +171,14 @@ void StageSelectScene::InputFunc()
 
 			if (gamepad.buttonDown & GamePad::A || gamepad.buttonDown & GamePad::START) {
 				this->m_menu = ShowingMenu::StageSelect;
-
+				this->m_activeInput = false;
 				game.PlayAudio(SEUI, CRI_SOUND_DECISION);
 			}
 
 			if (gamepad.buttonDown & GamePad::B) {
 
-				this->SceneChangeReady();
-				this->m_nextScene = FromStageSelectNextScene::ToTitleScene;
-
+				blackFilter.SetNextScene(NEXT_SCENE::Title);
+				this->m_activeInput = false;
 				game.PlayAudio(SEUI, CRI_SOUND_CANCEL);
 			}
 		}
@@ -197,25 +196,25 @@ void StageSelectScene::InputFunc()
 
 			if (gamepad.buttonDown & GamePad::A || gamepad.buttonDown & GamePad::START) {
 				this->m_menu = ShowingMenu::ReadyCheck;
-
+				this->m_activeInput = false;
 				game.PlayAudio(SEUI, CRI_SOUND_DECISION);
 			}
 
 			if (gamepad.buttonDown & GamePad::B) {
 				m_menu = ShowingMenu::PlayerSelect;
-
+				this->m_activeInput = false;
 				game.PlayAudio(SEUI, CRI_SOUND_CANCEL);
 			}
 		}
 		else if (m_menu == ShowingMenu::ReadyCheck) {
 			if (gamepad.buttonDown & GamePad::A || gamepad.buttonDown & GamePad::START) {
-				
-				this->SceneChangeReady();
-				this->m_nextScene = FromStageSelectNextScene::ToRaceScene;
+				this->m_activeInput = false;
+				blackFilter.SetNextScene(NEXT_SCENE::InRace);
 				game.PlayAudio(SEUI, CRI_SOUND_DECISION);
 			}
 
 			if (gamepad.buttonDown & GamePad::B) {
+				this->m_activeInput = false;
 				m_menu = ShowingMenu::StageSelect;
 				game.PlayAudio(SEUI, CRI_SOUND_CANCEL);
 			}
@@ -228,11 +227,15 @@ void StageSelectScene::ShowTextUI(float delta)
 	GameEngine& game = GameEngine::Instance();
 	glm::vec2 windowSize = game.GetWindowSize();
 
+	if ((float)m_menu * -windowSize.x * 0.1 == m_uIAdder) {
+		m_activeInput = true;
+	}
+
 	if (m_uIAdder < (float)m_menu * -windowSize.x * 0.1) {
-		m_uIAdder += 10;
+		m_uIAdder += windowSize.x * 0.01;
 	}
 	else if (m_uIAdder > (float)m_menu * -windowSize.x * 0.1) {
-		m_uIAdder -= 10;
+		m_uIAdder -= windowSize.x * 0.01;
 	}
 
 	float arrow = (int)(m_time * 50) % 20;
@@ -303,55 +306,34 @@ void StageSelectScene::ShowTextUI(float delta)
 	game.FontScale(glm::vec2(2));
 	game.AddString(glm::vec2(windowSize.x * 2 + 100/*2500*/ + m_uIAdder, 200), "PRESS A TO CONTINUE");
 
-	game.FrontImageScale(glm::vec2(4));
-	game.FrontImageColor(glm::vec4(0, 0, 0, m_UIAlpha));
-	game.FrontAddImage(glm::vec2(0, 0), "res/Model/Player.bmp");
-}
-
-void StageSelectScene::SceneChangeReady()
-{
-	this->m_sceneChanging = true;
-	this->m_activeInput = false;
 }
 
 void StageSelectScene::SceneChanger(float delta)
 {
 	GameEngine& game = GameEngine::Instance();
 
-	if (m_sceneChanging) {
-		if (m_UIAlpha < 1.0f) {
-			m_UIAlpha += delta;
-			if (m_UIAlpha >= 1.0f) {
-				m_UIAlpha = 1.0f;
-			}
-		}
+	blackFilter.Update(delta);
+	
+	switch (blackFilter.NextScene())
+	{
+	case None:
+		break;
+
+	case Title:
+		this->EndFunc();
+		game.UpdateFunc(TitleScene());
+		break;
+
+	case InRace:
+	{
+		this->EndFunc();
+		int num = m_playerNum.getIndex();
+		int lap = m_lapSelect.getIndex();
+		game.UpdateFunc(RaceScene(scoreFile, stageDataTexfile, checkPointTexfile, itemTexfile, texFile, num, lap));
+		break;
 	}
-	else {
-		if (m_UIAlpha > 0.0f) {
-			m_UIAlpha -= delta;
-			if (m_UIAlpha < 0.0f) {
-				m_UIAlpha = 0.0f;
-				this->m_activeInput = true;
-			}
-		}
+	default:
+		break;
 	}
 
-	if (m_sceneChanging && m_UIAlpha >= 1.0f) {
-		if (m_waitTime >= 0.0f) {
-			m_waitTime -= delta;
-		}
-
-		else {
-			if (m_nextScene == FromStageSelectNextScene::ToRaceScene) {
-				this->EndFunc();
-				int num = m_playerNum.getIndex();
-				int lap = m_lapSelect.getIndex();
-				game.UpdateFunc(RaceScene(scoreFile, stageDataTexfile, checkPointTexfile, itemTexfile, texFile, num, lap));
-			}
-			else if (m_nextScene == FromStageSelectNextScene::ToTitleScene) {
-				this->EndFunc();
-				game.UpdateFunc(TitleScene());
-			}
-		}
-	}
 }

@@ -4,6 +4,7 @@
 #include <vector>
 #include "../../../Entity.h"
 #include "../../Utilities/CommandSelect/CommandSelect.h"
+#include "../../Utilities/UITexture/BlackFilter/BlackFilter.h"
 
 enum class FromTitleNextScene {
 	None = -1,
@@ -25,11 +26,7 @@ private:
 
 	float CamY = 0;
 
-	float m_waitTime = 1.0f;
-	float m_UIAlpha = 1.0f;
-
-	bool m_sceneChanging = false;
-	bool m_activeInputFlag = false;
+	BlackFilter blackFilter;
 
 	Entity::Entity* m_pPlayerCharacter;
 

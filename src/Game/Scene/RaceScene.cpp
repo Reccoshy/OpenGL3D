@@ -166,7 +166,7 @@ void RaceScene::SpawnEffectSpeedUp(glm::vec3 pos, float yRot, float speed)
 
 	m_pSpeedUpEffects.push_back(new SpeedUpEffect);
 	glm::vec3 vel = pos - calcPosition(pos, yRot + game.GetRandomFloat(50, -50), game.GetRandomFloat(50, 0), 10);
-	m_pSpeedUpEffects.back()->Init(pos, glm::vec4(0, 1, 0, 0.5), vel);
+	m_pSpeedUpEffects.back()->Init(pos, glm::vec4(1, 0, 0, 0.8), vel);
 }
 
 void RaceScene::SpawnEffectRespawn(glm::vec3 pos, float lifeTime)
@@ -200,21 +200,16 @@ void RaceScene::OptionCommand(bool isAdd)
 void RaceScene::ActOptionCommand()
 {
 	if (resultCommand.getIndex() == 0) {
-		this->m_sceneChanging = true;
-		this->m_activeInput = false;
-		this->m_nextScene = FromRaceSceneToNextScene::Retry;
+		blackFilter.SetNextScene(NEXT_SCENE::InRace);
+
 	}
 	else if (resultCommand.getIndex() == 1) {
-		this->m_sceneChanging = true;
-		this->m_activeInput = false;
+		blackFilter.SetNextScene(NEXT_SCENE::StageSelect);
 
-		this->m_nextScene = FromRaceSceneToNextScene::ToStageSelectScene;
 	}
 	else if (resultCommand.getIndex() == 2) {
-		this->m_sceneChanging = true;
-		this->m_activeInput = false;
+		blackFilter.SetNextScene(NEXT_SCENE::Title);
 
-		this->m_nextScene = FromRaceSceneToNextScene::ToTitleScene;
 	}
 }
 
@@ -271,7 +266,7 @@ void RaceScene::Init()
 	isInitialized = true;
 
 	this->m_activeInput = true;
-	this->m_sceneChanging = false;
+	this->blackFilter.Init();
 
 	this->LoadStageFromFile(stageFileName);
 	this->LoadCheckPointFromFile(checkPointFileName);
@@ -296,7 +291,7 @@ void RaceScene::Init()
 
 	for (int i = 0; i < 4; i++) {
 		m_pPlayerCharacters.push_back(new CPlayerCharacter);
-
+		
 		bool playerCheck = false;
 		if (i < PlayerNum) {
 			playerCheck = true;
@@ -476,9 +471,10 @@ void RaceScene::UpdateResult(float delta)
 	else
 	{
 		if (!m_showRanking) {
+			blackFilter.SetNextScene(NEXT_SCENE::Result);/*
 			m_nextScene = FromRaceSceneToNextScene::ShowResultTime;
 			this->m_activeInput = false;
-			this->m_sceneChanging = true;
+			this->m_sceneChanging = true;*/
 		}
 	}
 
@@ -487,7 +483,7 @@ void RaceScene::UpdateResult(float delta)
 
 		game.Camera({ {-20, 20, -100},{0, 0, 0}, {0, 1, 0} }, 0);
 
-		if (m_UIAlpha <= 0.0f) {
+		if (!blackFilter.IsInAction()) {
 			this->ShowResult(delta);
 
 			if (m_resultMover <= 0) {
@@ -498,7 +494,6 @@ void RaceScene::UpdateResult(float delta)
 	}
 
 	this->ShowFilter();
-	//Time += delta;
 }
 
 bool RaceScene::LoadStageFromFile(char * const filename)
@@ -952,53 +947,38 @@ void RaceScene::SaveBestLap()
 	}
 }
 
-void RaceScene::SceneChanger(float delta) {
+void RaceScene::SceneChanger(float delta) 
+{
 	GameEngine& game = GameEngine::Instance();
 
-	if (m_sceneChanging) {
-		if (m_UIAlpha < 1.0f) {
-			m_UIAlpha += delta;
-			if (m_UIAlpha >= 1.0f) {
-				m_UIAlpha = 1.0f;
-			}
-		}
-	}
-	else {
-		if (m_UIAlpha > 0.0f) {
-			m_UIAlpha -= delta;
-			if (m_UIAlpha < 0.0f) {
-				m_UIAlpha = 0.0f;
-				this->m_activeInput = true;
-			}
-		}
-	}
+	blackFilter.Update(delta);
+	
+	switch (blackFilter.NextScene())
+	{
+	case NEXT_SCENE::InRace:
+		this->EndFunc();
+		this->isInitialized = false;
+		break;
 
-	if (m_sceneChanging && m_UIAlpha >= 1.0f) {
-		if (m_waitTime >= 0.0f) {
-			m_waitTime -= delta;
-		}
+	case NEXT_SCENE::StageSelect:
+		this->EndFunc();
+		game.UpdateFunc(StageSelectScene());
+		break;
 
-		else {
-			if (m_nextScene == FromRaceSceneToNextScene::Retry) {
-				this->EndFunc();
-				this->isInitialized = false;
-			}
-			if (m_nextScene == FromRaceSceneToNextScene::ToTitleScene) {
-				this->EndFunc();
-				game.UpdateFunc(TitleScene());
-			}
-			else if (m_nextScene == FromRaceSceneToNextScene::ToStageSelectScene) {
-				this->EndFunc();
-				game.UpdateFunc(StageSelectScene());
-			}
-			else if (m_nextScene == FromRaceSceneToNextScene::ShowResultTime) {
-				this->m_sceneChanging = false;
-				this->m_nextScene = FromRaceSceneToNextScene::NONE;
-				this->m_showRanking = true;
+	case NEXT_SCENE::Title:
+		this->EndFunc();
+		game.UpdateFunc(TitleScene());
+		break;
 
-				game.SetCameraNum(1);
-			}
-		}
+	case NEXT_SCENE::Result:
+		
+		blackFilter.Init();
+		this->m_showRanking = true;
+		game.SetCameraNum(1);
+
+	case NEXT_SCENE::None:
+	default:
+		break;
 	}
 }
 
@@ -1167,12 +1147,12 @@ void RaceScene::ShowUI(float delta)
 }
 
 void RaceScene::ShowFilter()
-{
+{/*
 	GameEngine& game = GameEngine::Instance();
 
 	game.FrontImageScale(glm::vec2(4));
 	game.FrontImageColor(glm::vec4(0, 0, 0, m_UIAlpha));
-	game.FrontAddImage(glm::vec2(0, 0), "res/Model/Player.bmp", 0, true);
+	game.FrontAddImage(glm::vec2(0, 0), "res/Model/Player.bmp", 0, true);*/
 }
 
 void RaceScene::ItemUI(glm::vec2 pos, glm::vec2 size, ItemsCode id, int index)
@@ -1315,12 +1295,12 @@ void RaceScene::ShowResult(float delta)
 		float second = 0.0f;
 
 		for (second = m_time; second >= 60.0f; ) {
-			m_time += 1;
+			minute += 1;
 			second -= 60.0f;
 		}
 
 		snprintf(str, 64, "%d Place   Player%d -   %02d:%05.2f",rank , i + 1, minute, second);
-		if (i <= PlayerNum) {
+		if (i <= PlayerNum - 1) {
 			game.FontColor(glm::vec4(0, 1, 1, 1));
 		}
 		else {
