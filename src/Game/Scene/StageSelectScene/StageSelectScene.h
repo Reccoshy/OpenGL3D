@@ -14,12 +14,6 @@ enum class ShowingMenu{
 	ReadyCheck = 20,
 };
 
-enum class FromStageSelectNextScene {
-	NONE = -1,
-	ToRaceScene = 0,
-	ToTitleScene = 1,
-};
-
 class StageSelectScene
 {
 public:
@@ -49,8 +43,6 @@ private:
 	BlackFilter blackFilter;
 
 	bool m_activeInput = false;
-
-	FromStageSelectNextScene m_nextScene = FromStageSelectNextScene::NONE;
 
 	char stageName[100];
 	char itemTexfile[100];

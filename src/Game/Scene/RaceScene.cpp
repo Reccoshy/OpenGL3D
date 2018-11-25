@@ -64,6 +64,10 @@ RaceScene::~RaceScene()
 
 void RaceScene::operator()(float delta)
 {
+
+	this->DeleteCheck();
+
+
 	if (!isInitialized) {
 		this->Init();
 	}
@@ -81,6 +85,7 @@ void RaceScene::operator()(float delta)
 		else
 			this->UpdateInGame(delta);
 	}
+	
 
 	this->SceneChanger(delta);
 }
@@ -94,7 +99,6 @@ void RaceScene::SpawnElectroTrap(glm::vec3 pos)
 void RaceScene::SpawnMissile(glm::vec3 pos, float Xrot, bool aiming)
 {
 	m_pMissiles.push_back(new Missile);
-
 	m_pMissiles.back()->init(pos, Xrot, this, aiming);
 }
 
@@ -282,7 +286,7 @@ void RaceScene::Init()
 		}
 	}
 
-	game.AddEntity(EntityGroupId_Others, glm::vec3(0, 0, 100), "Tree 1", "res/Model/Tree1.bmp", nullptr, true);
+	game.AddEntity(0, glm::vec3(0, 0, 100), "Tree 1", "res/Model/Tree1.bmp", nullptr, true);
 
 	std::vector<glm::vec3> pos;
 	for (int i = 0; i < m_pGoals.size(); i++) {	
@@ -292,11 +296,17 @@ void RaceScene::Init()
 	for (int i = 0; i < 4; i++) {
 		m_pPlayerCharacters.push_back(new CPlayerCharacter);
 		
+		m_pPlayerIcons.push_back(new PlayerIcon);
+
 		bool playerCheck = false;
 		if (i < PlayerNum) {
 			playerCheck = true;
 		}
 		m_pPlayerCharacters.back()->Init(glm::vec3(i * 5, 0, 0), m_pGoals.size(), 1.5f, i, this, pos, playerCheck);
+
+		m_pPlayerIcons.back()->Init(i, 4.0f, m_pPlayerCharacters[i]->Position());
+
+		m_attackInformer[i].Init(100.0);
 	}
 
 	resultCommand.InitCommand(3);
@@ -388,6 +398,8 @@ void RaceScene::EndFunc()
 	DeleteAll(m_pSpeedUpEffects);
 	DeleteAll(m_pRespawnEffects);
 
+	DeleteAll(m_pPlayerIcons);
+
 	game.RemoveGroundTexture();
 
 	game.StopAllSound();
@@ -471,10 +483,7 @@ void RaceScene::UpdateResult(float delta)
 	else
 	{
 		if (!m_showRanking) {
-			blackFilter.SetNextScene(NEXT_SCENE::Result);/*
-			m_nextScene = FromRaceSceneToNextScene::ShowResultTime;
-			this->m_activeInput = false;
-			this->m_sceneChanging = true;*/
+			blackFilter.SetNextScene(NEXT_SCENE::Result);
 		}
 	}
 
@@ -492,8 +501,6 @@ void RaceScene::UpdateResult(float delta)
 			}
 		}
 	}
-
-	this->ShowFilter();
 }
 
 bool RaceScene::LoadStageFromFile(char * const filename)
@@ -733,61 +740,65 @@ void RaceScene::UpdateEffects(float delta)
 
 		}
 	}
+
+	for (int i = 0; i < m_pPlayerIcons.size(); i++) {
+		m_pPlayerIcons[i]->Update(m_pPlayerCharacters[i]->Position());
+	}
 }
 
 void RaceScene::DeleteCheck()
 {
-	for (int i = 0; m_pMissiles.size(); i++) {
-		if (m_pMissiles[i]->IsActive()) {
+	for (int i = 0; i < m_pMissiles.size(); i++) {
+		if (!m_pMissiles[i]->IsActive()) {
 			Remove(m_pMissiles, i);
 			i--;
 		}
 	}
 
-	for (int i = 0; m_pElectroTraps.size(); i++) {
-		if (m_pElectroTraps[i]->IsActive()) {
+	for (int i = 0; i < m_pElectroTraps.size(); i++) {
+		if (!m_pElectroTraps[i]->IsActive()) {
 			Remove(m_pElectroTraps, i);
 			i--;
 		}
 	}
 
-	for (int i = 0; m_pNukes.size(); i++) {
-		if (m_pNukes[i]->IsActive()) {
+	for (int i = 0; i < m_pNukes.size(); i++) {
+		if (!m_pNukes[i]->IsActive()) {
 			Remove(m_pNukes, i);
 			i--;
 		}
 	}
 
-	for (int i = 0; m_pSmokes.size(); i++) {
-		if (m_pSmokes[i]->IsActive()) {
+	for (int i = 0; i < m_pSmokes.size(); i++) {
+		if (!m_pSmokes[i]->IsActive()) {
 			Remove(m_pSmokes, i);
 			i--;
 		}
 	}
 
-	for (int i = 0; m_pBombs.size(); i++) {
-		if (m_pBombs[i]->IsActive()) {
+	for (int i = 0; i < m_pBombs.size(); i++) {
+		if (!m_pBombs[i]->IsActive()) {
 			Remove(m_pBombs, i);
 			i--;
 		}
 	}
 
-	for (int i = 0; m_pFakeItems.size(); i++) {
-		if (m_pFakeItems[i]->IsActive()) {
+	for (int i = 0; i < m_pFakeItems.size(); i++) {
+		if (!m_pFakeItems[i]->IsActive()) {
 			Remove(m_pFakeItems, i);
 			i--;
 		}
 	}
 
-	for (int i = 0; m_pExplodes.size(); i++) {
-		if (m_pExplodes[i]->IsActive()) {
+	for (int i = 0; i < m_pExplodes.size(); i++) {
+		if (!m_pExplodes[i]->IsActive()) {
 			Remove(m_pExplodes, i);
 			i--;
 		}
 	}
 
 	for (int i = 0; i < m_pEffectExplodes.size(); i++) {
-		if (m_pEffectExplodes[i]->IsActive()) {
+		if (!m_pEffectExplodes[i]->IsActive()) {
 			Remove(m_pEffectExplodes, i);
 			i--;
 		}
@@ -1142,17 +1153,12 @@ void RaceScene::ShowUI(float delta)
 	game.AddString(glm::vec2(100, 700), str, 0 , true);
 
 	game.AddString(glm::vec2(10, 700), "FPS :", 0, true);
-	
-	this->ShowFilter();
-}
 
-void RaceScene::ShowFilter()
-{/*
-	GameEngine& game = GameEngine::Instance();
-
-	game.FrontImageScale(glm::vec2(4));
-	game.FrontImageColor(glm::vec4(0, 0, 0, m_UIAlpha));
-	game.FrontAddImage(glm::vec2(0, 0), "res/Model/Player.bmp", 0, true);*/
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < m_pMissiles.size(); j++) {
+			m_attackInformer[i].Update(i, m_pPlayerCharacters[i]->Position(), m_pMissiles[j]->Position(), m_pPlayerCharacters[i]->Yrot());
+		}
+	}
 }
 
 void RaceScene::ItemUI(glm::vec2 pos, glm::vec2 size, ItemsCode id, int index)
@@ -1275,8 +1281,6 @@ void RaceScene::OptionUI()
 	game.FontScale(glm::vec2(2));
 	game.AddString(glm::vec2(/*300*/ windowSize.x * 0.4, /*800*/ windowSize.y - 100.0f), "Back To Title", 0, true);
 	game.AddImage(glm::vec2(/*250*/ windowSize.x * 0.4 - 50, windowSize.y - 125.0f), "res/Texture/SpeedMeter.dds", 0, true);
-
-	this->ShowFilter();
 }
 
 void RaceScene::ShowResult(float delta)

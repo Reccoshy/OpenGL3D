@@ -157,6 +157,7 @@
     <ClCompile Include="src\Game\Scene\RaceScene.cpp" />
     <ClCompile Include="src\Game\Scene\StageSelectScene\StageSelectScene.cpp" />
     <ClCompile Include="src\Game\Scene\TitleScene\TitleScene.cpp" />
+    <ClCompile Include="src\Game\UITexture\AttackInformer\AttackInformer.cpp" />
     <ClCompile Include="src\Game\Utilities\CommandSelect\CommandSelect.cpp" />
     <ClCompile Include="src\Game\Utilities\Effects\Effects.cpp" />
     <ClCompile Include="src\Game\Utilities\MiniMap\MiniMap.cpp" />
@@ -227,6 +228,7 @@
     <ClInclude Include="src\Game\Scene\RaceScene.h" />
     <ClInclude Include="src\Game\Scene\StageSelectScene\StageSelectScene.h" />
     <ClInclude Include="src\Game\Scene\TitleScene\TitleScene.h" />
+    <ClInclude Include="src\Game\UITexture\AttackInformer\AttackInformer.h" />
     <ClInclude Include="src\Game\Utilities\CommandSelect\CommandSelect.h" />
     <ClInclude Include="src\Game\Utilities\Effects\Effects.h" />
     <ClInclude Include="src\Game\Utilities\MiniMap\MiniMap.h" />

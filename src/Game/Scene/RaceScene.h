@@ -14,43 +14,14 @@
 #include "../Entity/Item/Explode/Explode.h"
 #include "../Entity/EffectDestroy/EffectDestroy.h"
 #include "../Utilities/MiniMap/MiniMap.h"
+#include "../UITexture/AttackInformer/AttackInformer.h"
 #include "../Effects/AccelDust/AccelDust.h"
 #include "../Effects/ItemGetEffect/ItemGetEffect.h"
 #include "../Effects/SpeedUpEffect/SpeedUpEffect.h"
 #include "../Effects/PlayerRespawn/RespawnEffect.h"
+#include "../Effects/PlayerIcon/PlayerIcon.h"
 #include "../Utilities/UITexture/BlackFilter/BlackFilter.h"
 #include <vector>
-
-
-/// エンティティの衝突グループID.
-enum EntityGroupId
-{
-	EntityGroupId_Background,
-	EntityGroupId_Player,
-	EntityGroupId_PlayerShot,
-	EntityGroupId_Enemy,
-	EntityGroupId_EnemyShot,
-	EntityGroupId_Others
-};
-
-/// 音声プレイヤーのID.
-enum AudioPlayerId
-{
-	AudioPlayerId_Shot, ///< 自機のショット音.
-	AudioPlayerId_Bomb, ///< 爆発音.
-	AudioPlayerId_BGM, ///<　BGM.
-	AudioPlayerId_Max, ///< 同時発音可能な数.
-
-	AudioPlayerId_UI = AudioPlayerId_Shot, ///<　ユーザーインターフェイス操作音.
-};
-
-enum class FromRaceSceneToNextScene {
-	NONE = -1,
-	ToTitleScene = 0,
-	ToStageSelectScene = 1,
-	Retry = 2,
-	ShowResultTime = 3,
-};
 
 /*
 メインゲーム画面.
@@ -117,6 +88,8 @@ private:
 	std::vector<SpeedUpEffect*> m_pSpeedUpEffects;
 	std::vector<RespawnEffect*> m_pRespawnEffects;
 
+	std::vector<PlayerIcon*> m_pPlayerIcons;
+
 	CommandSelect resultCommand;
 
 	char stageFileName[100];
@@ -147,12 +120,6 @@ private:
 
 	bool m_activeInput = true;
 
-	//bool m_sceneChanging = false;
-
-	//float m_UIAlpha = 1.0f;
-
-	//float m_waitTime = 1.0f;
-
 	BlackFilter blackFilter;
 
 	glm::vec4 rankColor[5] = {
@@ -163,10 +130,10 @@ private:
 		glm::vec4(0, 0.5, 1, 1),
 	};
 
-	FromRaceSceneToNextScene m_nextScene = FromRaceSceneToNextScene::NONE;
-
 	MiniMap m_minimap;
 
+	AttackInformer m_attackInformer[4];
+	
 private:
 	void Init();
 
@@ -204,7 +171,6 @@ private:
 	void SceneChanger(float delta);
 
 	void ShowUI(float delta);
-	void ShowFilter();
 	void ItemUI(glm::vec2 pos, glm::vec2 scale, ItemsCode id, int index);
 
 	void DrawMapUi(int playerIndex);

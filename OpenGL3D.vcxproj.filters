@@ -115,6 +115,9 @@
     <Filter Include="Game\Effects\PlayerIcon">
       <UniqueIdentifier>{56044b25-fcc3-464f-a04d-644faabf98a7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Utilities\UITexture\AttackInformer">
+      <UniqueIdentifier>{c81fb5f9-880d-478b-a823-9bceead8786c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -233,6 +236,9 @@
     </ClCompile>
     <ClCompile Include="src\Game\Effects\PlayerIcon\PlayerIcon.cpp">
       <Filter>Game\Effects\PlayerIcon</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\UITexture\AttackInformer\AttackInformer.cpp">
+      <Filter>Game\Utilities\UITexture\AttackInformer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -433,6 +439,9 @@
     </ClInclude>
     <ClInclude Include="src\Game\Effects\PlayerIcon\PlayerIcon.h">
       <Filter>Game\Effects\PlayerIcon</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\UITexture\AttackInformer\AttackInformer.h">
+      <Filter>Game\Utilities\UITexture\AttackInformer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

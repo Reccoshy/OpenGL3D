@@ -28,21 +28,18 @@ bool CPlayerCharacter::Init(glm::vec3 pos, int goalNum, float r, int PlayerIndex
 {
 	GameEngine& game = GameEngine::Instance();
 
-	m_entity = game.AddEntity(EntityGroupId_Player, glm::vec3(0, 0, 0), "Aircraft", "res/Model/Player.bmp", nullptr);
+	m_entity = game.AddEntity(0, glm::vec3(0, 0, 0), "Aircraft", "res/Model/Player.bmp", nullptr);
 
 	m_entity->Position(pos);
-
 	m_entity->Scale(glm::vec3(2));
 
 	this->loadRideInfo("res/Data/RideParameter/RideParamater.txt");
 
 	this->radius = 2;
-
 	this->m_playerIndex = PlayerIndex;
-
 	this->MaxCheckPointIndex = goalNum - 1;
 
-	m_pBarrier = game.AddEntity(EntityGroupId_Others, this->Position(), "Cube", "res/Model/Toroid.bmp", nullptr);
+	m_pBarrier = game.AddEntity(0, this->Position(), "Cube", "res/Model/Toroid.bmp", nullptr);
 	m_pBarrier->Scale(glm::vec3(0.02f));
 	m_pBarrier->ToggleVisibility(false);
 
@@ -188,7 +185,7 @@ void CPlayerCharacter::inputFunc(float delta)
 		}
 	}
 	if (gamePad.buttonDown & GamePad::B) {
-		this->Dead();
+		ObtainItem((int)ItemsCode::FIRE);
 	}
 
 	if (gamePad.buttonDown & GamePad::Y) {

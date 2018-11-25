@@ -20,7 +20,6 @@ bool Missile::init(glm::vec3 pos, float rot, RaceScene* pScene, bool target)
 	this->m_Aiming = target;
 
 	this->m_pRaceScene = pScene;
-	this->m_pRaceScene->PlayAudioCheck(this->Position(), 1000, OTHERS, CRI_SOUND_ITEMSHOOT);
 
 	m_shadow.init(pos, 0.01f);
 
