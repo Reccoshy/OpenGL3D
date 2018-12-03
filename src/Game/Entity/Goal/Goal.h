@@ -12,6 +12,7 @@ struct Collision {
 //目的地を
 class Goal {
 public:
+	
 	bool Init(glm::vec3 pos, glm::vec3 min = glm::vec3(-10, -10, -10), glm::vec3 max = glm::vec3(10, 100, 10));
 
 	bool CollisionCheck(glm::vec3 pos, float radius);
@@ -20,13 +21,10 @@ public:
 
 	glm::vec3 Position() { return m_pEntity->Position(); }
 
+
 	void Destroy() {
 		m_pEntity->Destroy();
 	}
-
-private:
-
-	glm::vec3 CalcClosestPoint(glm::vec3 pos, float r);
 
 private:
 	//エンティティへのポインタ.

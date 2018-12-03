@@ -20,7 +20,10 @@
 enum SoundType {
 	BGM = 0,
 	SEUI = 1,
-	OTHERS = 4,
+	PLAYER = 2,
+	EXPLODE = 3,
+	SHOOT = 4,
+	OTHERS = 5,
 };
 
 /*

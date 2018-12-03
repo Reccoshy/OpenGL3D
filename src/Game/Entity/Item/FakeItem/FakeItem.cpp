@@ -19,7 +19,7 @@ bool FakeItem::Init(glm::vec3 pos, RaceScene* pSce)
 
 	this->m_pRaceScene = pSce;
 
-	this->m_pRaceScene->PlayAudioCheck(this->Position(), 1000, OTHERS, CRI_SOUND_ITEMPUT);
+	this->m_pRaceScene->PlayAudioCheck(this->Position(), 1000, SHOOT, CRI_SOUND_ITEMPUT);
 
 	return true;
 }

@@ -5,7 +5,7 @@
 #include "../../../../res/Sound/Sound.h"
 #include <iostream>
 
-bool Missile::init(glm::vec3 pos, float rot, RaceScene* pScene, bool target)
+bool Missile::Init(glm::vec3 pos, float rot, RaceScene* pScene, bool target)
 {
 	GameEngine& game = GameEngine::Instance();
 
@@ -61,7 +61,7 @@ bool Missile::CollisionCheck(glm::vec3 pos, float radius)
 
 			this->m_pRaceScene->SpawnEffectExplode(this->m_pEntity->Position());
 
-			m_pRaceScene->PlayAudioCheck(this->Position(), 1000, OTHERS, CRI_SOUND_SMALLEXPLODE);
+			m_pRaceScene->PlayAudioCheck(this->Position(), 1000, EXPLODE, CRI_SOUND_SMALLEXPLODE);
 
 			return true;
 		}

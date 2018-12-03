@@ -21,20 +21,25 @@ public:
 	void EndClear();
 
 private:
-
+	//画面の幅.
 	int width = 0;
+	//画面の高さ.
 	int height = 0;
-
+	//表示するエフェクトの数.
 	int m_effectNum = 0;
-
+	
+	//画像の表示をする位置のベクター
 	std::vector<glm::vec3> positions;
-
+	//画像の表示する拡大率のベクター.
 	std::vector<glm::vec2> scale;
-
+	//画像のテクスチャのベクター.
 	std::vector<TexturePtr> textures;
 
+	//エフェクトのVBOのベクター.
 	std::vector<GLuint> effectsVbo;
+	//エフェクトのVAOのベクター.
 	std::vector<GLuint> effectsVao;
 
+	//エフェクトに使用するプログラム.
 	Shader::ProgramPtr program = 0;
 };

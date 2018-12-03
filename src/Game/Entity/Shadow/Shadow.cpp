@@ -1,5 +1,11 @@
 #include "Shadow.h"
 
+/*
+‰Šú‰»ˆ—.
+
+@param	pos		‰e‚ð•\Ž¦‚·‚éˆÊ’u.
+@param	scale	‰e‚ÌŠg‘å—¦.
+*/
 bool Shadow::init(glm::vec3 pos, float scale)
 {
 	GameEngine& game = GameEngine::Instance();
@@ -15,16 +21,30 @@ bool Shadow::init(glm::vec3 pos, float scale)
 	return this;
 }
 
+/*
+XVˆ—.
+
+@param	pos	XVŒã‚Ì‰e‚ÌˆÊ’u.
+*/
 void Shadow::Update(glm::vec3 pos)
 {
 	this->m_pEntity->Position(glm::vec3(pos.x, -0.9, pos.z));
 }
 
+/*
+‰e‚Ì•\Ž¦E”ñ•\Ž¦‚ðØ‚è‘Ö‚¦‚é.
+
+@param	isVisible	true = ‰e‚ð•\Ž¦.
+					false= ‰e‚ð”ñ•\Ž¦.
+*/
 void Shadow::ChangeVisible(bool isVisible)
 {
 	this->m_pEntity->ToggleVisibility(isVisible);
 }
 
+/*
+‰e‚ðÁ‚·‚½‚ß‚Ìˆ—.
+*/
 void Shadow::Destroy()
 {
 	this->m_pEntity->Destroy();

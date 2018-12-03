@@ -123,6 +123,8 @@ namespace Audio {
 	*/
 	void Play(int playerId, int cueId)
 	{
+		Stop(playerId);
+
 		criAtomExPlayer_SetCueId(playerList[playerId], acb, cueId);
 		criAtomExPlayer_Start(playerList[playerId]);
 	}

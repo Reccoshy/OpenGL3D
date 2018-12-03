@@ -5,7 +5,7 @@ class RaceScene;
 
 class Smoke {
 public:
-	bool init(glm::vec3 pos, float yRot, RaceScene* p);
+	bool Init(glm::vec3 pos, float yRot, RaceScene* p);
 
 	void Update(float delta);
 

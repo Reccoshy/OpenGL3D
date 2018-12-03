@@ -118,6 +118,9 @@
     <Filter Include="Game\Utilities\UITexture\AttackInformer">
       <UniqueIdentifier>{c81fb5f9-880d-478b-a823-9bceead8786c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Utilities\Shasow">
+      <UniqueIdentifier>{6ef59221-d0b3-4d36-95dd-b1d8e7648c92}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -239,6 +242,9 @@
     </ClCompile>
     <ClCompile Include="src\Game\UITexture\AttackInformer\AttackInformer.cpp">
       <Filter>Game\Utilities\UITexture\AttackInformer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\Utilities\Shadow\Shadow.cpp">
+      <Filter>Game\Utilities\Shasow</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -442,6 +448,9 @@
     </ClInclude>
     <ClInclude Include="src\Game\UITexture\AttackInformer\AttackInformer.h">
       <Filter>Game\Utilities\UITexture\AttackInformer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\Utilities\Shadow\Shadow.h">
+      <Filter>Game\Utilities\Shasow</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

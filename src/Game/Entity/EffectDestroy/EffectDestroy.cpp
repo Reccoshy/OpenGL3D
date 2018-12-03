@@ -20,15 +20,7 @@ void EffectDestroy::Update(float delta)
 			m_pEntity->Scale(glm::vec3(4 - m_lifeTime * 4));
 			m_pEntity->Rotation(glm::vec3(0, m_lifeTime * 2, 0));
 
-			if (m_lifeTime < 0.1) {
-				m_pEntity->Color(glm::vec4(0.25f, 0.1f, 0.1f, 1));
-			}
-			else if (m_lifeTime < 0.3) {
-				m_pEntity->Color(glm::vec4(1.0f, 0.5f, 0.1f, 1));
-			}
-			else {
-				m_pEntity->Color(glm::vec4(1.0f, 1.0f, 0.75f, 1));
-			}
+			ChangeColor();
 		}
 		else {
 			m_pEntity->ToggleVisibility(false);
@@ -40,4 +32,17 @@ void EffectDestroy::Update(float delta)
 void EffectDestroy::Destroy()
 {
 	this->m_pEntity->Destroy();
+}
+
+void EffectDestroy::ChangeColor()
+{
+	if (m_lifeTime < 0.1) {
+		m_pEntity->Color(glm::vec4(0.25f, 0.1f, 0.1f, 1));
+	}
+	else if (m_lifeTime < 0.3) {
+		m_pEntity->Color(glm::vec4(1.0f, 0.5f, 0.1f, 1));
+	}
+	else {
+		m_pEntity->Color(glm::vec4(1.0f, 1.0f, 0.75f, 1));
+	}
 }

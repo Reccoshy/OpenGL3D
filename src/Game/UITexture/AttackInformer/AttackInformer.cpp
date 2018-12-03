@@ -22,7 +22,7 @@ void AttackInformer::Update(int index, glm::vec3 origin, glm::vec3 items, float 
 	if (check < 0) {
 		check += 360;
 	}
-
+	
 
 	glm::vec2 winSize = GameEngine::Instance().GetWindowSize();
 

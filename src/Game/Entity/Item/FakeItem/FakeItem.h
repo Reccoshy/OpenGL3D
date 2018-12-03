@@ -28,7 +28,7 @@ public:
 	}
 
 	bool IsActive() {
-		return active;
+		return m_active;
 	}
 
 private:
@@ -37,10 +37,10 @@ private:
 	//エンティティへのポインタ.
 	Entity::Entity* m_pEntity;
 	//アイテム
-	int itemId = -1;
-	float time = 0.0f;
+	int m_itemId = -1;
+	float m_time = 0.0f;
 
-	bool active = true;
+	bool m_active = true;
 
 	float y_Rot = 0.0f;
 

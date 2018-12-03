@@ -33,5 +33,5 @@ private:
 	Entity::Entity* m_pEntity = nullptr;
 
 	//トラップが有効か.
-	bool isActive = true;
+	bool m_isActive = true;
 };

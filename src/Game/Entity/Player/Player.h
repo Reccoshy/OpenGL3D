@@ -8,6 +8,7 @@
 class RaceScene;
 class Goal;
 
+//プレイヤークラス.
 class CPlayerCharacter
 {
 public:
@@ -64,30 +65,6 @@ public:
 	bool const IsAutoDrive() { return m_autoDriveFlag; }
 	bool const IsDead() { return m_dead; }
 
-private:
-
-	int m_checkPointIndex = 0;
-	int m_nextCheckPoint = 1;
-	int MaxCheckPointIndex = -1;
-
-	int m_lap = 1;
-
-	float m_score = 0.0f;
-	float m_FinishTime = 0.0f;
-
-	bool activeInput = true;
-	bool m_autoDriveFlag = false;
-	bool m_cameraActiveFlag = false;
-
-	bool m_optionPressedCheck = false;
-
-	glm::vec3 m_spawningPoint = glm::vec3(0);
-
-	std::vector<float> m_lapTime;
-
-	bool m_dead = false;
-
-	int m_rank = 0;
 
 private:
 	void inputFunc(float delta);
@@ -107,75 +84,183 @@ private:
 	void PlayAudioCheck(int audioType, int audioId);
 
 private:
-	
+	//プレイヤーの車体のモデルのポインタ.
 	Entity::Entity* m_entity;
-
+	//プレイヤーのバリアのモデルのポインタ.
 	Entity::Entity* m_pBarrier;
 
-	std::vector<glm::vec3> m_goals;
-
+	//レースシーン中のモデルのポインタ.
 	RaceScene* m_pRaceScene = nullptr;
-
+	//影のモデル.
 	Shadow m_Shadow;
-
+	//プレイヤーのインデックス.
 	int m_playerIndex = -1;
-
+	//レースが終了していかのフラグ.
 	bool FinishedRace = false;
-
+	//ゴールのカメラの回転度数.
 	float cameraGoalTurn = 0.0f;
-
+	
+	//あたり判定用の半径.
 	float radius = 0.0f;
+	
+	//カメラのY軸での回転度数.
 	float CameraYDif = 180.0f;
-
+	
+	//プレイヤーが向いている方向度数.
 	float m_Yrot = 0.0f;
+	//プレイヤーの実際の速さ.
 	float m_acctualSpeed = 0.0f;
+	//プレイヤーのアクセルの速さ.
 	float m_velocity = 0.0f;
-	glm::vec3 m_actualVel = glm::vec3(0);
-	glm::vec3 m_bounceVel = glm::vec3(0);
 
+	glm::vec3 m_actualVel;
+	
+	//==================
+	//反射処理
+	//==================
+
+	//ぶつかった時の反動のベクトル.
+	glm::vec3 m_bounceVel = glm::vec3(0);
+	//反動が発生している経過時間.
 	float currentBounceTime = 0.0f;
+	//反動の処理が続く時間.
 	float bounceTime = 3.0f;
 
+	//==================
+	//機体のステータス
+	//==================
+
+	//アクセルでの1秒まででかかる時間.
 	double m_accel = 20.0;
+	//アクセルで出せる最高速度.
 	double MaxSpeed = 60.0;
+	//ブレーキでの速度低下度.
 	double m_break = 60.0;
+	//旋回速度.
 	double m_turnRate = 180.0;
 
+	//アクセルを押していない時間
 	float StopTime = 0.0f;
+	//後方へ移動している.
 	bool backward = false;
+	//後ろに下がれる最高速度.
 	double MaxBackWardSpeed = -5.0;
 
+	//=========================
+	//ゴールへのルート・タイム
+	//=========================
+
+	//プレイヤーのゴールの位置のベクター.
+	std::vector<glm::vec3> m_goals;
+
+	//現在のチェックポイント.
+	int m_checkPointIndex = 0;
+	//次のチェックポイント.
+	int m_nextCheckPoint = 1;
+	//チェックポイントの最大数.
+	int MaxCheckPointIndex = -1;
+	
+	//現在の周回数
+	int m_lap = 1;
+
+	//一周にかかった時間のベクター.
+	std::vector<float> m_lapTime;
+
+	//終了時間のタイム.
+	float m_FinishTime = 0.0f;
+
+	//順位
+	int m_rank = 0;
+	//順位を決定させる点数.
+	float m_score = 0.0f;
+
+	//==========================
+	//オプション画面
+	//==========================
+
+	//入力有効フラグ.
+	bool activeInput = true;
+
+	//カメラ有効フラグ.
+	bool m_cameraActiveFlag = false;
+	//オプション画面を開いた後の2重押しチェック.
+	bool m_optionPressedCheck = false;
+
+	//===========================
+	//アイテム
+	//===========================
+
+	//アイテムによるスピードアップできる時間
 	double SpeedUpTime = 2.0;
+	//スピードアップ使用からの経過時間.
 	double CurrentSpeedUpTime = 0.0;
 
+	//バリアの有効フラグ.
 	bool activeShield = false;
+	//バリアの持続時間.
 	double ShieldTime = 5.0;
+	//バリアの使用中の経過時間.
 	double CurrentShieldTime = 0.0f;
 
-	double RespawnTime = 2.0;
-	double CurrentRespawnTime = 2.0f;
-
+	//アイテムを合成できる.
 	bool itemMixReady = false;
+	//アイテムが合成可能かどうかのフラグ.
 	bool itemMixable = false;
 
+	//煙を噴出しているかどうかのフラグ.
 	bool m_smokeEmitting = false;
+	//煙を噴出した数.
 	int m_smokeEmitCount = 0;
+	//煙を噴出する最大数.
 	int m_smokeEmitingEndCount = 3;
+	//煙にかかる時間,
 	float m_smokeTimer = 0.0f;
+	//煙を噴出するインターバル.
 	float m_smokeEmitInterval = 0.2f;
 
-	float m_frontAttackTime;
+	//================
+	//AI
+	//================
+
+	//自動操縦フラグ.
+	bool m_autoDriveFlag = false;
+
+	//正面に向かって攻撃するアイテムの発射までの経過時間.
+	float m_frontAttackTime = 2.0f;
+	//正面に向かって攻撃するアイテムに時間.
 	float m_frontAttackInterval = 2.0f;
 
-	float m_backAttackTime;
+	//後方に向かって攻撃するアイテムの発射までの経過時間.
+	float m_backAttackTime = 2.0f;
+	//後方に向かって攻撃するアイテムに時間.
 	float m_backAttackInterval = 2.0f;
 
+	//バフ系アイテムを使用するまでの時間.
 	float m_BuffUseTime;
+	//ランダムでバフを使用するまでの最大時間.
 	int BuffMaxTime = 20;
+	//ランダムでバフを使用するまでの最低時間.
 	int BuffMinTime = 5;
 
+	//所持アイテムID.
 	int itemId = -1;
+	//在庫内のアイテムID.
+	int m_stockItems = -1;
+	//アイテムを使用方法のタイプ.
 	ItemUsageType m_type = ItemUsageType::NONE;
 
-	int m_stockItems = -1;
+	//==============
+	//死亡処理
+	//==============
+	
+	//死亡フラグ.
+	bool m_dead = false;
+	
+	//死亡した時の復活地点.
+	glm::vec3 m_spawningPoint = glm::vec3(0);
+
+	//復活にかかる時間.
+	double RespawnTime = 2.0;
+	//死亡してからの経過時間.
+	double CurrentRespawnTime = 2.0f;
 };

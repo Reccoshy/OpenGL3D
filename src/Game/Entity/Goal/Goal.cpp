@@ -27,8 +27,6 @@ bool Goal::CollisionCheck(glm::vec3 pos,float radius)
 	glm::vec3 CPcolMin = m_position + m_collision.min;
 	glm::vec3 CPcolMax = m_position + m_collision.max;
 
-	//CalcClosestPoint(pos, radius);
-
 	if (CPcolMax.x < pos.x - radius || CPcolMin.x > pos.x + radius) return false;
 	if (CPcolMax.y < pos.y - radius || CPcolMin.y > pos.y + radius) return false;
 	if (CPcolMax.z < pos.z - radius || CPcolMin.z > pos.z + radius) return false;
@@ -42,34 +40,3 @@ bool Goal::ToggleVisible(bool b)
 
 	return b;
 }
-//
-//float angleBetween(
-//	glm::vec3 a,
-//	glm::vec3 b,
-//	glm::vec3 origin
-//) {
-//	glm::vec3 da = glm::normalize(a - origin);
-//	glm::vec3 db = glm::normalize(b - origin);
-//	return glm::acos(glm::dot(da, db));
-//}
-//
-//glm::vec3 Goal::CalcClosestPoint(glm::vec3 pos, float r)
-//{
-//	glm::vec3 difference = pos - m_position;
-//
-//	float angle = angleBetween(glm::vec3(10, 0, 0), m_position, pos);
-//
-//	float rotateX = 0;
-//	float rotateY = 0;
-//
-//	float x = sin(rotateX) * r;
-//	float z = cos(rotateX) * r;
-//
-//	float lengthRatio = cos(rotateY) * x;
-//	float lengthZ = cos(rotateY) * z;
-//	float y = sin(rotateY) * r;
-//
-//	glm::vec3 local = glm::vec3(x, y, z);
-//
-//	return local + pos;
-//}

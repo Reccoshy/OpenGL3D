@@ -4,7 +4,7 @@
 #include "../../../../Game/Scene/RaceScene.h"
 #include "../../../../../res/Sound/Sound.h"
 
-bool Smoke::init(glm::vec3 pos, float rot, RaceScene* p)
+bool Smoke::Init(glm::vec3 pos, float rot, RaceScene* p)
 {
 	GameEngine& game = GameEngine::Instance();
 

@@ -6,6 +6,11 @@
 #include <stdio.h>
 #include <glm/gtc/matrix_transform.hpp>
 
+/*
+エフェクト描画の初期化処理.
+
+@param size	ウィンドウの画面サイズ.
+*/
 void Effect::Init(glm::vec2 size)
 {
 	this->width = size.x;
@@ -14,6 +19,14 @@ void Effect::Init(glm::vec2 size)
 	program = GameEngine::Instance().checkProgram("Effect");
 }
 
+/*
+エフェクトの追加処理.
+
+@param pos			エフェクトを表示させる位置.
+@param s			エフェクト用の画像サイズ.
+@param color		エフェクトの色.
+@param imageName	エフェクトに使用する画像名.
+*/
 void Effect::AddEffect(glm::vec3 pos, glm::vec2 s, glm::vec4 color, const char* imageName)
 {
 	GameEngine& game = GameEngine::Instance();
@@ -78,6 +91,11 @@ void Effect::AddEffect(glm::vec3 pos, glm::vec2 s, glm::vec4 color, const char* 
 	effectsVbo.push_back(VBO);
 }
 
+/*
+エフェクトの画像の描画処理.
+
+@param	index	エフェクトを描画するカメラのインデックス.
+*/
 void Effect::Draw(int index)
 {
 	GameEngine& game = GameEngine::Instance();
@@ -127,6 +145,9 @@ void Effect::Draw(int index)
 	glDisable(GL_BLEND);
 }
 
+/*
+終了処理. 画像の情報をすべて消去する.
+*/
 void Effect::EndClear()
 {
 	for (int i = 0; i < m_effectNum; i++) {

@@ -13,17 +13,30 @@ public:
 
 	void Update(float delta);
 
+	/*
+	エンティティの位置の取得.
+
+	@return	エンティティの位置.
+	*/
 	glm::vec3 Position() {
 		return m_pEntity->Position();
 	}
 
+	/*
+	有効フラグ無効後の破壊処理.
+	*/
 	void Destroy() {
 		m_pEntity->Destroy();
 		m_shadow.Destroy();
 	}
 
+	/*
+	有効フラグのチェック.
+
+	@return 有効フラグ.
+	*/
 	bool IsActive() {
-		return active;
+		return m_active;
 	}
 
 private:
@@ -34,7 +47,7 @@ private:
 	//エンティティへのポインタ.
 	Entity::Entity* m_pEntity;
 	//有効かどうか.
-	bool active = true;
+	bool m_active = true;
 	//移動速度(後方にこの速度で移動)
 	float m_velocity = 80.0f;
 	//正面の角度.

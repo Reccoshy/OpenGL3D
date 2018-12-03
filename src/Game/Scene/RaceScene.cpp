@@ -64,9 +64,7 @@ RaceScene::~RaceScene()
 
 void RaceScene::operator()(float delta)
 {
-
 	this->DeleteCheck();
-
 
 	if (!isInitialized) {
 		this->Init();
@@ -85,8 +83,6 @@ void RaceScene::operator()(float delta)
 		else
 			this->UpdateInGame(delta);
 	}
-	
-
 	this->SceneChanger(delta);
 }
 
@@ -99,7 +95,7 @@ void RaceScene::SpawnElectroTrap(glm::vec3 pos)
 void RaceScene::SpawnMissile(glm::vec3 pos, float Xrot, bool aiming)
 {
 	m_pMissiles.push_back(new Missile);
-	m_pMissiles.back()->init(pos, Xrot, this, aiming);
+	m_pMissiles.back()->Init(pos, Xrot, this, aiming);
 }
 
 void RaceScene::SpawnNuke(glm::vec3 pos, float y_rot)

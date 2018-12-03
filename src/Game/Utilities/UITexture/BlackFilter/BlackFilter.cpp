@@ -1,6 +1,9 @@
 #include "BlackFilter.h"
 #include "../../../../GameEngine.h"
 
+/*
+暗転処理の初期化.
+*/
 bool BlackFilter::Init()
 {
 	m_sceneOpening = true;
@@ -13,6 +16,11 @@ bool BlackFilter::Init()
 	return true;
 }
 
+/*
+更新処理.
+
+@param	delta 次の更新までの時間.
+*/
 void BlackFilter::Update(float delta)
 {
 	if (m_sceneChanging) {
@@ -41,39 +49,29 @@ void BlackFilter::Update(float delta)
 		}
 
 		else {
-
 			m_changeNow = true;
-
-			//if (m_nextScene == FromRaceSceneToNextScene::Retry) {
-			//	this->EndFunc();
-			//	this->isInitialized = false;
-			//}
-			//if (m_nextScene == FromRaceSceneToNextScene::ToTitleScene) {
-			//	this->EndFunc();
-			//	game.UpdateFunc(TitleScene());
-			//}
-			//else if (m_nextScene == FromRaceSceneToNextScene::ToStageSelectScene) {
-			//	this->EndFunc();
-			//	game.UpdateFunc(StageSelectScene());
-			//}
-			//else if (m_nextScene == FromRaceSceneToNextScene::ShowResultTime) {
-			//	this->m_sceneChanging = false;
-			//	this->m_nextScene = FromRaceSceneToNextScene::NONE;
-			//	this->m_showRanking = true;
-			//	game.SetCameraNum(1);
-			//}
 		}
 	}
 
 	return;
 }
 
+/*
+次に移動するシーンを設定する.
+
+@param	scene	次のシーン.
+*/
 void BlackFilter::SetNextScene(NEXT_SCENE scene)
 {
 	this->m_sceneChanging = true;
 	this->m_nextScene = scene;
 }
 
+/*
+次に移動するシーンを返し、それを確認しシーンを移動させる.
+
+@return	NEXT_SCENE
+*/
 NEXT_SCENE BlackFilter::NextScene()
 {
 	if (m_changeNow) {
@@ -83,11 +81,19 @@ NEXT_SCENE BlackFilter::NextScene()
 	return NEXT_SCENE::None;
 }
 
+/*
+暗転処理実行中かどうかを返す.
+
+@return	暗転処理が実行中.
+*/
 bool BlackFilter::IsInAction()
 {
 	return m_sceneChanging || m_sceneOpening;
 }
 
+/*
+設定されている画像をすべて描画.
+*/
 void BlackFilter::Draw()
 {
 	GameEngine& game = GameEngine::Instance();

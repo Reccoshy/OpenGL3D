@@ -1,5 +1,6 @@
 #pragma once
 
+//コマンドセレクトに使用するクラス.
 class CommandSelect {
 public:
 
@@ -10,7 +11,8 @@ public:
 	int getIndex() { return index; }
 
 private:
-
+	//選択中のインデックス.
 	int index = 0;
+	//選択可能最大インデックス.
 	int MaxIndex = 0;
 };

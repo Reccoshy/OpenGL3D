@@ -16,24 +16,23 @@ bool ElectroTrap::init(glm::vec3 pos, RaceScene* p)
 	m_shadow.init(pos, 0.01f);
 
 	this->m_pRaceScene = p;
-	this->m_pRaceScene->PlayAudioCheck(this->Position(), 1000, OTHERS, CRI_SOUND_ITEMPUT);
-
+	this->m_pRaceScene->PlayAudioCheck(this->Position(), 1000, SHOOT, CRI_SOUND_ITEMPUT);
 
 	return true;
 }
 
 bool ElectroTrap::CollisionCheck(glm::vec3 pos, float radius)
 {
-	if (isActive) {
+	if (m_isActive) {
 
 		float distance = glm::distance(this->m_pEntity->Position(), pos);
 
 		if (distance < radius) {
-			this->isActive = false;
+			this->m_isActive = false;
 			this->m_pEntity->ToggleVisibility(false);
 			this->m_shadow.ChangeVisible(false);
 
-			this->m_pRaceScene->PlayAudioCheck(this->Position(), 1000, OTHERS, CRI_SOUND_SMALLEXPLODE);
+			this->m_pRaceScene->PlayAudioCheck(this->Position(), 1000, SHOOT, CRI_SOUND_SMALLEXPLODE);
 
 			return true;
 		}

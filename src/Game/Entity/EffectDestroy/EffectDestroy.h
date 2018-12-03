@@ -15,6 +15,10 @@ public:
 	void Destroy();
 
 private:
+
+	void ChangeColor();
+
+private:
 	//爆発が消えるまでの時間.
 	float m_lifeTime = 0.5f;
 	//爆発のエンティティへのポインタ.

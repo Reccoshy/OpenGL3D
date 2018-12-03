@@ -147,7 +147,7 @@ void CPlayerCharacter::ObtainItem(int id)
 		itemMixable = true;
 	}
 
-	this->PlayAudioCheck(OTHERS, CRI_SOUND_ITEMGET);
+	this->PlayAudioCheck(PLAYER, CRI_SOUND_ITEMGET);
 
 	itemId = id;
 
@@ -429,7 +429,7 @@ void CPlayerCharacter::UseItem()
 
 			m_pRaceScene->SpawnMissile(pos, m_Yrot);
 
-			this->PlayAudioCheck(OTHERS, CRI_SOUND_ITEMSHOOT);
+			this->PlayAudioCheck(SHOOT, CRI_SOUND_ITEMSHOOT);
 		}
 			break;
 		case ItemsCode::WATER:
@@ -439,7 +439,7 @@ void CPlayerCharacter::UseItem()
 			this->m_pBarrier->ToggleVisibility(true);
 			this->activeShield = true;
 
-			this->PlayAudioCheck(OTHERS, CRI_SOUND_BARRIERACTIVE);
+			this->PlayAudioCheck(PLAYER, CRI_SOUND_BARRIERACTIVE);
 
 			break;
 		case ItemsCode::ELCTRO:
@@ -451,7 +451,7 @@ void CPlayerCharacter::UseItem()
 
 			m_pRaceScene->SpawnElectroTrap(pos);
 
-			this->PlayAudioCheck(OTHERS, CRI_SOUND_ITEMPUT);
+			this->PlayAudioCheck(SHOOT, CRI_SOUND_ITEMPUT);
 		}
 			break;
 		case ItemsCode::SUPERSPEED:
@@ -469,7 +469,7 @@ void CPlayerCharacter::UseItem()
 			m_pRaceScene->SpawnMissile(pos, m_Yrot, true);
 
 
-			this->PlayAudioCheck(OTHERS, CRI_SOUND_BARRIERACTIVE);
+			this->PlayAudioCheck(PLAYER, CRI_SOUND_BARRIERACTIVE);
 		}
 		break;
 		
@@ -514,7 +514,7 @@ void CPlayerCharacter::UseItem()
 				m_pRaceScene->SpawnMissile(pos, m_Yrot - 6 + i * 3);
 			}
 
-			this->PlayAudioCheck(OTHERS, CRI_SOUND_ITEMSHOOT);
+			this->PlayAudioCheck(SHOOT, CRI_SOUND_ITEMSHOOT);
 
 			break;
 
@@ -534,7 +534,7 @@ void CPlayerCharacter::UseItem()
 		{
 			m_pRaceScene->SpawnNuke(Position(), Yrot());
 
-			this->PlayAudioCheck(OTHERS, CRI_SOUND_ITEMSHOOT);
+			this->PlayAudioCheck(SHOOT, CRI_SOUND_ITEMSHOOT);
 		}
 		break;
 
@@ -546,7 +546,7 @@ void CPlayerCharacter::UseItem()
 			this->m_pBarrier->ToggleVisibility(true);
 			this->activeShield = true;
 
-			this->PlayAudioCheck(OTHERS, CRI_SOUND_BARRIERACTIVE);
+			this->PlayAudioCheck(PLAYER, CRI_SOUND_BARRIERACTIVE);
 			break;
 
 		case ItemsCode::FAKEITEM:
@@ -558,8 +558,6 @@ void CPlayerCharacter::UseItem()
 			glm::vec3 pos = glm::vec3(x, 0, z) + this->Position();
 
 			m_pRaceScene->SpawnFakeItem(pos);
-
-			this->PlayAudioCheck(OTHERS, CRI_SOUND_ITEMPUT);
 		}
 			break;
 
@@ -575,7 +573,7 @@ void CPlayerCharacter::UseItem()
 				angle -= 360;
 			}
 
-			this->PlayAudioCheck(OTHERS, CRI_SOUND_ITEMPUT);
+			this->PlayAudioCheck(SHOOT, CRI_SOUND_ITEMPUT);
 
 			m_pRaceScene->SpawnBombs(pos, angle);
 		}

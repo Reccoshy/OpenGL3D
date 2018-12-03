@@ -1,6 +1,12 @@
 #include "Obstacle.h"
 #include "../../../GameEngine.h"
 
+/*
+áŠQ•¨‚ğ”z’u‚·‚é.
+
+@param	áŠQ•¨‚Ì”z’u‚·‚éêŠ.
+@param	áŠQ•¨‚Ì”¼Œa‚¨‚æ‚Ñ‘å‚«‚³.
+*/
 void Obstacle::Init(glm::vec3 pos, float radius)
 {
 	GameEngine& game = GameEngine::Instance();

@@ -10,11 +10,18 @@ class RaceScene;
 //レースアイテムミサイル.
 class Missile {
 public:
-	bool init(glm::vec3 pos, float rot, RaceScene* m_pScene, bool aiming = false);
+	
+	/*
+	
+	*/
+	bool Init(glm::vec3 pos, float rot, RaceScene* m_pScene, bool aiming = false);
+
 
 	void Update(float delta, std::vector<CPlayerCharacter*> player);
 
+
 	bool CollisionCheck(glm::vec3 pos, float radius);
+
 
 	void DetectPlayersAndChase(float delta, std::vector<CPlayerCharacter*> players);
 

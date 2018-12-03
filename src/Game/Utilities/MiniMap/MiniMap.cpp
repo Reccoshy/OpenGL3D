@@ -1,6 +1,14 @@
 #include "MiniMap.h"
 #include "../../../GameEngine.h"
 
+/*
+初期化処理
+
+@param	pos			描画を設定する場所の設定.
+@param	filename	描画するマップの画像名.
+
+@return 初期化成功
+*/
 bool MiniMap::Init(glm::vec2 pos, std::string filename)
 {
 	this->m_mapOrigin = pos;
@@ -10,6 +18,12 @@ bool MiniMap::Init(glm::vec2 pos, std::string filename)
 	return true;
 }
 
+/*
+更新処理.
+
+@param players		シーン上にいるプレイヤー全てのポインタ.
+@param playerIndex	マップ上のメインとするプレイヤーのインデックス.
+*/
 void MiniMap::Update(std::vector<CPlayerCharacter*> players, int playerIndex)
 {
 	GameEngine& game = GameEngine::Instance();
@@ -29,6 +43,7 @@ void MiniMap::Update(std::vector<CPlayerCharacter*> players, int playerIndex)
 		glm::vec4(0.2, 0.2, 0.2, 1)
 	};
 
+	//マップ上のプレイヤーの位置を表示
 	for (int j = 0; j < players.size(); j++) {
 
 		if (j == playerIndex) {
@@ -44,6 +59,7 @@ void MiniMap::Update(std::vector<CPlayerCharacter*> players, int playerIndex)
 		game.AddImage(mapPos + pos + mapOffset, "res/Texture/MiniMap/mapPlayerDotUi.dds", playerIndex);
 	}
 
+	//自分の位置を一番最後に描画.
 	glm::vec2 pos = glm::vec2(players[playerIndex]->Position().z, -players[playerIndex]->Position().x);
 	glm::vec2 mapOffset = glm::vec2(160, 180);
 

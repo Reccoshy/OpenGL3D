@@ -75,9 +75,19 @@ namespace UITexture {
 		return true;
 	}
 
-	
+	/*
+	画面の特定の位置に画像を設定する.
 
-	bool Renderer::SetTexture(const glm::vec2& position, const char* str, int CameraIndex, int cameraNum, bool SingleCamWrite)
+	@param	position	テクスチャの位置.
+	@param	str			使用するテクスチャの読み込み.
+	@param	cameraIndex テクスチャを張り付けする位置を使用する.
+	@param	cameraNum	現在のカメラの数.
+	@param	singleCamWrite	画面全体の位置に対しての画像の位置を設定するかどうか.
+
+	@return	true	設定成功.
+	@return false	設定失敗.
+	*/
+	bool Renderer::SetTexture(const glm::vec2& position, const char* str, int cameraIndex, int cameraNum, bool singleCamWrite)
 	{
 		if (!GameEngine::Instance().LoadTextureFromFile(str)) {
 			return false;
@@ -87,16 +97,16 @@ namespace UITexture {
 		glm::vec2 camOffset = glm::vec2(0);
 		glm::vec2 camScale = glm::vec2(1);
 
-		if (!SingleCamWrite) {
+		if (!singleCamWrite) {
 			if (cameraNum >= 3) {
 				camScale = glm::vec2(0.5f);
 
-				camOffset = glm::vec2(windowSize.x * 0.5 * (CameraIndex % 2), windowSize.y * 0.5 * (CameraIndex / 2));
+				camOffset = glm::vec2(windowSize.x * 0.5 * (cameraIndex % 2), windowSize.y * 0.5 * (cameraIndex / 2));
 			}
 			else if (cameraNum >= 2) {
 				camScale = glm::vec2(1.0f, 0.5f);
 
-				camOffset = glm::vec2(0, windowSize.y * 0.5 * CameraIndex);
+				camOffset = glm::vec2(0, windowSize.y * 0.5 * cameraIndex);
 			}
 		}
 

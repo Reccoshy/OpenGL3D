@@ -161,6 +161,7 @@
     <ClCompile Include="src\Game\Utilities\CommandSelect\CommandSelect.cpp" />
     <ClCompile Include="src\Game\Utilities\Effects\Effects.cpp" />
     <ClCompile Include="src\Game\Utilities\MiniMap\MiniMap.cpp" />
+    <ClCompile Include="src\Game\Utilities\Shadow\Shadow.cpp" />
     <ClCompile Include="src\Game\Utilities\UITexture\BlackFilter\BlackFilter.cpp" />
     <ClCompile Include="src\Game\Utilities\UITexture\UITexture.cpp" />
     <ClCompile Include="src\GLFWEW.cpp" />
@@ -232,6 +233,7 @@
     <ClInclude Include="src\Game\Utilities\CommandSelect\CommandSelect.h" />
     <ClInclude Include="src\Game\Utilities\Effects\Effects.h" />
     <ClInclude Include="src\Game\Utilities\MiniMap\MiniMap.h" />
+    <ClInclude Include="src\Game\Utilities\Shadow\Shadow.h" />
     <ClInclude Include="src\Game\Utilities\UITexture\BlackFilter\BlackFilter.h" />
     <ClInclude Include="src\Game\Utilities\UITexture\UITexture.h" />
     <ClInclude Include="src\GLFWEW.h" />

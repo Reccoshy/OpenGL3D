@@ -14,7 +14,7 @@ bool Explosion::Init(glm::vec3 pos, RaceScene* p)
 	active = true;
 
 	this->m_pRaceScene = p;
-	p->PlayAudioCheck(this->Position(), 1000, OTHERS, CRI_SOUND_BIGEXPLODE);
+	p->PlayAudioCheck(this->Position(), 1000, EXPLODE, CRI_SOUND_BIGEXPLODE);
 
 	return true;
 }

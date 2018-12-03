@@ -56,7 +56,7 @@ public:
 
 	int CollisionCheck(glm::vec3 pos, float radius);
 
-	bool GetActive() { return active; }
+	bool GetActive() { return m_active; }
 
 	glm::vec3 Position() { return m_pEntity->Position(); }
 
@@ -68,14 +68,19 @@ public:
 	static ItemUsageType GetItemType(ItemsCode item);
 
 private:
+	//アイテムのエンティティ.
 	Entity::Entity* m_pEntity;
-	int itemId = (int)ItemsCode::NONE;
+	//アイテムのID.
+	int m_itemId = (int)ItemsCode::NONE;
+	//アイテムが所得できるようになるまでのインターバル.
 	float const respawnTime = 2.0f;
-	float time = 0.0f;
+	//アイテム有効フラグまでの経過時間.
+	float m_time = 0.0f;
 
-	bool active = true;
-
+	//有効フラグ.
+	bool m_active = true;
+	//影.
 	Shadow m_shadow;
-
+	//回転度数.
 	float y_Rot = 0.0f;
 };

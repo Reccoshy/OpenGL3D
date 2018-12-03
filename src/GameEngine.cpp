@@ -305,6 +305,10 @@ bool GameEngine::Init(int w, int h, const char* title, bool fullScreen)
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(GroundVertex), (GLvoid*)offsetof(GroundVertex, texCoord));
 	glBindVertexArray(0);
 
+
+
+
+
 	if (!vbo || !ibo || !vao || !uboLight || !uboPostEffect || !offscreen) {
 		std::cerr << "ERROR: GameEngineの初期化に失敗" << std::endl;
 		return false;
@@ -973,4 +977,24 @@ void GameEngine::RenderGround(int cameraNum) const
 	
 	glDrawArrays(GL_TRIANGLES, 0, sizeof(GroundVertex) / 3);
 	glBindVertexArray(0);
+}
+
+/**
+* デプスシャドウマップを描画する.
+*/
+void GameEngine::RenderShadow() const
+{
+	glBindFramebuffer(GL_FRAMEBUFFER, offDepth->GetFramebuffer());
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
+	glEnable(GL_CULL_FACE);
+	glDisable(GL_BLEND);
+	glViewport(0, 0, offDepth->Width(), offDepth->Height());
+	glScissor(0, 0, offDepth->Width(), offDepth->Height());
+	glClearDepth(1);
+	glClear(GL_DEPTH_BUFFER_BIT);
+
+	const Shader::ProgramPtr& progDepth = shaderMap.find("RenderDepth")->second;
+	progDepth->UseProgram();
+	entityBuffer->DrawDepth(meshBuffer);
 }

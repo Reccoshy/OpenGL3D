@@ -2,6 +2,9 @@
 #include "../../../GameEngine.h"
 #include "../../../res/Sound/Sound.h"
 
+/*
+ƒRƒ}ƒ“ƒh
+*/
 void CommandSelect::InitCommand(int Max, int initialIndex)
 {
 	this->MaxIndex = Max - 1;
