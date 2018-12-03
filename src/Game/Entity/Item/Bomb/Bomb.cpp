@@ -1,6 +1,6 @@
 #include "Bomb.h"
 #include "../../../../GameEngine.h"
-#include "../../../Scene/RaceScene.h"
+#include "../../../Scene/RaceScene/RaceScene.h"
 
 /*
 ‰Šú‰»ˆ—.

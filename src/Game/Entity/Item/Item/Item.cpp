@@ -1,6 +1,6 @@
 #include "Item.h"
 #include "../../../../res/Sound/Sound.h"
-#include "../../../GameEngine.h"
+#include "../../../../GameEngine.h"
 
 /*
 ‰Šú‰»ˆ—.

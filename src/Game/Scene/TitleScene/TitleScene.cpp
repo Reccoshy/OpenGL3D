@@ -2,7 +2,7 @@
 #include "../../../GameEngine.h"
 #include "../../../res/Sound/Sound.h"
 #include "../StageSelectScene/StageSelectScene.h"
-#include "../RaceScene.h"
+#include "../RaceScene/RaceScene.h"
 
 void TitleScene::operator()(double delta)
 {

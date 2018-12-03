@@ -2,7 +2,7 @@
 @file	main.cpp
 */
 #include "GameEngine.h"
-#include "Game/Scene/RaceScene.h"
+#include "Game/Scene/RaceScene/RaceScene.h"
 #include "Game/Scene/TitleScene/TitleScene.h"
 #include "../res/Sound/ElemantalDriver_acf.h"
 #include "../res/Sound/Sound.h"
@@ -101,14 +101,14 @@ int main(){
 
 	game.UpdateFunc(TitleScene());
 	
-	game.UpdateFunc(RaceScene(
-		"res/Data/data.txt",
-		"res/Data/StageData/PlanePlaneField/TestStage1.txt",
-		"res/Data/StageData/PlanePlaneField/TestCheckPoint1.txt",
-		"res/Data/StageData/PlanePlaneField/TestItems1.txt",
-		"res/Data/StageData/PlanePlaneField/TestStageTextures1.txt",
-		3, 2));
-	
+	//game.UpdateFunc(RaceScene(
+	//	"res/Data/data.txt",
+	//	"res/Data/StageData/PlanePlaneField/TestStage1.txt",
+	//	"res/Data/StageData/PlanePlaneField/TestCheckPoint1.txt",
+	//	"res/Data/StageData/PlanePlaneField/TestItems1.txt",
+	//	"res/Data/StageData/PlanePlaneField/TestStageTextures1.txt",
+	//	3, 2));
+	//
 	/*
 	game.UpdateFunc(RaceScene("res/Data/StageData/StarLightTown/Stage.txt",
 		"res/Data/StageData/StarLightTown/CheckPoint.txt",

@@ -2,7 +2,7 @@
 #pragma warning(disable:4996)
 
 #include "../../../Entity.h"
-#include "../Item/Item.h"
+#include "../Item/Item/Item.h"
 #include "../Shadow/Shadow.h"
 
 class RaceScene;

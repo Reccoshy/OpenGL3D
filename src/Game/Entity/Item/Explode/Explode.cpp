@@ -1,6 +1,6 @@
 #include "Explode.h"
 #include "../../../../GameEngine.h"
-#include "../../../../Game/Scene/RaceScene.h"
+#include "../../../../Game/Scene/RaceScene/RaceScene.h"
 #include "../../../../../res/Sound/Sound.h"
 
 bool Explosion::Init(glm::vec3 pos, RaceScene* p)

@@ -1,6 +1,6 @@
 #include "EffectDestroy.h"
 #include "../../../GameEngine.h"
-#include "../../../Game/Scene/RaceScene.h"
+#include "../../../Game/Scene/RaceScene/RaceScene.h"
 
 bool EffectDestroy::Init(glm::vec3 pos)
 {

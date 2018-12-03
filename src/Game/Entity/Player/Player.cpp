@@ -1,12 +1,11 @@
 #include "Player.h"
 #include "../../../GameEngine.h"
-#include "../../Scene/RaceScene.h"
+#include "../../Scene/RaceScene/RaceScene.h"
 #include <iostream>
 #include <math.h>
 #include <stdio.h>
 #include "../../../GameEngine.h"
 #include "../../Entity/Goal/Goal.h"
-#include "../../Entity/Item/Item.h"
 #include "../../../res/Sound/Sound.h"
 
 glm::vec3 CalcPosition(glm::vec3 pos, float rotateX, float rotateY, float distance)

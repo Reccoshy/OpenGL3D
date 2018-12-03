@@ -649,7 +649,13 @@ void GameEngine::SetCubeMap(const char * filename)
 	cubemapTexture = GetTexture(filename);
 }
 
-bool GameEngine::SetGroundTexture(int texNum,const char * filename)
+/*
+地面に使用するテクスチャを選択する.
+
+@param	texNum		変更するテクスチャの番号.
+@param	filename	設定するテクスチャの名前.
+*/
+bool GameEngine::SetGroundTexture(int texNum, const char * filename)
 {
 	switch (texNum)
 	{
@@ -684,6 +690,9 @@ bool GameEngine::SetGroundTexture(int texNum,const char * filename)
 	return false;
 }
 
+/*
+地面のテクスチャを破棄する.
+*/
 void GameEngine::RemoveGroundTexture()
 {
 	groundTexture0 = 0;
@@ -693,6 +702,9 @@ void GameEngine::RemoveGroundTexture()
 	groundTexture4 = 0;
 }
 
+/*
+全画面表示切替え.
+*/
 void GameEngine::toggleFullScreen()
 {
 	GLFWEW::Window& window = GLFWEW::Window::instance();
@@ -702,6 +714,9 @@ void GameEngine::toggleFullScreen()
 	offscreen = OffscreenBuffer::Create(1920,1080);
 }
 
+/*
+ゲーム終了の呼び出し,
+*/
 void GameEngine::EndGame()
 {
 	running = false;
@@ -908,6 +923,9 @@ void GameEngine::Render(float delta)
 	m_effect.EndClear();
 }
 
+/*
+キューブマップを描画する.
+*/
 void GameEngine::RenderCubeMap(int cameraNum) const
 {
 	if (!cubemapTexture) {
@@ -934,6 +952,9 @@ void GameEngine::RenderCubeMap(int cameraNum) const
 	glEnable(GL_DEPTH_TEST);
 }
 
+/*
+地面のテクスチャを描画する.
+*/
 void GameEngine::RenderGround(int cameraNum) const
 {
 	if (groundTexture0 == 0 || groundTexture1 == 0 || groundTexture2 == 0 || groundTexture3 == 0 || groundTexture4 == 0) {
@@ -979,22 +1000,22 @@ void GameEngine::RenderGround(int cameraNum) const
 	glBindVertexArray(0);
 }
 
-/**
-* デプスシャドウマップを描画する.
-*/
-void GameEngine::RenderShadow() const
-{
-	glBindFramebuffer(GL_FRAMEBUFFER, offDepth->GetFramebuffer());
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LESS);
-	glEnable(GL_CULL_FACE);
-	glDisable(GL_BLEND);
-	glViewport(0, 0, offDepth->Width(), offDepth->Height());
-	glScissor(0, 0, offDepth->Width(), offDepth->Height());
-	glClearDepth(1);
-	glClear(GL_DEPTH_BUFFER_BIT);
-
-	const Shader::ProgramPtr& progDepth = shaderMap.find("RenderDepth")->second;
-	progDepth->UseProgram();
-	entityBuffer->DrawDepth(meshBuffer);
-}
+///**
+//* デプスシャドウマップを描画する.
+//*/
+//void GameEngine::RenderShadow() const
+//{
+//	glBindFramebuffer(GL_FRAMEBUFFER, offDepth->GetFramebuffer());
+//	glEnable(GL_DEPTH_TEST);
+//	glDepthFunc(GL_LESS);
+//	glEnable(GL_CULL_FACE);
+//	glDisable(GL_BLEND);
+//	glViewport(0, 0, offDepth->Width(), offDepth->Height());
+//	glScissor(0, 0, offDepth->Width(), offDepth->Height());
+//	glClearDepth(1);
+//	glClear(GL_DEPTH_BUFFER_BIT);
+//
+//	const Shader::ProgramPtr& progDepth = shaderMap.find("RenderDepth")->second;
+//	progDepth->UseProgram();
+//	entityBuffer->DrawDepth(meshBuffer);
+//}

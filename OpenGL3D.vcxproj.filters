@@ -43,26 +43,17 @@
     <Filter Include="Game\Entity\Item">
       <UniqueIdentifier>{5e9b0c6d-838f-457e-b0bf-ed5c7ddce137}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\Entity\ElectroTrap">
-      <UniqueIdentifier>{ffdd23be-10b5-4f26-85f9-6caac7d388b7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game\Entity\Obstacles">
       <UniqueIdentifier>{3c94613b-76f5-4636-b211-d31e5cad35d1}</UniqueIdentifier>
     </Filter>
     <Filter Include="Game\Data\Stage">
       <UniqueIdentifier>{d0f38c66-f628-4973-b699-fea72f94d26e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\Entity\Missile">
-      <UniqueIdentifier>{15b58cfe-ae5b-4349-8d53-9beeff19d5e0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game\Entity\Item\Nuke">
       <UniqueIdentifier>{cd3d96df-e8e7-4c6c-a6ce-4e2ad54db949}</UniqueIdentifier>
     </Filter>
     <Filter Include="Game\Entity\Item\Smoke">
       <UniqueIdentifier>{a791e5d5-737e-4fc1-9de3-c2b7e9b4e8af}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game\Entity\Explode">
-      <UniqueIdentifier>{de82dd98-ca64-439a-9514-5c83f4619742}</UniqueIdentifier>
     </Filter>
     <Filter Include="Game\Entity\Item\Bomb">
       <UniqueIdentifier>{0b04c115-a140-42fc-8300-a2004b86df2a}</UniqueIdentifier>
@@ -121,6 +112,21 @@
     <Filter Include="Game\Utilities\Shasow">
       <UniqueIdentifier>{6ef59221-d0b3-4d36-95dd-b1d8e7648c92}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Entity\Item\Missile">
+      <UniqueIdentifier>{42cf942e-fa9b-4825-9b9d-c64a5331fe73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Entity\Item\Explode">
+      <UniqueIdentifier>{749eff12-f679-483c-ba2c-d13c1c37c20e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Entity\Item\ElectroTrap">
+      <UniqueIdentifier>{a271f229-9848-4b2d-97f4-7d419357da78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Entity\Item\Item">
+      <UniqueIdentifier>{8c814d29-3f32-4490-9a03-4dad9d350310}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Scene\RaceScene">
+      <UniqueIdentifier>{74d144a2-2d26-4a19-9c0e-f1eee7178b14}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -156,9 +162,6 @@
     <ClCompile Include="src\Audio.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="src\Game\Scene\RaceScene.cpp">
-      <Filter>Game\Scene</Filter>
-    </ClCompile>
     <ClCompile Include="src\Game\Entity\Player\Player.cpp">
       <Filter>Game\Entity\Player</Filter>
     </ClCompile>
@@ -168,26 +171,14 @@
     <ClCompile Include="src\Game\Utilities\UITexture\UITexture.cpp">
       <Filter>Game\Utilities\UITexture</Filter>
     </ClCompile>
-    <ClCompile Include="src\Game\Entity\Item\Item.cpp">
-      <Filter>Game\Entity\Item</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Game\Entity\Item\ElectroTrap\ElectroTrap.cpp">
-      <Filter>Game\Entity\ElectroTrap</Filter>
-    </ClCompile>
     <ClCompile Include="src\Game\Entity\Obstacle\Obstacle.cpp">
       <Filter>Game\Entity\Obstacles</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Game\Entity\Item\Missile\Missile.cpp">
-      <Filter>Game\Entity\Missile</Filter>
     </ClCompile>
     <ClCompile Include="src\Game\Entity\Item\Nuke\Nuke.cpp">
       <Filter>Game\Entity\Item\Nuke</Filter>
     </ClCompile>
     <ClCompile Include="src\Game\Entity\Item\Smoke\Smoke.cpp">
       <Filter>Game\Entity\Item\Smoke</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Game\Entity\Item\Explode\Explode.cpp">
-      <Filter>Game\Entity\Explode</Filter>
     </ClCompile>
     <ClCompile Include="src\Game\Entity\Item\Bomb\Bomb.cpp">
       <Filter>Game\Entity\Item\Bomb</Filter>
@@ -222,9 +213,6 @@
     <ClCompile Include="src\Game\Effects\AccelDust\AccelDust.cpp">
       <Filter>Game\Effects\AccelDusts</Filter>
     </ClCompile>
-    <ClCompile Include="src\Game\Effects\Particle.cpp">
-      <Filter>Game\Effects</Filter>
-    </ClCompile>
     <ClCompile Include="src\Game\Effects\ItemGetEffect\ItemGetEffect.cpp">
       <Filter>Game\Effects\ItemGetEffect</Filter>
     </ClCompile>
@@ -245,6 +233,21 @@
     </ClCompile>
     <ClCompile Include="src\Game\Utilities\Shadow\Shadow.cpp">
       <Filter>Game\Utilities\Shasow</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\Entity\Item\Missile\Missile.cpp">
+      <Filter>Game\Entity\Item\Missile</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\Entity\Item\Explode\Explode.cpp">
+      <Filter>Game\Entity\Item\Explode</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\Entity\Item\ElectroTrap\ElectroTrap.cpp">
+      <Filter>Game\Entity\Item\ElectroTrap</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\Entity\Item\Item\Item.cpp">
+      <Filter>Game\Entity\Item\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\Scene\RaceScene\RaceScene.cpp">
+      <Filter>Game\Scene\RaceScene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -359,9 +362,6 @@
     <ClInclude Include="src\Audio.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="src\Game\Scene\RaceScene.h">
-      <Filter>Game\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="src\Game\Entity\Player\Player.h">
       <Filter>Game\Entity\Player</Filter>
     </ClInclude>
@@ -371,29 +371,17 @@
     <ClInclude Include="src\Game\Utilities\UITexture\UITexture.h">
       <Filter>Game\Utilities\UITexture</Filter>
     </ClInclude>
-    <ClInclude Include="src\Game\Entity\Item\Item.h">
-      <Filter>Game\Entity\Item</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Game\Entity\Item\ElectroTrap\ElectroTrap.h">
-      <Filter>Game\Entity\ElectroTrap</Filter>
-    </ClInclude>
     <ClInclude Include="src\Game\Entity\Obstacle\Obstacle.h">
       <Filter>Game\Entity\Obstacles</Filter>
     </ClInclude>
     <ClInclude Include="res\Data\StageData\TestStage1.txt">
       <Filter>Game\Data\Stage</Filter>
     </ClInclude>
-    <ClInclude Include="src\Game\Entity\Item\Missile\Missile.h">
-      <Filter>Game\Entity\Missile</Filter>
-    </ClInclude>
     <ClInclude Include="src\Game\Entity\Item\Nuke\Nuke.h">
       <Filter>Game\Entity\Item\Nuke</Filter>
     </ClInclude>
     <ClInclude Include="src\Game\Entity\Item\Smoke\Smoke.h">
       <Filter>Game\Entity\Item\Smoke</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Game\Entity\Item\Explode\Explode.h">
-      <Filter>Game\Entity\Explode</Filter>
     </ClInclude>
     <ClInclude Include="src\Game\Entity\Item\Bomb\Bomb.h">
       <Filter>Game\Entity\Item\Bomb</Filter>
@@ -431,9 +419,6 @@
     <ClInclude Include="src\Game\Effects\ItemGetEffect\ItemGetEffect.h">
       <Filter>Game\Effects\ItemGetEffect</Filter>
     </ClInclude>
-    <ClInclude Include="src\Game\Effects\Particle.h">
-      <Filter>Game\Effects</Filter>
-    </ClInclude>
     <ClInclude Include="src\Game\Effects\SpeedUpEffect\SpeedUpEffect.h">
       <Filter>Game\Effects\SpeedUpEffect</Filter>
     </ClInclude>
@@ -451,6 +436,21 @@
     </ClInclude>
     <ClInclude Include="src\Game\Utilities\Shadow\Shadow.h">
       <Filter>Game\Utilities\Shasow</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\Entity\Item\Missile\Missile.h">
+      <Filter>Game\Entity\Item\Missile</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\Entity\Item\Explode\Explode.h">
+      <Filter>Game\Entity\Item\Explode</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\Entity\Item\ElectroTrap\ElectroTrap.h">
+      <Filter>Game\Entity\Item\ElectroTrap</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\Entity\Item\Item\Item.h">
+      <Filter>Game\Entity\Item\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\Scene\RaceScene\RaceScene.h">
+      <Filter>Game\Scene\RaceScene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

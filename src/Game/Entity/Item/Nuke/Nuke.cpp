@@ -1,7 +1,7 @@
 #include "Nuke.h"
 #include "../../../../GameEngine.h"
 #include <iostream>
-#include "../../../Scene/RaceScene.h"
+#include "../../../Scene/RaceScene/RaceScene.h"
 #include "../../../../../res/Sound/Sound.h"
 
 /*
@@ -14,9 +14,7 @@
 bool CNuke::Init(glm::vec3 pos, float rot, RaceScene* p)
 {
 	this->m_pEntity = GameEngine::Instance().AddEntity(0, pos, "Aircraft", "res/Model/Toroid.bmp", nullptr);
-
 	this->m_pEntity->Rotation(glm::quat(glm::vec3(80, 0, 0)));
-
 	this->m_pEntity->Scale(glm::vec3(3));
 
 	this->m_Yrot = rot;

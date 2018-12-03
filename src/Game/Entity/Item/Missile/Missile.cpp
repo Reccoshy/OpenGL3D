@@ -1,7 +1,7 @@
 #include "Missile.h"
 #include "../../../../GameEngine.h"
 #include "../../../Entity/Player/Player.h"
-#include "../../../Scene/RaceScene.h"
+#include "../../../Scene/RaceScene/RaceScene.h"
 #include "../../../../res/Sound/Sound.h"
 #include <iostream>
 

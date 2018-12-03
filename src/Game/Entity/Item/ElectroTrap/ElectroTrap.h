@@ -19,7 +19,7 @@ public:
 
 	bool IsActive()
 	{
-		return isActive;
+		return m_isActive;
 	}
 
 	void Destroy();

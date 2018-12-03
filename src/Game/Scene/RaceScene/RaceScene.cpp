@@ -3,12 +3,12 @@
 */
 
 #include "RaceScene.h"
-#include "../../GameEngine.h"
+#include "../../../GameEngine.h"
 #include "../../../res/Sound/Sound.h"
-#include "TitleScene/TitleScene.h"
-#include "StageSelectScene/StageSelectScene.h"
-#include "../Entity/Player/Player.h"
-#include "../Entity/Item/Item.h"
+#include "../TitleScene/TitleScene.h"
+#include "../StageSelectScene/StageSelectScene.h"
+#include "../../Entity/Player/Player.h"
+#include "../../Entity/Item/Item/Item.h"
 #include <algorithm>
 #include <iostream>
 #include <fstream>
@@ -121,7 +121,7 @@ void RaceScene::SpawnNuke(glm::vec3 pos, float y_rot)
 
 	m_pNukes.push_back(new CNuke);
 
-	m_pNukes.back()->init(pos, y_rot, this);
+	m_pNukes.back()->Init(pos, y_rot, this);
 }
 
 void RaceScene::SpawnBombs(glm::vec3 pos, float yRot)
@@ -133,7 +133,7 @@ void RaceScene::SpawnBombs(glm::vec3 pos, float yRot)
 void RaceScene::SpawnSmoke(glm::vec3 pos, float y_rot)
 {
 	m_pSmokes.push_back(new Smoke);
-	m_pSmokes.back()->init(pos, y_rot, this);
+	m_pSmokes.back()->Init(pos, y_rot, this);
 }
 
 void RaceScene::SpawnFakeItem(glm::vec3 pos)

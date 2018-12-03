@@ -1,8 +1,8 @@
 #pragma once
 
 #include <glm/glm.hpp>
-#include "../../../Entity.h"
-#include "../Shadow/Shadow.h"
+#include "../../../../Entity.h"
+#include "../../Shadow/Shadow.h"
 
 enum class ItemsCode {
 	NONE = -1,

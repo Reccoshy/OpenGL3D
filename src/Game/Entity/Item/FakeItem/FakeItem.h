@@ -1,7 +1,7 @@
 #pragma once
 #include <glm/glm.hpp>
 #include "../../../../Entity.h"
-#include "../Item.h"
+#include "../Item/Item.h"
 #include "../../Shadow/Shadow.h"
 
 class RaceScene;

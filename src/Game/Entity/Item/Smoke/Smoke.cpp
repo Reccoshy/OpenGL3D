@@ -1,7 +1,7 @@
 #include "Smoke.h"
 #include "../../../../GameEngine.h"
 #include <iostream>
-#include "../../../../Game/Scene/RaceScene.h"
+#include "../../../../Game/Scene/RaceScene/RaceScene.h"
 #include "../../../../../res/Sound/Sound.h"
 
 bool Smoke::Init(glm::vec3 pos, float rot, RaceScene* p)

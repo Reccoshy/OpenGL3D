@@ -1,10 +1,10 @@
-#include "../Item.h"
+#include "../Item/Item.h"
 #include "../../../../../res/Sound/Sound.h"
 #include "../../../../GameEngine.h"
 #include <stdio.h>
 #include <Time.h>
 #include "FakeItem.h"
-#include "../../../../Game/Scene/RaceScene.h"
+#include "../../../../Game/Scene/RaceScene/RaceScene.h"
 
 bool FakeItem::Init(glm::vec3 pos, RaceScene* pSce)
 {
@@ -13,7 +13,7 @@ bool FakeItem::Init(glm::vec3 pos, RaceScene* pSce)
 	m_pEntity->Position(pos);
 	m_shadow.init(pos, 0.01f);
 
-	this->itemId = rand() % 4;
+	this->m_itemId = rand() % 4;
 
 	this->m_pEntity->Scale(glm::vec3(2));
 
@@ -26,7 +26,7 @@ bool FakeItem::Init(glm::vec3 pos, RaceScene* pSce)
 
 void FakeItem::Update(float delta)
 {
-	if (active) {
+	if (m_active) {
 
 		y_Rot -= delta * 5;
 		if (y_Rot <= 0) {
@@ -37,14 +37,14 @@ void FakeItem::Update(float delta)
 
 		this->ColorUpdate();
 
-		m_pEntity->ToggleVisibility(this->active);
+		m_pEntity->ToggleVisibility(this->m_active);
 		this->m_shadow.Update(Position());
 	}
 }
 
 void FakeItem::ColorUpdate()
 {
-	switch ((ItemsCode)itemId)
+	switch ((ItemsCode)m_itemId)
 	{
 	case ItemsCode::WIND:
 		m_pEntity->Color(glm::vec4(0, 0.5, 0, 1));
@@ -69,7 +69,7 @@ void FakeItem::ColorUpdate()
 
 bool FakeItem::CollisionCheck(glm::vec3 pos, float radius)
 {
-	if (!this->active) {
+	if (!this->m_active) {
 		return false;
 	}
 
@@ -77,7 +77,7 @@ bool FakeItem::CollisionCheck(glm::vec3 pos, float radius)
 
 	if (distance < radius) {
 
-		this->active = false;
+		this->m_active = false;
 
 		this->m_pEntity->ToggleVisibility(false);
 
