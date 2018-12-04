@@ -13,37 +13,6 @@
 #include <iostream>
 #include <fstream>
 
-template<typename T>
-void Remove(std::vector<T>& vector, int index)
-{
-	delete vector[index];
-	vector.erase(vector.begin() + index);
-}
-
-template<typename T>
-void DeleteAll(std::vector<T>& vector)
-{
-	for (int i = 0; i < vector.size(); i++) {
-		delete vector[i];
-	}
-
-	vector.clear();
-}
-
-glm::vec3 calcPosition(glm::vec3 pos, float rotateX, float rotateY, float distance)
-{
-	rotateX = glm::radians(rotateX);
-	rotateY = glm::radians(rotateY);
-
-	float x = sin(rotateX) * distance;
-	float z = cos(rotateX) * distance;
-
-	float lengthRatio = cos(rotateY) * x;
-	float lengthZ = cos(rotateY) * z;
-	float y = sin(rotateY) * distance;
-
-	return glm::vec3(pos.x + lengthRatio, pos.y + y, pos.z + lengthZ);
-}
 
 RaceScene::RaceScene(char scoreFile[], char stageFile[], char checkPointFile[], char itemFile[], char texfileName[], int playerNum, int lap)
 {
@@ -154,10 +123,10 @@ void RaceScene::SpawnEffectAccelDust(glm::vec3 pos)
 	m_pAccelDusts.back()->Init(pos);
 }
 
-void RaceScene::SpawnEffectItemGetSparkle(glm::vec3 pos, glm::vec4 color)
+void RaceScene::SpawnEffectSparkle(glm::vec3 pos, glm::vec4 color, int emitNum)
 {
-	m_pItemGetEffects.push_back(new CitemGetEffect);
-	m_pItemGetEffects.back()->Init(pos, color);
+	m_pSparcleEffects.push_back(new CSparcleEffect);
+	m_pSparcleEffects.back()->Init(pos, color, emitNum);
 }
 
 void RaceScene::SpawnEffectSpeedUp(glm::vec3 pos, float yRot, float speed)
@@ -165,7 +134,7 @@ void RaceScene::SpawnEffectSpeedUp(glm::vec3 pos, float yRot, float speed)
 	GameEngine& game = GameEngine::Instance();
 
 	m_pSpeedUpEffects.push_back(new SpeedUpEffect);
-	glm::vec3 vel = pos - calcPosition(pos, yRot + game.GetRandomFloat(50, -50), game.GetRandomFloat(50, 0), 10);
+	glm::vec3 vel = pos - game.CalcPosition(pos, yRot + game.GetRandomFloat(50, -50), game.GetRandomFloat(50, 0), 10);
 	m_pSpeedUpEffects.back()->Init(pos, glm::vec4(1, 0, 0, 0.8), vel);
 }
 
@@ -209,7 +178,6 @@ void RaceScene::ActOptionCommand()
 	}
 	else if (resultCommand.getIndex() == 2) {
 		blackFilter.SetNextScene(NEXT_SCENE::Title);
-
 	}
 }
 
@@ -319,106 +287,103 @@ void RaceScene::Init()
 	game.PlayAudio(BGM, CRI_SOUND_STAGEBGM2);
 }
 
+/*
+ゲーム終了処理を実行する.
+*/
 void RaceScene::EndFunc()
 {
 	GameEngine& game = GameEngine::Instance();
 
 	this->SaveBestLap();
 
-	int num;
-
 	for (int i = 0; i < m_pPlayerCharacters.size(); i++) {
 		m_pPlayerCharacters[i]->DestroyEntity();
 	}
-
-	DeleteAll(m_pPlayerCharacters);
+	game.DeleteAll(m_pPlayerCharacters);
 
 	for (int i = 0; i < m_pItems.size(); i++) {
 		m_pItems[i]->Destroy();
 	}
-
-	DeleteAll(m_pItems);
+	game.DeleteAll(m_pItems);
 
 	for (int i = 0; i < m_pObstacles.size(); i++) {
 		m_pObstacles[i]->Entity()->Destroy();
 	}
-	DeleteAll(m_pObstacles);
+	game.DeleteAll(m_pObstacles);
 
 	for (int i = 0; i < m_pGoals.size(); i++) {
 		m_pGoals[i]->Destroy();
 	}
-	DeleteAll(m_pGoals);
+	game.DeleteAll(m_pGoals);
 
 	for (int i = 0; i < m_pMissiles.size(); i++) {
 		m_pMissiles[i]->Destroy();
 	}
-	DeleteAll(m_pMissiles);
+	game.DeleteAll(m_pMissiles);
 
 	for (int i = 0; i < m_pElectroTraps.size(); i++) {
 		m_pElectroTraps[i]->Destroy();
 	}
-	DeleteAll(m_pElectroTraps);
+	game.DeleteAll(m_pElectroTraps);
 
 	for (int i = 0; i < m_pBombs.size(); i++) {
 		m_pBombs[i]->Destroy();
 	}
-	DeleteAll(m_pBombs);
+	game.DeleteAll(m_pBombs);
 
 	for (int i = 0; i < m_pFakeItems.size(); i++) {
 		m_pFakeItems[i]->Destroy();
 	}
-	DeleteAll(m_pFakeItems);
+	game.DeleteAll(m_pFakeItems);
 
 	for (int i = 0; i < m_pNukes.size(); i++) {
 		m_pNukes[i]->Destroy();
 	}
-	DeleteAll(m_pNukes);
+	game.DeleteAll(m_pNukes);
 
 	for (int i = 0; i < m_pSmokes.size(); i++) {
 		m_pSmokes[i]->Destroy();
 	}
-	DeleteAll(m_pSmokes);
+	game.DeleteAll(m_pSmokes);
 
 	for (int i = 0; i < m_pExplodes.size(); i++) {
 		m_pExplodes[i]->Destroy();
 	}
-	DeleteAll(m_pExplodes);
+	game.DeleteAll(m_pExplodes);
 
 	for (int i = 0; i < m_pEffectExplodes.size(); i++) {
 		m_pEffectExplodes[i]->Destroy();
 	};
-	DeleteAll(m_pEffectExplodes);
+	game.DeleteAll(m_pEffectExplodes);
 
-	DeleteAll(m_pAccelDusts);
-	DeleteAll(m_pItemGetEffects);
-	DeleteAll(m_pSpeedUpEffects);
-	DeleteAll(m_pRespawnEffects);
+	game.DeleteAll(m_pAccelDusts);
+	game.DeleteAll(m_pSparcleEffects);
+	game.DeleteAll(m_pSpeedUpEffects);
+	game.DeleteAll(m_pRespawnEffects);
 
-	DeleteAll(m_pPlayerIcons);
+	game.DeleteAll(m_pPlayerIcons);
 
 	game.RemoveGroundTexture();
 
 	game.StopAllSound();
 }
 
+/*
+ゲーム中の更新処理.
+
+@param	delta	1フレームの更新時間,
+*/
 void RaceScene::UpdateInGame(float delta)
 {
 	GameEngine& game = GameEngine::Instance();
 
 	this->PlayerUpdate(delta);
-
 	this->CheckPoint();
-
 	this->ItemUpdate(delta);
-
 	this->UpdateEffects(delta);
-
 	this->CheckAllPlayerFinished();
-
 	this->CollisionChecks();
-
 	this->RankingCheck();
-
 	this->ShowUI(delta);
 
 	Time += delta;
@@ -438,22 +403,22 @@ void RaceScene::UpdateGameStart(float delta)
 	}
 
 	for (int i = 0; i < PlayerNum; i++) {
-		cameraPos[i] = calcPosition(m_pPlayerCharacters[i]->Position(), m_pPlayerCharacters[i]->Yrot() + 180, 15, 20 + adder);
+		cameraPos[i] = game.CalcPosition(m_pPlayerCharacters[i]->Position(), m_pPlayerCharacters[i]->Yrot() + 180, 15, 20 + adder);
 
 		game.Camera({ { cameraPos[i] },{ m_pPlayerCharacters[i]->Position() },{ 0, 1, 0 } }, i);
 	}
 
 	this->ItemUpdate(delta);
 	this->UpdateEffects(delta);
-	this->RankingCheck();
 
+	this->RankingCheck();
 	this->ShowUI(delta);
 }
 
 void RaceScene::UpdatePause(float delta)
 {
 	this->UpdateEffects(delta);
-	this->m_pPlayerCharacters[PauseIndex]->inputOptionFunc(delta);
+	this->m_pPlayerCharacters[PauseIndex]->InputOptionFunc(delta);
 	this->RankingUI();
 
 	this->OptionUI();
@@ -482,7 +447,9 @@ void RaceScene::UpdateResult(float delta)
 			blackFilter.SetNextScene(NEXT_SCENE::Result);
 		}
 	}
-
+	
+	
+	//最後のランキング表示.
 	if (m_showRanking) {
 		GameEngine& game = GameEngine::Instance();
 
@@ -492,13 +459,16 @@ void RaceScene::UpdateResult(float delta)
 			this->ShowResult(delta);
 
 			if (m_resultMover <= 0) {
-				this->m_pPlayerCharacters[0]->inputOptionFunc(delta);
+				this->m_pPlayerCharacters[0]->InputOptionFunc(delta);
 				OptionUI();
 			}
 		}
 	}
 }
 
+/*
+ステージの壁のデータの読み込み.
+*/
 bool RaceScene::LoadStageFromFile(char * const filename)
 {
 	FILE* fp = fopen(filename, "rb");
@@ -523,6 +493,9 @@ bool RaceScene::LoadStageFromFile(char * const filename)
 	return true;
 }
 
+/*
+次のチェックポイントまでのファイルを読み込む.
+*/
 bool RaceScene::LoadCheckPointFromFile(char* const filename)
 {
 	GameEngine& game = GameEngine::Instance();
@@ -549,6 +522,9 @@ bool RaceScene::LoadCheckPointFromFile(char* const filename)
 	return true;
 }
 
+/*
+アイテムの情報の読み込み.
+*/
 bool RaceScene::LoadItemsFromFile(char* const filename)
 {
 	FILE* fp = fopen(filename, "rb");
@@ -572,6 +548,13 @@ bool RaceScene::LoadItemsFromFile(char* const filename)
 	return true;
 }
 
+/*
+壁を配置する.
+
+@param	from	壁の配置開始場所,
+@param	to		壁の配置終了場所.
+@param	space	壁と次の壁配置までの間隔.
+*/
 void RaceScene::WallSetPointToPoint(glm::vec3 from, glm::vec3 to, float space)
 {
 	GameEngine& game = GameEngine::Instance();
@@ -583,10 +566,13 @@ void RaceScene::WallSetPointToPoint(glm::vec3 from, glm::vec3 to, float space)
 		double degree = glm::degrees(radian);
 
 		m_pObstacles.push_back(new Obstacle);
-		m_pObstacles.back()->Init(calcPosition(from, degree, 0.0f, i * space), space);
+		m_pObstacles.back()->Init(game.CalcPosition(from, degree, 0.0f, i * space), space);
 	}
 }
 
+/*
+ステージに使用しているテクスチャを読み込む.
+*/
 bool RaceScene::LoadStageTextures(char* const filename)
 {
 	GameEngine& game = GameEngine::Instance();
@@ -617,22 +603,21 @@ bool RaceScene::LoadStageTextures(char* const filename)
 	return true;
 }
 
+/*
+プレイヤー更新処理,
+*/
 void RaceScene::PlayerUpdate(float delta)
 {
 	for (int i = 0; i < m_pPlayerCharacters.size(); i++) {
-		m_pPlayerCharacters[i]->Update(delta, Time);
-
-		std::vector<glm::vec3> positions;
-
-		for (int j = 0; j < m_pPlayerCharacters.size(); j++) {
-			positions.push_back(m_pPlayerCharacters[j]->Position());
-		}
+		m_pPlayerCharacters[i]->Update(delta);
 
 		m_pPlayerCharacters[i]->AutoDrive(delta, m_pPlayerCharacters);
-		positions.clear();
 	}
 }
 
+/*
+アイテムの更新処理.
+*/
 void RaceScene::ItemUpdate(float delta)
 {
 	for (int i = 0; i < m_pItems.size(); i++) {
@@ -682,8 +667,13 @@ void RaceScene::ItemUpdate(float delta)
 	}
 }
 
+/*
+エフェクト類の描画処理.
+*/
 void RaceScene::UpdateEffects(float delta)
 {
+	GameEngine& game = GameEngine::Instance();
+
 	for (int i = 0; i < m_pAccelDusts.size(); i++) {
 		if (!m_pausing) {
 			m_pAccelDusts[i]->Update(delta);
@@ -691,19 +681,18 @@ void RaceScene::UpdateEffects(float delta)
 		m_pAccelDusts[i]->Draw();
 
 		if (!m_pAccelDusts[i]->ActiveCheck()) {
-			Remove(m_pAccelDusts, i);
+			game.Remove(m_pAccelDusts, i);
 			i--;
 		}
 	}
 
-	for (int i = 0; i < m_pItemGetEffects.size(); i++) {
+	for (int i = 0; i < m_pSparcleEffects.size(); i++) {
 		if (!m_pausing) {
-			m_pItemGetEffects[i]->Update(delta);
+			m_pSparcleEffects[i]->Update(delta);
 		}
-		m_pItemGetEffects[i]->Draw();
 
-		if (!m_pItemGetEffects[i]->IsActive()) {
-			Remove(m_pItemGetEffects, i);
+		if (!m_pSparcleEffects[i]->IsActive()) {
+			game.Remove(m_pSparcleEffects, i);
 			i--;
 		}
 	}
@@ -715,7 +704,7 @@ void RaceScene::UpdateEffects(float delta)
 		m_pSpeedUpEffects[i]->Draw();
 
 		if (!m_pSpeedUpEffects[i]->IsActive()) {
-			Remove(m_pSpeedUpEffects, i);
+			game.Remove(m_pSpeedUpEffects, i);
 			i--;
 		}
 	}
@@ -728,10 +717,10 @@ void RaceScene::UpdateEffects(float delta)
 
 		if (!m_pRespawnEffects[i]->IsActive()) {
 
-			SpawnEffectItemGetSparkle(m_pRespawnEffects[i]->Position(), glm::vec4(1, 1, 0, 1));
-			SpawnEffectItemGetSparkle(m_pRespawnEffects[i]->Position(), glm::vec4(0, 1, 1, 1));
+			SpawnEffectSparkle(m_pRespawnEffects[i]->Position(), glm::vec4(1, 1, 0, 1), 5);
+			SpawnEffectSparkle(m_pRespawnEffects[i]->Position(), glm::vec4(0, 1, 1, 1), 5);
 
-			Remove(m_pRespawnEffects, i);
+			game.Remove(m_pRespawnEffects, i);
 			i--;
 
 		}
@@ -742,65 +731,73 @@ void RaceScene::UpdateEffects(float delta)
 	}
 }
 
+/*
+有効フラグを確認しポインタを削除する関数.
+*/
 void RaceScene::DeleteCheck()
 {
+	GameEngine& game = GameEngine::Instance();
+
 	for (int i = 0; i < m_pMissiles.size(); i++) {
 		if (!m_pMissiles[i]->IsActive()) {
-			Remove(m_pMissiles, i);
+			game.Remove(m_pMissiles, i);
 			i--;
 		}
 	}
 
 	for (int i = 0; i < m_pElectroTraps.size(); i++) {
 		if (!m_pElectroTraps[i]->IsActive()) {
-			Remove(m_pElectroTraps, i);
+			game.Remove(m_pElectroTraps, i);
 			i--;
 		}
 	}
 
 	for (int i = 0; i < m_pNukes.size(); i++) {
 		if (!m_pNukes[i]->IsActive()) {
-			Remove(m_pNukes, i);
+			game.Remove(m_pNukes, i);
 			i--;
 		}
 	}
 
 	for (int i = 0; i < m_pSmokes.size(); i++) {
 		if (!m_pSmokes[i]->IsActive()) {
-			Remove(m_pSmokes, i);
+			game.Remove(m_pSmokes, i);
 			i--;
 		}
 	}
 
 	for (int i = 0; i < m_pBombs.size(); i++) {
 		if (!m_pBombs[i]->IsActive()) {
-			Remove(m_pBombs, i);
+			game.Remove(m_pBombs, i);
 			i--;
 		}
 	}
 
 	for (int i = 0; i < m_pFakeItems.size(); i++) {
 		if (!m_pFakeItems[i]->IsActive()) {
-			Remove(m_pFakeItems, i);
+			game.Remove(m_pFakeItems, i);
 			i--;
 		}
 	}
 
 	for (int i = 0; i < m_pExplodes.size(); i++) {
 		if (!m_pExplodes[i]->IsActive()) {
-			Remove(m_pExplodes, i);
+			game.Remove(m_pExplodes, i);
 			i--;
 		}
 	}
 
 	for (int i = 0; i < m_pEffectExplodes.size(); i++) {
 		if (!m_pEffectExplodes[i]->IsActive()) {
-			Remove(m_pEffectExplodes, i);
+			game.Remove(m_pEffectExplodes, i);
 			i--;
 		}
 	}
 }
 
+/*
+チェックポイント通過のチェック.
+*/
 void RaceScene::CheckPoint()
 {
 	for (int i = 0; i < m_pGoals.size(); i++) {
@@ -817,6 +814,9 @@ void RaceScene::CheckPoint()
 	}
 }
 
+/*
+あたり判定.
+*/
 void RaceScene::CollisionChecks()
 {
 	GameEngine& game = GameEngine::Instance();
@@ -828,7 +828,7 @@ void RaceScene::CollisionChecks()
 
 			if (itemId != -1) {
 				this->m_pPlayerCharacters[i]->ObtainItem(itemId);
-				SpawnEffectItemGetSparkle(m_pItems[j]->Position(), glm::vec4(0, 1, 1, 0.5f));
+				SpawnEffectSparkle(m_pItems[j]->Position(), glm::vec4(0, 1, 1, 0.5f), 5);
 			}
 		}
 
@@ -873,6 +873,9 @@ void RaceScene::CollisionChecks()
 	}
 }
 
+/*
+順位の確認用.(ゴールまでの距離)
+*/
 void RaceScene::RankingCheck()
 {
 	for (int i = 0; i < m_pPlayerCharacters.size(); i++) {
@@ -902,6 +905,31 @@ void RaceScene::RankingCheck()
 	}
 }
 
+
+void RaceScene::RankingSortFromTime()
+{
+	for (int i = 0; i < m_pPlayerCharacters.size(); i++) {
+		if (m_pPlayerCharacters[i]->GetFinishedRace()) {
+
+			int rank = 1;
+
+			for (int j = 0; j <= m_pPlayerCharacters.size(); j++) {
+				if (i == j)
+					continue;
+
+				if (m_pPlayerCharacters[i]->GetFinishTime() < m_pPlayerCharacters[j]->GetFinishTime()) {
+					rank++;
+				}
+			}
+
+			m_pPlayerCharacters[i]->SetPlayerRank(rank);
+		}
+	}
+}
+
+/*
+全プレイヤーがゴールしたかチェックする.
+*/
 void RaceScene::CheckAllPlayerFinished()
 {
 	for (int i = 0; i < m_pPlayerCharacters.size(); i++) {
@@ -917,6 +945,9 @@ void RaceScene::CheckAllPlayerFinished()
 	}
 }
 
+/*
+ゲーム終了後AIのゴール達成までのおおよその時間を計算する.
+*/
 void RaceScene::CalcFinishTime()
 {
 	for (int i = 0; i < m_pPlayerCharacters.size(); i++) {
@@ -932,6 +963,8 @@ void RaceScene::CalcFinishTime()
 	}
 }
 
+/*
+*/
 void RaceScene::SaveBestLap()
 {
 	FILE* fp = fopen(bestTimeFileName, "rb");
@@ -940,10 +973,8 @@ void RaceScene::SaveBestLap()
 	}
 
 	float num = 0.0f;
+	fscanf(fp, "%f", &num);
 
-	while (fscanf(fp, "%f", &num) != EOF) {
-		
-	}
 
 	for (int i = 0; i < m_pPlayerCharacters.size(); i++) {
 		for (int j = 0; j < m_pPlayerCharacters[i]->GetPlayerLapTime().size(); j++) {
@@ -1051,8 +1082,6 @@ void RaceScene::ShowUI(float delta)
 		game.FontColor(rankColor[m_pPlayerCharacters[i]->GetRank()]);
 		game.FontScale(glm::vec2(2.0));
 		game.AddString(glm::vec2(windowSize.x - 310.0f, windowSize.y - 200.0f), str, i);
-
-		this->RankingCheck();
 
 		if ((ItemsCode)m_pPlayerCharacters[i]->GetItemId() != ItemsCode::NONE && (ItemsCode)m_pPlayerCharacters[i]->GetStockItemId() != ItemsCode::NONE) {
 

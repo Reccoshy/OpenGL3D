@@ -4,6 +4,7 @@
 
 class PlayerIcon {
 public:
+
 	bool Init(int index, float height, glm::vec3 pos);
 
 	void Update(glm::vec3 pos);

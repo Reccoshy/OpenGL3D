@@ -14,7 +14,7 @@ class CPlayerCharacter
 public:
 
 	bool Init(glm::vec3 pos, int goalNum, float radius, int playerIndex, RaceScene* pScene, std::vector<glm::vec3> g, bool isPlayer);
-	bool Update(float delta, float Time);
+	bool Update(float delta);
 
 	float Yrot() { return m_Yrot; }
 
@@ -30,7 +30,7 @@ public:
 	void ObtainItem(int id);
 	int GetItemId() { return itemId; }
 	int GetStockItemId() { return m_stockItems; }
-	float Radius() { return radius; }
+	float Radius() { return m_radius; }
 
 	void UseItem();
 
@@ -41,7 +41,7 @@ public:
 		this->m_Shadow.Destroy();
 	}
 
-	void inputOptionFunc(float delta);
+	void InputOptionFunc(float delta);
 
 	bool GetFinishedRace() { return FinishedRace; }
 
@@ -67,7 +67,7 @@ public:
 
 
 private:
-	void inputFunc(float delta);
+	void InputFunc(float delta);
 
 	bool loadRideInfo(const char* filename);
 
@@ -101,7 +101,7 @@ private:
 	float cameraGoalTurn = 0.0f;
 	
 	//‚ ‚½‚è”»’è—p‚Ì”¼Œa.
-	float radius = 0.0f;
+	float m_radius = 0.0f;
 	
 	//ƒJƒƒ‰‚ÌY²‚Å‚Ì‰ñ“]“x”.
 	float CameraYDif = 180.0f;

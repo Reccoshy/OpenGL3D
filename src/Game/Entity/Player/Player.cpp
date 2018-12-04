@@ -8,22 +8,7 @@
 #include "../../Entity/Goal/Goal.h"
 #include "../../../res/Sound/Sound.h"
 
-glm::vec3 CalcPosition(glm::vec3 pos, float rotateX, float rotateY, float distance)
-{
-	rotateX = glm::radians(rotateX);
-	rotateY = glm::radians(rotateY);
-
-	float x = sin(rotateX) * distance;
-	float z = cos(rotateX) * distance;
-
-	float lengthRatio = cos(rotateY) * x;
-	float lengthZ = cos(rotateY) * z;
-	float y = sin(rotateY) * distance;
-
-	return glm::vec3(pos.x + lengthRatio, pos.y + y, pos.z + lengthZ);
-}
-
-bool CPlayerCharacter::Init(glm::vec3 pos, int goalNum, float r, int PlayerIndex, RaceScene* pScene, std::vector<glm::vec3> g, bool isPlayer)
+bool CPlayerCharacter::Init(glm::vec3 pos, int goalNum, float r, int playerIndex, RaceScene* pScene, std::vector<glm::vec3> g, bool isPlayer)
 {
 	GameEngine& game = GameEngine::Instance();
 
@@ -32,10 +17,20 @@ bool CPlayerCharacter::Init(glm::vec3 pos, int goalNum, float r, int PlayerIndex
 	m_entity->Position(pos);
 	m_entity->Scale(glm::vec3(2));
 
+	glm::vec4 color[4] =
+	{
+		glm::vec4(1.0, 0.5, 0.5, 1),
+		glm::vec4(0.5, 0.5, 1.0, 1),
+		glm::vec4(1.0, 1.0, 0.5, 1),
+		glm::vec4(0.5, 1.0, 0.5, 1),
+	};
+
+	m_entity->Color(glm::vec4(color[playerIndex]));
+
 	this->loadRideInfo("res/Data/RideParameter/RideParamater.txt");
 
-	this->radius = 2;
-	this->m_playerIndex = PlayerIndex;
+	this->m_radius = 2;
+	this->m_playerIndex = playerIndex;
 	this->MaxCheckPointIndex = goalNum - 1;
 
 	m_pBarrier = game.AddEntity(0, this->Position(), "Cube", "res/Model/Toroid.bmp", nullptr);
@@ -64,18 +59,20 @@ bool CPlayerCharacter::Init(glm::vec3 pos, int goalNum, float r, int PlayerIndex
 	return true;
 }
 
-bool CPlayerCharacter::Update(float delta, float Time)
+/*
+更新処理.
+
+@param	delta	
+@param	Time	ゴールまでの時間.
+*/
+bool CPlayerCharacter::Update(float delta)
 {
-	this->inputFunc(delta);
+	this->InputFunc(delta);
 	this->MoveFunc(delta);
 	this->SpawnSmokes(delta);
 	this->ItemStateUpdate(delta);
 	this->CameraUpdate(delta);
 	this->RespawnFunc(delta);
-
-	if (!FinishedRace) {
-		m_FinishTime = Time;
-	}
 
 	m_Shadow.Update(Position());
 	m_Shadow.ChangeVisible(m_entity->Visible());
@@ -108,7 +105,7 @@ void CPlayerCharacter::PassGoal(float Time)
 	float LapTime = Time;
 
 	for (int i = 0; i < m_lapTime.size(); i++) {
-		LapTime -= m_lapTime[i - 1];
+		LapTime -= m_lapTime[i];
 	}
 
 	m_lapTime.push_back(LapTime);
@@ -153,15 +150,19 @@ void CPlayerCharacter::ObtainItem(int id)
 	m_type = Item::GetItemType((ItemsCode)itemId);
 }
 
-void CPlayerCharacter::inputFunc(float delta)
+void CPlayerCharacter::InputFunc(float delta)
 {
+	GameEngine& game = GameEngine::Instance();
+	GamePad gamePad = game.GetGamePad(m_playerIndex);
+
+	if (gamePad.buttonDown & GamePad::START) {
+		m_pRaceScene->TogglePause(m_playerIndex);
+		this->m_optionPressedCheck = true;
+	}
+
 	if (!this->activeInput || this->m_autoDriveFlag) {
 		return;
 	}
-
-	GameEngine& game = GameEngine::Instance();
-
-	GamePad gamePad = game.GetGamePad(m_playerIndex);
 	
 	float camDif = GLFWEW::Window::instance().GetBackAxe(m_playerIndex);
 
@@ -190,6 +191,7 @@ void CPlayerCharacter::inputFunc(float delta)
 	if (gamePad.buttonDown & GamePad::Y) {
 		this->SwapItemStock();
 	}
+
 
 	this->itemMixReady = false;
 	if (gamePad.buttons & GamePad::L) {
@@ -220,11 +222,6 @@ void CPlayerCharacter::inputFunc(float delta)
 	}
 	else if (gamePad.buttons & GamePad::DPAD_RIGHT) {
 		m_Yrot -= m_turnRate * delta;
-	}
-
-	if (gamePad.buttonDown & GamePad::START) {
-		m_pRaceScene->TogglePause(m_playerIndex);
-		this->m_optionPressedCheck = true;
 	}
 
 	m_entity->Rotation(glm::quat(glm::vec3(0, glm::radians(yRot), 0)));
@@ -421,8 +418,8 @@ void CPlayerCharacter::UseItem()
 			break;
 		case ItemsCode::FIRE:
 		{
-			float x = sin(glm::radians(m_Yrot)) * radius * 1.1;
-			float z = cos(glm::radians(m_Yrot)) * radius * 1.1;
+			float x = sin(glm::radians(m_Yrot)) * m_radius * 1.1;
+			float z = cos(glm::radians(m_Yrot)) * m_radius * 1.1;
 
 			glm::vec3 pos = glm::vec3(x, 0, z) + Position();
 
@@ -460,8 +457,8 @@ void CPlayerCharacter::UseItem()
 		case ItemsCode::AIMMISSILE:
 		case ItemsCode::AIMMISSILE2:
 		{
-			float x = sin(glm::radians(m_Yrot)) * radius * 1.1f;
-			float z = cos(glm::radians(m_Yrot)) * radius * 1.1f;
+			float x = sin(glm::radians(m_Yrot)) * m_radius * 1.1f;
+			float z = cos(glm::radians(m_Yrot)) * m_radius * 1.1f;
 
 			glm::vec3 pos = glm::vec3(x, 0, z) + Position();
 
@@ -477,8 +474,8 @@ void CPlayerCharacter::UseItem()
 		{
 			for (int i = 0; i < 8; i++) {
 
-				float x = sin(glm::radians(m_Yrot - 6.0f + i * 45.0f)) * radius * 1.1f;
-				float z = cos(glm::radians(m_Yrot - 6.0f + i * 45.0f)) * radius * 1.1f;
+				float x = sin(glm::radians(m_Yrot - 6.0f + i * 45.0f)) * m_radius * 1.1f;
+				float z = cos(glm::radians(m_Yrot - 6.0f + i * 45.0f)) * m_radius * 1.1f;
 
 				glm::vec3 pos = glm::vec3(x, 0, z) + Position();
 
@@ -491,8 +488,8 @@ void CPlayerCharacter::UseItem()
 		case ItemsCode::ELECTROWIND:
 		{
 			for (int i = 0; i < 3; i++) {
-				float x = sin(glm::radians(m_Yrot -180 - 3 + i * 3)) * radius * 1.1;
-				float z = cos(glm::radians(m_Yrot -180 - 3 + i * 3)) * radius * 1.1;
+				float x = sin(glm::radians(m_Yrot -180 - 3 + i * 3)) * m_radius * 1.1;
+				float z = cos(glm::radians(m_Yrot -180 - 3 + i * 3)) * m_radius * 1.1;
 
 				glm::vec3 pos = glm::vec3(x, 0, z) + Position();
 
@@ -505,8 +502,8 @@ void CPlayerCharacter::UseItem()
 
 			for (int i = 0; i < 5; i++) {
 			
-				float x = sin(glm::radians(m_Yrot - 6 + i * 3)) * radius * 1.1;
-				float z = cos(glm::radians(m_Yrot - 6 + i * 3)) * radius * 1.1;
+				float x = sin(glm::radians(m_Yrot - 6 + i * 3)) * m_radius * 1.1;
+				float z = cos(glm::radians(m_Yrot - 6 + i * 3)) * m_radius * 1.1;
 
 				glm::vec3 pos = glm::vec3(x, 0, z) + Position();
 
@@ -551,8 +548,8 @@ void CPlayerCharacter::UseItem()
 		case ItemsCode::FAKEITEM:
 		case ItemsCode::FAKEITEM2:
 		{
-			float x = sin(glm::radians(m_Yrot)) * radius * -1.1;
-			float z = cos(glm::radians(m_Yrot)) * radius * -1.1;
+			float x = sin(glm::radians(m_Yrot)) * m_radius * -1.1;
+			float z = cos(glm::radians(m_Yrot)) * m_radius * -1.1;
 
 			glm::vec3 pos = glm::vec3(x, 0, z) + this->Position();
 
@@ -562,8 +559,8 @@ void CPlayerCharacter::UseItem()
 
 		case ItemsCode::BOMB:
 		{
-			float x = sin(glm::radians(m_Yrot)) * radius * -1.1;
-			float z = cos(glm::radians(m_Yrot)) * radius * -1.1;
+			float x = sin(glm::radians(m_Yrot)) * m_radius * -1.1;
+			float z = cos(glm::radians(m_Yrot)) * m_radius * -1.1;
 
 			glm::vec3 pos = glm::vec3(x, 0, z) + this->Position();
 
@@ -611,7 +608,7 @@ void CPlayerCharacter::Dead()
 	}
 }
 
-void CPlayerCharacter::inputOptionFunc(float delta)
+void CPlayerCharacter::InputOptionFunc(float delta)
 {
 	GameEngine& game = GameEngine::Instance();
 
@@ -643,7 +640,7 @@ glm::vec3 CPlayerCharacter::CollisionCheckAndBounce(glm::vec3 pos, float radius,
 {
 	float distance = glm::distance(this->m_entity->Position(), pos);
 
-	if (distance < radius + this->radius) {
+	if (distance < radius + m_radius) {
 		this->currentBounceTime = bounceTime;
 		
 		this->m_bounceVel = this->Position() - pos;
@@ -843,6 +840,9 @@ void CPlayerCharacter::AutoDrive(float delta, std::vector<CPlayerCharacter*> cha
 	}
 }
 
+/*
+カメラ位置の更新.
+*/
 void CPlayerCharacter::CameraUpdate(float delta)
 {
 	GameEngine& game = GameEngine::Instance();
@@ -853,7 +853,7 @@ void CPlayerCharacter::CameraUpdate(float delta)
 			cameraGoalTurn += delta * 30;
 		}
 
-		glm::vec3 pos = CalcPosition(Position(), Yrot() + CameraYDif + cameraGoalTurn,/* 89*/15, /*200*/20 + CurrentSpeedUpTime);
+		glm::vec3 pos = game.CalcPosition(Position(), Yrot() + CameraYDif + cameraGoalTurn,/* 89*/15, /*200*/20 + CurrentSpeedUpTime);
 		game.Camera({ { pos },{ this->Position() },{ 0, 1, 0 } }, m_playerIndex);
 	}
 }

@@ -127,6 +127,9 @@
     <Filter Include="Game\Scene\RaceScene">
       <UniqueIdentifier>{74d144a2-2d26-4a19-9c0e-f1eee7178b14}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Utilities\UITexture\RaceSceneUI">
+      <UniqueIdentifier>{e0f4471a-2da9-45ed-9e87-40a73049f0bf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">

@@ -17,6 +17,7 @@
 #include <functional>
 #include <random>
 
+//使用するサウンドのタイプ.
 enum SoundType {
 	BGM = 0,
 	SEUI = 1,
@@ -25,6 +26,8 @@ enum SoundType {
 	SHOOT = 4,
 	OTHERS = 5,
 };
+
+
 
 /*
 ゲームエンジンクラス.
@@ -66,6 +69,7 @@ public:
 	const Entity::CollisionHandlerType& CollisionHandler(int gid0, int gid1) const;
 	void ClearCollisionHandlerList();
 
+
 	void SetCubeMap(const char * filename);
 
 	bool SetGroundTexture(int textureNum ,const char* filename);
@@ -106,8 +110,9 @@ public:
 		return camera[index];
 	}
 
-	void toggleFullScreen();
+	void ToggleFullScreen();
 	void EndGame();
+
 
 	bool InitAudio(const char* acfPath, const char* acbPath, const char* awbPath,
 		const char* dspBusName, size_t playerCount);
@@ -140,6 +145,49 @@ public:
 		return itr->second;
 	}
 
+	/*
+ベクターの一部のポインタの削除.
+
+@param	vector	削除するベクター.
+@param	index	そのベクターの位置.
+*/
+	template<typename T>
+	void Remove(std::vector<T>& vector, int index)
+	{
+		delete vector[index];
+		vector.erase(vector.begin() + index);
+	}
+
+	/*
+	ベクターのすべてのポインタを削除.
+
+	@param	削除するベクター.
+	*/
+	template<typename T>
+	void DeleteAll(std::vector<T>& vector)
+	{
+		for (int i = 0; i < vector.size(); i++) {
+			delete vector[i];
+		}
+
+		vector.clear();
+	}
+
+	glm::vec3 CalcPosition(glm::vec3 pos, float rotateX, float rotateY, float distance)
+	{
+		rotateX = glm::radians(rotateX);
+		rotateY = glm::radians(rotateY);
+
+		float x = sin(rotateX) * distance;
+		float z = cos(rotateX) * distance;
+
+		float lengthRatio = cos(rotateY) * x;
+		float lengthZ = cos(rotateY) * z;
+		float y = sin(rotateY) * distance;
+
+		return glm::vec3(pos.x + lengthRatio, pos.y + y, pos.z + lengthZ);
+	}
+
 private:
 	GameEngine() = default;
 	~GameEngine();
@@ -164,8 +212,8 @@ private:
 	GLuint ibo = 0;
 	GLuint vao = 0;
 
-	GLuint vbo2 = 0;
-	GLuint vao2 = 0;
+	GLuint skyboxVbo = 0;
+	GLuint skyboxVao = 0;
 
 	GLuint groundVbo = 0;
 	GLuint groundVao = 0;

@@ -1,11 +1,24 @@
 #include "ItemGetEffect.h"
 #include "../../../GameEngine.h"
 
-bool CitemGetEffect::Init(glm::vec3 pos, glm::vec4 color)
+/*
+初期化処理.
+
+@param	pos		出現位置.
+@param	color	色.
+@param	emitNum	出現数.
+*/
+bool CSparcleEffect::Init(glm::vec3 pos, glm::vec4 color, int emitNum)
 {
 	GameEngine& game = GameEngine::Instance();
 	
-	for (int i = 0; i < 5; i++) {
+	m_potition.resize(emitNum);
+	m_velocity.resize(emitNum);
+	m_scales.resize(emitNum);
+
+	m_emitNum = emitNum;
+
+	for (int i = 0; i < emitNum; i++) {
 
 		m_potition[i] = pos;
 
@@ -14,19 +27,23 @@ bool CitemGetEffect::Init(glm::vec3 pos, glm::vec4 color)
 			game.GetRandomFloat(m_randMaxVel, 0.0f),
 			game.GetRandomFloat(m_randMaxVel, m_randMinVel));
 		
-		m_scale[i] = game.GetRandomFloat(m_randMaxScale, m_randMinScale);
+		m_scales[i] = game.GetRandomFloat(m_randMaxScale, m_randMinScale);
 	}
 
 	m_color = color;
-
 	m_active = true;
 
 	return true;
 }
 
-void CitemGetEffect::Update(float delta)
+/*
+更新処理.
+
+@param	delta	
+*/
+void CSparcleEffect::Update(float delta)
 {
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < m_emitNum; i++) {
 		m_potition[i] += m_velocity[i] * delta;
 	}
 
@@ -37,16 +54,22 @@ void CitemGetEffect::Update(float delta)
 	}
 }
 
-void CitemGetEffect::Draw()
+/*
+有向グラフの取得.
+*/
+bool CSparcleEffect::IsActive()
+{
+	return m_active;
+}
+
+/*
+描画処理.
+*/
+void CSparcleEffect::Draw()
 {
 	GameEngine& game = GameEngine::Instance();
 
-	for (int i = 0; i < 5; i++) {
-		game.AddEffect(m_potition[i], glm::vec2(m_scale[i]), m_color, "res/Texture/itemGetSparkle.dds");
+	for (int i = 0; i < m_emitNum; i++) {
+		game.AddEffect(m_potition[i], glm::vec2(m_scales[i]), m_color, "res/Texture/itemGetSparkle.dds");
 	}
-}
-
-bool CitemGetEffect::IsActive()
-{
-	return m_active;
 }

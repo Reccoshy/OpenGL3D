@@ -45,7 +45,7 @@ public:
 
 	//エフェクト
 	void SpawnEffectAccelDust(glm::vec3 pos);
-	void SpawnEffectItemGetSparkle(glm::vec3 pos, glm::vec4 color);
+	void SpawnEffectSparkle(glm::vec3 pos, glm::vec4 color, int emitNum);
 	void SpawnEffectSpeedUp(glm::vec3 pos, float yRot, float speed);
 	void SpawnEffectRespawn(glm::vec3 pos, float lifeTime);
 
@@ -94,7 +94,7 @@ private:
 
 	//エフェクト.
 	std::vector<AccelDust*> m_pAccelDusts;
-	std::vector<CitemGetEffect*> m_pItemGetEffects;
+	std::vector<CSparcleEffect*> m_pSparcleEffects;
 	std::vector<SpeedUpEffect*> m_pSpeedUpEffects;
 	std::vector<RespawnEffect*> m_pRespawnEffects;
 
@@ -140,20 +140,29 @@ private:
 		glm::vec4(0, 0.5, 1, 1),
 	};
 
+	//ミニマップ
 	MiniMap m_minimap;
 
+	//後方注意
 	AttackInformer m_attackInformer[4];
 	
 private:
+
 	void Init();
 
 	void EndFunc();
 
+	//===========================
+	//ゲーム状況にそれぞれの更新処理.
+	//===========================
 	void UpdateInGame(float delta);
 	void UpdateGameStart(float delta);
 	void UpdatePause(float delta);
 	void UpdateResult(float delta);
 
+	//=================================
+	//ステージ生成用関数.
+	//=================================
 	bool LoadStageFromFile(char* const filename);
 	bool LoadCheckPointFromFile(char* const filename);
 	bool LoadItemsFromFile(char* const filename);
@@ -161,6 +170,7 @@ private:
 	void WallSetPointToPoint(glm::vec3 from, glm::vec3 to, float space);
 	
 	bool LoadStageTextures(char* const filename);
+
 
 	void PlayerUpdate(float delta);
 
@@ -172,7 +182,9 @@ private:
 
 	void CheckPoint();
 	void CollisionChecks();
+	
 	void RankingCheck();
+	void RankingSortFromTime();
 
 	void CheckAllPlayerFinished();
 

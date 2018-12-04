@@ -283,17 +283,17 @@ bool GameEngine::Init(int w, int h, const char* title, bool fullScreen)
 		InterfaceBlock::BINDINGPOINT_POSTEFFECTDATA, "PostEffectData");
 	offscreen = OffscreenBuffer::Create(width, height);
 
-	// Setup skybox VAO
-	glGenVertexArrays(1, &vao2);
-	glGenBuffers(1, &vbo2);
-	glBindVertexArray(vao2);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo2);
+	//キューブマップVAO
+	glGenVertexArrays(1, &skyboxVao);
+	glGenBuffers(1, &skyboxVbo);
+	glBindVertexArray(skyboxVao);
+	glBindBuffer(GL_ARRAY_BUFFER, skyboxVbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid *)0);
 	glBindVertexArray(0);
 
-	// Setup ground VAO
+	//地面のVAO
 	glGenVertexArrays(1, &groundVao);
 	glGenBuffers(1, &groundVbo);
 	glBindVertexArray(groundVao);
@@ -304,9 +304,6 @@ bool GameEngine::Init(int w, int h, const char* title, bool fullScreen)
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(GroundVertex), (GLvoid*)offsetof(GroundVertex, texCoord));
 	glBindVertexArray(0);
-
-
-
 
 
 	if (!vbo || !ibo || !vao || !uboLight || !uboPostEffect || !offscreen) {
@@ -705,7 +702,7 @@ void GameEngine::RemoveGroundTexture()
 /*
 全画面表示切替え.
 */
-void GameEngine::toggleFullScreen()
+void GameEngine::ToggleFullScreen()
 {
 	GLFWEW::Window& window = GLFWEW::Window::instance();
 
@@ -936,13 +933,13 @@ void GameEngine::RenderCubeMap(int cameraNum) const
 	glDepthFunc(GL_LEQUAL);
 	shaderMap.find("CubeMap")->second->UseProgram();
 
-	glm::mat4 view = glm::mat4(glm::mat3(glm::lookAt(camera[cameraNum].position, camera[cameraNum].target, camera[cameraNum].up)));	// Remove any translation component of the view matrix
+	glm::mat4 view = glm::mat4(glm::mat3(glm::lookAt(camera[cameraNum].position, camera[cameraNum].target, camera[cameraNum].up)));
 	glm::mat4 projection = glm::perspective(glm::radians(45.0f), static_cast<float>(width) / static_cast<float> (height), 1.0f, 200.0f);
 
 	glUniformMatrix4fv(glGetUniformLocation(shaderMap.find("CubeMap")->second->getProgram(), "view"), 1, GL_FALSE, &view[0][0]);
 	glUniformMatrix4fv(glGetUniformLocation(shaderMap.find("CubeMap")->second->getProgram(), "projection"), 1, GL_FALSE, &projection[0][0]);
 	
-	glBindVertexArray(vao2);
+	glBindVertexArray(skyboxVao);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture->Id());
 	glDrawArrays(GL_TRIANGLES, 0, sizeof(skyboxVertices) / 3);
