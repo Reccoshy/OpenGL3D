@@ -93,8 +93,9 @@ int Item::CollisionCheck(glm::vec3 pos, float radius)
 
 	float distance = glm::distance(this->m_pEntity->Position(), pos);
 
+	
 	//ƒAƒCƒeƒ€“üèˆ—.
-	if (distance < radius) {
+	if (distance < radius + m_radius) {
 
 		this->m_time = this->respawnTime;
 		this->m_active = false;

@@ -11,9 +11,6 @@ class RaceScene;
 class Missile {
 public:
 	
-	/*
-	
-	*/
 	bool Init(glm::vec3 pos, float rot, RaceScene* m_pScene, bool aiming = false);
 
 
@@ -24,6 +21,8 @@ public:
 
 
 	void DetectPlayersAndChase(float delta, std::vector<CPlayerCharacter*> players);
+
+	void SpawnEffects();
 
 	glm::vec3 Position()
 	{
@@ -44,6 +43,8 @@ private:
 	//レース中のシーン.
 	RaceScene* m_pRaceScene = nullptr;
 
+
+	float m_radius = 1.0f;
 	//向いている方向.
 	float m_Yrot = 0.0f;
 

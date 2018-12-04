@@ -653,7 +653,6 @@ glm::vec3 CPlayerCharacter::CollisionCheckAndBounce(glm::vec3 pos, float radius,
 		m_bounceVel = glm::normalize(m_bounceVel);
 
 		this->m_bounceVel *= 10.0f;
-
 		this->m_velocity = 0;
 	}
 

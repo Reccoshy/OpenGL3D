@@ -18,7 +18,7 @@ void Obstacle::Init(glm::vec3 pos, float radius)
 
 	this->m_colRadius = radius;
 
-	m_pEntity->Scale(glm::vec3(radius */* 1.4*/  0.008));
+	m_pEntity->Scale(glm::vec3(radius * 0.008));
 
 	return;
 }

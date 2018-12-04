@@ -76,37 +76,24 @@ bool StageSelectScene::LoadStageData()
 	while (fscanf(fp, "%s", text) != EOF)
 	{
 		if (line == getLine * repeat) {
-
-			for (int i = 0; i < 100; i++) {
-				this->scoreFile[i] = text[i];
-			}
 			snprintf(scoreFile, 100, "%s",text);
 			this->LoadHighScore();
 		}
 		else if (line == getLine * repeat + 1) {
-			for (int i = 0; i < 100; i++) {
-				this->stageName[i] = text[i];
-			}
+			
+			snprintf(stageName, 100, "%s", text);
 		}
 		else if (line == getLine * repeat + 2) {
-			for (int i = 0; i < 100; i++) {
-				this->stageDataTexfile[i] = text[i];
-			}
+			snprintf(stageDataTexfile, 100, "%s", text);
 		}
 		else if (line == getLine * repeat + 3) {
-			for (int i = 0; i < 100; i++) {
-				this->checkPointTexfile[i] = text[i];
-			}
+			snprintf(checkPointTexfile, 100, "%s", text);
 		}
 		else if (line == getLine * repeat + 4) {
-			for (int i = 0; i < 100; i++) {
-				this->itemTexfile[i] = text[i];
-			}
+			snprintf(itemTexfile, 100, "%s", text);
 		}
 		else if (line == getLine * repeat + 5) {
-			for (int i = 0; i < 100; i++) {
-				this->texFile[i] = text[i];
-			}
+			snprintf(texFile, 100, "%s", text);
 			break;
 		}
 		line++;
@@ -285,7 +272,7 @@ void StageSelectScene::ShowTextUI(float delta)
 	snprintf(str, 32, "%d: %s", m_stageSelect.getIndex(), stageName);
 	game.FontColor(glm::vec4(1));
 	game.FontScale(glm::vec2(2));
-	game.AddString(glm::vec2(windowSize.x + 250/*1400*/ + m_uIAdder, 200), str);
+	game.AddString(glm::vec2(windowSize.x + 250 + m_uIAdder, 200), str);
 	game.AddImage(glm::vec2(windowSize.x + 100 + m_uIAdder - arrow, 190), "res/Texture/ArrorL.dds");
 	game.AddImage(glm::vec2(windowSize.x + 950 + m_uIAdder + arrow, 190), "res/Texture/ArrorR.dds");
 
@@ -298,15 +285,15 @@ void StageSelectScene::ShowTextUI(float delta)
 	}
 	snprintf(str, 32, "Best Lap Time : %d:%05.2f", minute, second);
 	game.FontColor(glm::vec4(1, 1, 0, 1));
-	game.AddString(glm::vec2(windowSize.x + 100/*1400*/ + m_uIAdder, windowSize.y - 200/*800*/), str);
+	game.AddString(glm::vec2(windowSize.x + 100 + m_uIAdder, windowSize.y - 200), str);
 
 
 	snprintf(str, 32, "%d: %s", m_stageSelect.getIndex(), stageName);
 	game.FontColor(glm::vec4(1));
 	game.FontScale(glm::vec2(2));
-	game.AddString(glm::vec2(windowSize.x * 2 + 100/*2500*/ + m_uIAdder, 200), "PRESS A TO CONTINUE");
-
+	game.AddString(glm::vec2(windowSize.x * 2 + 100 + m_uIAdder, 200), "PRESS A TO CONTINUE");
 }
+
 
 void StageSelectScene::SceneChanger(float delta)
 {

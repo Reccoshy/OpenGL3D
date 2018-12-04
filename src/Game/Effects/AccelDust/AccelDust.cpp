@@ -1,19 +1,24 @@
 #include "AccelDust.h"
 #include "../../../GameEngine.h"
 
+/*
+初期化処理.
+
+@param	pos	エフェクトの出現場所.
+*/
 bool AccelDust::Init(glm::vec3 pos)
 {
-	GameEngine& game = GameEngine::Instance();
-
-	game.AddEffect(pos, glm::vec2(m_scale), m_color, "res/Texture/MiniMap/mapPlayerDotUi.dds");
-
 	m_position = pos;
-
 	m_active = true;
 
 	return true;
 }
 
+/*
+更新処理.
+
+@param	dt	1フレームの更新処理.
+*/
 void AccelDust::Update(float dt)
 {
 	if (m_active) {
@@ -26,9 +31,12 @@ void AccelDust::Update(float dt)
 	}
 }
 
+/*
+描画処理.
+*/
 void AccelDust::Draw()
 {
 	GameEngine& game = GameEngine::Instance();
 
-	game.AddEffect(m_position, glm::vec2(m_scale), m_color, "res/Texture/MiniMap/mapPlayerDotUi.dds");
+	game.AddEffect(m_position, glm::vec2(m_scale), m_color, "res/Texture/itemGetSparkle.dds");
 }

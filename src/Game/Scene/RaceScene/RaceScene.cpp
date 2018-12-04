@@ -66,7 +66,7 @@ void RaceScene::operator()(float delta)
 {
 	this->DeleteCheck();
 
-	if (!isInitialized) {
+	if (!m_isInitialized) {
 		this->Init();
 	}
 
@@ -263,7 +263,7 @@ void RaceScene::Init()
 
 	game.SetCameraNum(PlayerNum);
 
-	isInitialized = true;
+	m_isInitialized = true;
 
 	this->m_activeInput = true;
 	this->blackFilter.Init();
@@ -911,15 +911,21 @@ void RaceScene::CheckAllPlayerFinished()
 
 		if (m_pPlayerCharacters.size() - 1 == i) {
 			this->m_isInResult = true;
-			for (int j = 0; j < m_pPlayerCharacters.size(); j++) {
-				if (!m_pPlayerCharacters[j]->GetFinishedRace()) {
-					//while (!m_pPlayerCharacters[j]->GetFinishedRace())
-					//{
-					//	if (m_pPlayerCharacters[j]->GetPlayerLapTime().size() > 0) {
-					//		float time = *m_pPlayerCharacters[j]->GetPlayerLapTime().begin();
-					//	//	m_pPlayerCharacters[j]->PassGoal()
-					//	}
-					//}
+
+			this->CalcFinishTime();
+		}
+	}
+}
+
+void RaceScene::CalcFinishTime()
+{
+	for (int i = 0; i < m_pPlayerCharacters.size(); i++) {
+		if (!m_pPlayerCharacters[i]->GetFinishedRace()) {
+			while (!m_pPlayerCharacters[i]->GetFinishedRace())
+			{
+				if (m_pPlayerCharacters[i]->GetPlayerLapTime().size() > 0) {
+					float time = *m_pPlayerCharacters[i]->GetPlayerLapTime().begin();
+					m_pPlayerCharacters[i]->PassGoal(time);
 				}
 			}
 		}
@@ -964,7 +970,7 @@ void RaceScene::SceneChanger(float delta)
 	{
 	case NEXT_SCENE::InRace:
 		this->EndFunc();
-		this->isInitialized = false;
+		this->m_isInitialized = false;
 		break;
 
 	case NEXT_SCENE::StageSelect:
@@ -1001,7 +1007,7 @@ void RaceScene::ShowUI(float delta)
 		
 		game.FontColor(glm::vec4(1.0f));
 		game.FontScale(glm::vec2(2.0f));
-		game.AddString(glm::vec2(windowSize.x - 430.0f/*770.0f*/, 24.0f), "Lap", i);
+		game.AddString(glm::vec2(windowSize.x - 430.0f, 24.0f), "Lap", i);
 		
 		if (m_pPlayerCharacters[i]->GetLap() <= lapNum) {
 			snprintf(str, 16, "%d", m_pPlayerCharacters[i]->GetLap());
@@ -1011,18 +1017,18 @@ void RaceScene::ShowUI(float delta)
 			snprintf(str, 16, "%d", lapNum);
 			game.FontColor(glm::vec4(1, 0, 0, 1));
 		}
-		game.AddString(glm::vec2(windowSize.x - 300.0f/*900.0f*/, 24.0f), str, i);
+		game.AddString(glm::vec2(windowSize.x - 300.0f, 24.0f), str, i);
 
 		game.FontColor(glm::vec4(1, 1, 1, 1));
-		game.AddString(glm::vec2(windowSize.x - 225.0f/*975.0f*/, 24.0f), "/", i);
+		game.AddString(glm::vec2(windowSize.x - 225.0f, 24.0f), "/", i);
 
 		snprintf(str, 16, "%d", lapNum);
 		game.FontColor(glm::vec4(1, 1, 0, 1));
-		game.AddString(glm::vec2(windowSize.x - 150.0f/*1050.0f*/, 24.0f), str, i);
+		game.AddString(glm::vec2(windowSize.x - 150.0f, 24.0f), str, i);
 
 		game.FontScale(glm::vec2(1.5f));
 		game.FontColor(glm::vec4(1.0f));
-		game.AddString(glm::vec2(windowSize.x - 280.0f/*920.0f*/, windowSize.y - 110.0f/*800.0f*/), "Speed", i);
+		game.AddString(glm::vec2(windowSize.x - 280.0f, windowSize.y - 110.0f), "Speed", i);
 
 		game.ImageColor(glm::vec4(0, 1, 0, 1));
 		game.ImageScale(glm::vec2(0.75));
@@ -1031,7 +1037,7 @@ void RaceScene::ShowUI(float delta)
 		snprintf(str, 16, "%06.2f", m_pPlayerCharacters[i]->Velocity());
 		game.FontScale(glm::vec2(1.5f));
 		game.FontColor(glm::vec4(1.0f));
-		game.AddString(glm::vec2(windowSize.x - 280.0f/*920.0f*/, windowSize.y - 60.0f/*840.0f*/), str, i);
+		game.AddString(glm::vec2(windowSize.x - 280.0f, windowSize.y - 60.0f), str, i);
 		
 		game.ImageScale(glm::vec2(0.75));
 		game.AddImage(glm::vec2(windowSize.x - 310.0f, windowSize.y - 70.0f), "res/Texture/SpeedMeter.dds", i);
@@ -1040,11 +1046,11 @@ void RaceScene::ShowUI(float delta)
 
 		game.FontColor(glm::vec4(0, 0, 0, 1));
 		game.FontScale(glm::vec2(2.0));
-		game.AddString(glm::vec2(windowSize.x - 305.0f/*920.0f*/, windowSize.y - 195.0f/*720.0f*/), str, i);
+		game.AddString(glm::vec2(windowSize.x - 305.0f, windowSize.y - 195.0f), str, i);
 
 		game.FontColor(rankColor[m_pPlayerCharacters[i]->GetRank()]);
 		game.FontScale(glm::vec2(2.0));
-		game.AddString(glm::vec2(windowSize.x - 310.0f/*920.0f*/, windowSize.y - 200.0f/*720.0f*/), str, i);
+		game.AddString(glm::vec2(windowSize.x - 310.0f, windowSize.y - 200.0f), str, i);
 
 		this->RankingCheck();
 
@@ -1059,20 +1065,20 @@ void RaceScene::ShowUI(float delta)
 				game.ImageColor(glm::vec4(0, 1, 1, 1));
 			}
 			game.FontScale(glm::vec2(1.2f));
-			game.AddString(glm::vec2(24.0, windowSize.y - 180.0f/*750.0*/), "MIX", i);
+			game.AddString(glm::vec2(24.0, windowSize.y - 180.0f), "MIX", i);
 
 			game.FontColor(glm::vec4(1, 1, 0, 1));
-			game.AddString(glm::vec2(100.0, windowSize.y - 180.0f/*750.0*/), "L + R", i);
+			game.AddString(glm::vec2(100.0, windowSize.y - 180.0f), "L + R", i);
 		}
 		else {
 			game.ImageColor(glm::vec4(0, 1, 1, 1));
 		}
 
-		this->ItemUI(glm::vec2(36.0, windowSize.y - 130.0f/*800.0*/), glm::vec2(1.0f), (ItemsCode)(m_pPlayerCharacters[i]->GetStockItemId()), i);
+		this->ItemUI(glm::vec2(36.0, windowSize.y - 130.0f), glm::vec2(1.0f), (ItemsCode)(m_pPlayerCharacters[i]->GetStockItemId()), i);
 		game.ImageScale(glm::vec2(0.75f));
 		game.AddImage(glm::vec2(8.0f, windowSize.y - 145.0f), "res/Texture/SpeedMeter.dds", i);
 
-		this->ItemUI(glm::vec2(36.0, windowSize.y - 80.0f/*830.0*/), glm::vec2(2), (ItemsCode)(m_pPlayerCharacters[i]->GetItemId()), i);
+		this->ItemUI(glm::vec2(36.0, windowSize.y - 80.0f), glm::vec2(2), (ItemsCode)(m_pPlayerCharacters[i]->GetItemId()), i);
 		game.ImageScale(glm::vec2(1.1f, 1.0f));
 		game.AddImage(glm::vec2(8.0, windowSize.y - 100.0f), "res/Texture/SpeedMeter.dds", i);
 
@@ -1210,7 +1216,7 @@ void RaceScene::RankingUI()
 
 			game.FontScale(glm::vec2(4.0));
 
-			game.AddString(glm::vec2(windowSize.x * 0.2f/*200.0f*/, windowSize.y * 0.2 /*120.0f*/), "GOAL!", i);
+			game.AddString(glm::vec2(windowSize.x * 0.2f, windowSize.y * 0.2), "GOAL!", i);
 
 			snprintf(str, 16, "%d Place!", m_pPlayerCharacters[i]->GetRank());
 			game.FontScale(glm::vec2(4.0));
@@ -1223,7 +1229,7 @@ void RaceScene::RankingUI()
 			else {
 				game.FontColor(glm::vec4(1));
 			}
-			game.AddString(glm::vec2(windowSize.x * 0.3f/*300.0f*/, windowSize.y * 0.4 /*300.0f*/), str, i);
+			game.AddString(glm::vec2(windowSize.x * 0.3f, windowSize.y * 0.4), str, i);
 		}
 	}
 }
@@ -1238,7 +1244,7 @@ void RaceScene::OptionUI()
 
 	if (m_pausing) {
 		snprintf(str, 16, "Player%d pause", PauseIndex + 1);
-		game.AddString(glm::vec2(windowSize.x * 0.2f, windowSize.y * 0.2f /*400, 100*/), str, 0, true);
+		game.AddString(glm::vec2(windowSize.x * 0.2f, windowSize.y * 0.2f), str, 0, true);
 	}
 
 	if (resultCommand.getIndex() == 0) {
@@ -1250,9 +1256,9 @@ void RaceScene::OptionUI()
 		game.ImageColor(glm::vec4(0.2, 0.2, 0.2, 1));
 	}
 	game.FontScale(glm::vec2(2));
-	game.AddString(glm::vec2(/*300*/ windowSize.x * 0.4, /*600*/windowSize.y -300.0f), "Retry", 0, true);
+	game.AddString(glm::vec2(windowSize.x * 0.4, windowSize.y -300.0f), "Retry", 0, true);
 	game.ImageScale(glm::vec2(1.2, 1));
-	game.AddImage(glm::vec2(/*250*/ windowSize.x * 0.4 - 50, windowSize.y -325.0f), "res/Texture/SpeedMeter.dds", 0, true);
+	game.AddImage(glm::vec2(windowSize.x * 0.4 - 50, windowSize.y -325.0f), "res/Texture/SpeedMeter.dds", 0, true);
 
 	if (resultCommand.getIndex() == 1) {
 		game.FontColor(glm::vec4(1, 0, 0, 1));
@@ -1263,8 +1269,8 @@ void RaceScene::OptionUI()
 		game.ImageColor(glm::vec4(0.2, 0.2, 0.2, 1));
 	}
 	game.FontScale(glm::vec2(2));
-	game.AddString(glm::vec2(/*300*/ windowSize.x * 0.4, /*700*/ windowSize.y - 200.0f), "Stage Select", 0, true);
-	game.AddImage(glm::vec2(/*250*/ windowSize.x * 0.4 - 50, windowSize.y - 225.0f), "res/Texture/SpeedMeter.dds", 0 ,true);
+	game.AddString(glm::vec2(windowSize.x * 0.4, windowSize.y - 200.0f), "Stage Select", 0, true);
+	game.AddImage(glm::vec2(windowSize.x * 0.4 - 50, windowSize.y - 225.0f), "res/Texture/SpeedMeter.dds", 0 ,true);
 
 	if (resultCommand.getIndex() == 2) {
 		game.FontColor(glm::vec4(1, 0, 0, 1));
@@ -1275,8 +1281,8 @@ void RaceScene::OptionUI()
 		game.ImageColor(glm::vec4(0.2, 0.2, 0.2, 1));
 	}
 	game.FontScale(glm::vec2(2));
-	game.AddString(glm::vec2(/*300*/ windowSize.x * 0.4, /*800*/ windowSize.y - 100.0f), "Back To Title", 0, true);
-	game.AddImage(glm::vec2(/*250*/ windowSize.x * 0.4 - 50, windowSize.y - 125.0f), "res/Texture/SpeedMeter.dds", 0, true);
+	game.AddString(glm::vec2(windowSize.x * 0.4, windowSize.y - 100.0f), "Back To Title", 0, true);
+	game.AddImage(glm::vec2(windowSize.x * 0.4 - 50, windowSize.y - 125.0f), "res/Texture/SpeedMeter.dds", 0, true);
 }
 
 void RaceScene::ShowResult(float delta)
@@ -1314,6 +1320,7 @@ void RaceScene::ShowResult(float delta)
 		game.ImageScale(glm::vec2(1.7, 1));
 		game.AddImage(glm::vec2(350 + m_resultMover, 130 + i * 100), "res/Texture/SpeedMeter.dds", 0, true);
 	}
+
 	if (m_resultMover > 0.0f) {
 		m_resultMover -= delta * windowSize.x;
 		if (m_resultMover <= 0.0f) {

@@ -77,6 +77,8 @@ private:
 	//アイテム有効フラグまでの経過時間.
 	float m_time = 0.0f;
 
+	float m_radius = 1.5f;
+
 	//有効フラグ.
 	bool m_active = true;
 	//影.

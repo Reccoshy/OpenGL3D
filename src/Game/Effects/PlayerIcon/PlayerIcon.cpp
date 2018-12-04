@@ -13,8 +13,6 @@ bool PlayerIcon::Init(int index, float height, glm::vec3 pos)
 void PlayerIcon::Update(glm::vec3 pos)
 {
 	m_position = pos;
-
-//	Draw();
 }
 
 void PlayerIcon::Draw()

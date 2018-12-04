@@ -34,6 +34,8 @@ private:
 	std::vector<glm::vec2> scale;
 	//画像のテクスチャのベクター.
 	std::vector<TexturePtr> textures;
+	
+	std::vector<int> showIndex;
 
 	//エフェクトのVBOのベクター.
 	std::vector<GLuint> effectsVbo;

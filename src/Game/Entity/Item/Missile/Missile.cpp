@@ -43,6 +43,8 @@ void Missile::Update(float delta, std::vector<CPlayerCharacter*> players)
 		this->m_pEntity->Position(pos);
 
 		this->m_shadow.Update(pos);
+
+		this->SpawnEffects();
 	}
 }
 
@@ -128,7 +130,11 @@ void Missile::DetectPlayersAndChase(float delta, std::vector<CPlayerCharacter*> 
 		m_Yrot += m_turnRate * delta;
 	}
 
-	std::cout << checker << " " << degree << std::endl;
+}
+
+void Missile::SpawnEffects()
+{
+	m_pRaceScene->SpawnEffectSpeedUp(Position(), m_Yrot, m_velocity);
 }
 
 void Missile::Destroy()

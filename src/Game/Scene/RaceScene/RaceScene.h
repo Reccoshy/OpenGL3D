@@ -33,6 +33,7 @@ public:
 	~RaceScene();
 	void operator()(float delta);
 
+	//アイテム
 	void SpawnElectroTrap(glm::vec3 pos);
 	void SpawnMissile(glm::vec3 pos, float X_rot, bool aiming = false);
 	void SpawnNuke(glm::vec3 pos, float y_rot);
@@ -42,15 +43,20 @@ public:
 	void SpawnFakeItem(glm::vec3 pos);
 	void SpawnEffectExplode(glm::vec3 pos);
 
+	//エフェクト
 	void SpawnEffectAccelDust(glm::vec3 pos);
 	void SpawnEffectItemGetSparkle(glm::vec3 pos, glm::vec4 color);
 	void SpawnEffectSpeedUp(glm::vec3 pos, float yRot, float speed);
 	void SpawnEffectRespawn(glm::vec3 pos, float lifeTime);
 
-	bool BestTimeCheck(float Time);
-	
-	void OptionCommand(bool isAdd);
 
+	bool BestTimeCheck(float Time);
+
+
+	void TogglePause(int playerindex);
+
+	void OptionCommand(bool isAdd);
+	
 	void ActOptionCommand();
 
 	void PlayAudioCheck(glm::vec3 pos, float distance, int soundType, int audioId);
@@ -59,19 +65,21 @@ public:
 
 	std::vector<Obstacle*> getObstacles();
 
-	void TogglePause(int playerindex);
-
 	int GetLapNum() { return lapNum; }
 
 private:
-	bool isInitialized = false;
+	
+	bool m_isInitialized = false;
 
 	std::vector<CPlayerCharacter*> m_pPlayerCharacters;
 
 	std::vector<Goal*> m_pGoals;
-	std::vector<Item*> m_pItems;
-
+	
+	//障害物.
 	std::vector<Obstacle*> m_pObstacles;
+
+	//アイテム
+	std::vector<Item*> m_pItems;
 
 	std::vector<ElectroTrap*> m_pElectroTraps;
 	std::vector<Missile*> m_pMissiles;
@@ -81,12 +89,15 @@ private:
 	std::vector<FakeItem*> m_pFakeItems;
 	std::vector<Explosion*> m_pExplodes;
 
+	//爆発エンティティ.
 	std::vector<EffectDestroy*> m_pEffectExplodes;
 
+	//エフェクト.
 	std::vector<AccelDust*> m_pAccelDusts;
 	std::vector<CitemGetEffect*> m_pItemGetEffects;
 	std::vector<SpeedUpEffect*> m_pSpeedUpEffects;
 	std::vector<RespawnEffect*> m_pRespawnEffects;
+
 
 	std::vector<PlayerIcon*> m_pPlayerIcons;
 
@@ -109,7 +120,6 @@ private:
 
 	float m_resultMover = 0.0f;
 
-	int rank = 1;
 	int PlayerNum = 4;
 	int AirCraftNum = 4;
 
@@ -165,6 +175,8 @@ private:
 	void RankingCheck();
 
 	void CheckAllPlayerFinished();
+
+	void CalcFinishTime();
 
 	void SaveBestLap();
 
