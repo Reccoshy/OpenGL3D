@@ -41,11 +41,11 @@ public:
 		this->m_Shadow.Destroy();
 	}
 
-	void InputOptionFunc(float delta);
+	void InputOptionFunc();
 
 	bool GetFinishedRace() { return FinishedRace; }
 
-	glm::vec3 CollisionCheckAndBounce(glm::vec3 pos, float radius, glm::vec3 movement = glm::vec3(0), glm::vec3 force = glm::vec3(0));
+	void CollisionCheckAndBounce(glm::vec3 pos, float radius);
 
 	void AutoDrive(float delta, std::vector<CPlayerCharacter*> players);
 
@@ -113,6 +113,7 @@ private:
 	//プレイヤーのアクセルの速さ.
 	float m_velocity = 0.0f;
 
+	//実質の速さ.
 	glm::vec3 m_actualVel;
 	
 	//==================

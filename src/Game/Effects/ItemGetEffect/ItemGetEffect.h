@@ -3,7 +3,7 @@
 #include <glm/glm.hpp>
 #include <vector>
 
-class CSparcleEffect {
+class CsparkleEffect {
 public:
 	bool Init(glm::vec3 pos, glm::vec4 color, int emitNum);
 

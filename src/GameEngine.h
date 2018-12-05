@@ -27,8 +27,6 @@ enum SoundType {
 	OTHERS = 5,
 };
 
-
-
 /*
 ゲームエンジンクラス.
 */
@@ -122,6 +120,7 @@ public:
 	void StopAudio(int playerId);
 	void StopAllSound();
 
+
 	void SetCameraNum(int i);
 
 	void AddEffect(glm::vec3 pos, glm::vec2 scale, glm::vec4 color, const char* imageName);
@@ -173,6 +172,14 @@ public:
 		vector.clear();
 	}
 
+	/*
+	カメラの位置などの計算用.
+
+	@param	pos			中心点.
+	@param	rotateX		中心点からの左右の角度.
+	@param	rotateY		中心点から上下の角度.
+	@param	distance	中心とする場所からの距離.
+	*/
 	glm::vec3 CalcPosition(glm::vec3 pos, float rotateX, float rotateY, float distance)
 	{
 		rotateX = glm::radians(rotateX);

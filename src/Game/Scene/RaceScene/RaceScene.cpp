@@ -13,7 +13,17 @@
 #include <iostream>
 #include <fstream>
 
+/*
+レースシーンコンストラクタ.(ステージ情報読み込み).
 
+@param	scoreFile		周回最高タイム情報テキスト.
+@param	stageFile		ステージの壁情報テキスト.
+@param	checkPointFile	チェックポイント情報テキスト.
+@param	itemFile		アイテム配置情報テキスト.
+@param	texFileName		テクスチャ情報テキスト.
+@param	playerNum		参加プレイヤー数.
+@param	lap				周回数.
+*/
 RaceScene::RaceScene(char scoreFile[], char stageFile[], char checkPointFile[], char itemFile[], char texfileName[], int playerNum, int lap)
 {
 	snprintf(bestTimeFileName, 100, "%s", scoreFile);
@@ -55,95 +65,143 @@ void RaceScene::operator()(float delta)
 	this->SceneChanger(delta);
 }
 
+/*
+トラップを配置.
+
+@param	pos	位置.
+*/
 void RaceScene::SpawnElectroTrap(glm::vec3 pos)
 {
 	this->m_pElectroTraps.push_back(new ElectroTrap);
 	this->m_pElectroTraps.back()->init(pos, this);
 }
 
-void RaceScene::SpawnMissile(glm::vec3 pos, float Xrot, bool aiming)
+/*
+ミサイルを発射する.
+
+@param	pos		配置位置.
+@param	rot		発射方向.
+@param	aiming	追尾するかどうか.
+*/
+void RaceScene::SpawnMissile(glm::vec3 pos, float rot, bool aiming)
 {
 	m_pMissiles.push_back(new Missile);
-	m_pMissiles.back()->Init(pos, Xrot, this, aiming);
+	m_pMissiles.back()->Init(pos, rot, this, aiming);
 }
 
-void RaceScene::SpawnNuke(glm::vec3 pos, float y_rot)
+/*
+核爆弾発射.
+
+@param	pos	爆弾発射位置.
+@param	rot	爆弾発射方向.
+*/
+void RaceScene::SpawnNuke(glm::vec3 pos, float rot)
 {
-	int index = -1;
-	int value = 0;
-	glm::vec3* position = nullptr;
-
-	for (int i = 0; i < m_pPlayerCharacters.size(); i++) {
-
-		if (index == -1) {
-			index = i;
-			position = &m_pPlayerCharacters[i]->Position();
-			value = m_pPlayerCharacters[i]->GetLap() + m_pPlayerCharacters[i]->GetCheckPointIndex();
-		}
-		else {
-			if (value > m_pPlayerCharacters[i]->GetLap() + m_pPlayerCharacters[i]->GetCheckPointIndex()) {
-				index = i;
-				position = &m_pPlayerCharacters[i]->Position();
-			}
-		}
-	}
-
 	m_pNukes.push_back(new CNuke);
-
-	m_pNukes.back()->Init(pos, y_rot, this);
+	m_pNukes.back()->Init(pos, rot, this);
 }
 
-void RaceScene::SpawnBombs(glm::vec3 pos, float yRot)
+/*
+後方に爆弾発射.
+
+@param	pos	爆弾発射位置.
+@param	rot	爆弾発射方向.
+*/
+void RaceScene::SpawnBombs(glm::vec3 pos, float rot)
 {
 	m_pBombs.push_back(new Bomb);
-	m_pBombs.back()->Init(pos, yRot, this);
+	m_pBombs.back()->Init(pos, rot, this);
 }
 
-void RaceScene::SpawnSmoke(glm::vec3 pos, float y_rot)
+/*
+煙幕を出現させる.
+
+@param	pos	出現位置.
+@param	rot	モデルの角度.
+*/
+void RaceScene::SpawnSmoke(glm::vec3 pos, float rot)
 {
 	m_pSmokes.push_back(new Smoke);
-	m_pSmokes.back()->Init(pos, y_rot, this);
+	m_pSmokes.back()->Init(pos, rot, this);
 }
 
+/*
+偽アイテムを出現する.
+
+@param	pos	出現位置.
+*/
 void RaceScene::SpawnFakeItem(glm::vec3 pos)
 {
 	m_pFakeItems.push_back(new FakeItem);
 	m_pFakeItems.back()->Init(pos, this);
 }
 
+/*
+爆発モデルの出現.
+
+@param	pos	出現位置.
+*/
 void RaceScene::SpawnEffectExplode(glm::vec3 pos)
 {
 	m_pEffectExplodes.push_back(new EffectDestroy);
 	m_pEffectExplodes.back()->Init(pos);
 }
 
+/*
+アクセルの煙の出現位置.
+
+@param	pos	出現位置.
+*/
 void RaceScene::SpawnEffectAccelDust(glm::vec3 pos)
 {
 	m_pAccelDusts.push_back(new AccelDust);
 	m_pAccelDusts.back()->Init(pos);
 }
 
+/*
+キラキラエフェクトを出現する.
+
+@param	pos		出現位置.
+@param	color	エフェクトの色.
+@param	emitNum	出現量.
+*/
 void RaceScene::SpawnEffectSparkle(glm::vec3 pos, glm::vec4 color, int emitNum)
 {
-	m_pSparcleEffects.push_back(new CSparcleEffect);
+	m_pSparcleEffects.push_back(new CsparkleEffect);
 	m_pSparcleEffects.back()->Init(pos, color, emitNum);
 }
 
-void RaceScene::SpawnEffectSpeedUp(glm::vec3 pos, float yRot, float speed)
+/*
+スピードアップ時のエフェクト.
+
+@param	pos		出現位置.
+@param	rot		方向性.
+@param	speed	速さ.
+*/
+void RaceScene::SpawnEffectSpeedUp(glm::vec3 pos, float rot, float speed)
 {
 	GameEngine& game = GameEngine::Instance();
 
 	m_pSpeedUpEffects.push_back(new SpeedUpEffect);
-	glm::vec3 vel = pos - game.CalcPosition(pos, yRot + game.GetRandomFloat(50, -50), game.GetRandomFloat(50, 0), 10);
+	glm::vec3 vel = pos - game.CalcPosition(pos, rot + game.GetRandomFloat(50, -50), game.GetRandomFloat(50, 0), 10);
 	m_pSpeedUpEffects.back()->Init(pos, glm::vec4(1, 0, 0, 0.8), vel);
 }
 
+/*
+復活エフェクト出現.
+
+@param	pos			出現位置.
+@param	lifeTime	出現時間.
+*/
 void RaceScene::SpawnEffectRespawn(glm::vec3 pos, float lifeTime)
 {
 	m_pRespawnEffects.push_back(new RespawnEffect);
 	m_pRespawnEffects.back()->Init(pos, lifeTime);
 }
 
+/*
+最高記録かどうかのチェック.
+*/
 bool RaceScene::BestTimeCheck(float Time)
 {
 	FILE *fp = fopen(bestTimeFileName, "wb");//バイナリファイルを開く
@@ -156,31 +214,45 @@ bool RaceScene::BestTimeCheck(float Time)
 	return true;
 }
 
+/*
+オプション画面の選択変更.
+*/
 void RaceScene::OptionCommand(bool isAdd)
 {
 	if (isAdd) {
-		this->resultCommand.IncreaseIndex();
+		this->m_optionCommand.IncreaseIndex();
 	}
 	else {
-		this->resultCommand.DecreaseIndex();
+		this->m_optionCommand.DecreaseIndex();
 	}
 }
 
+/*
+オプション画面の項目実行.
+*/
 void RaceScene::ActOptionCommand()
 {
-	if (resultCommand.getIndex() == 0) {
+	if (m_optionCommand.getIndex() == 0) {
 		blackFilter.SetNextScene(NEXT_SCENE::InRace);
 
 	}
-	else if (resultCommand.getIndex() == 1) {
+	else if (m_optionCommand.getIndex() == 1) {
 		blackFilter.SetNextScene(NEXT_SCENE::StageSelect);
 
 	}
-	else if (resultCommand.getIndex() == 2) {
+	else if (m_optionCommand.getIndex() == 2) {
 		blackFilter.SetNextScene(NEXT_SCENE::Title);
 	}
 }
 
+/*
+指定範囲内のSEを流すかどうかのチェック.
+
+@param	pos			音源の場所.
+@param	distance	音源を再生可能の場所.
+@param	audioType	音源のタイプ.
+@param	audioId		流す音声のID.
+*/
 void RaceScene::PlayAudioCheck(glm::vec3 pos, float distance, int audioType, int audioId)
 {
 	for (int i = 0; i < m_pPlayerCharacters.size(); i++) {
@@ -193,22 +265,32 @@ void RaceScene::PlayAudioCheck(glm::vec3 pos, float distance, int audioType, int
 	}
 }
 
+/*
+フィールド上のアイテムを取得.
+
+@return	アイテムのポインタ.
+*/
 std::vector<Item*> RaceScene::GetFieldItems()
 {
 	return m_pItems;
 }
 
-std::vector<Obstacle*> RaceScene::getObstacles()
-{
-	return m_pObstacles;
-}
+/*
+あたり判定付き爆発.
 
+@param	pos	出現位置.
+*/
 void RaceScene::SpawnExplode(glm::vec3 pos)
 {
 	m_pExplodes.push_back(new Explosion);
 	m_pExplodes.back()->Init(pos, this);
 }
 
+/*
+ポーズ状態切り替え.
+
+@param	playerIndex	ポーズしたプレイヤーのインデックス.
+*/
 void RaceScene::TogglePause(int playerIndex)
 {
 	GameEngine& game = GameEngine::Instance();
@@ -225,6 +307,9 @@ void RaceScene::TogglePause(int playerIndex)
 	}
 }
 
+/*
+初期化処理.
+*/
 void RaceScene::Init()
 {
 	GameEngine& game = GameEngine::Instance();
@@ -266,14 +351,14 @@ void RaceScene::Init()
 		if (i < PlayerNum) {
 			playerCheck = true;
 		}
-		m_pPlayerCharacters.back()->Init(glm::vec3(i * 5, 0, 0), m_pGoals.size(), 1.5f, i, this, pos, playerCheck);
+		m_pPlayerCharacters.back()->Init(glm::vec3(i * 5, 0, 0), m_pGoals.size(), 2.0f, i, this, pos, playerCheck);
 
 		m_pPlayerIcons.back()->Init(i, 4.0f, m_pPlayerCharacters[i]->Position());
 
 		m_attackInformer[i].Init(100.0);
 	}
 
-	resultCommand.InitCommand(3);
+	m_optionCommand.InitCommand(3);
 
 	m_pausing = false;
 	m_isInResult = false;
@@ -389,6 +474,9 @@ void RaceScene::UpdateInGame(float delta)
 	Time += delta;
 }
 
+/*
+ゲーム開始までの更新処理.
+*/
 void RaceScene::UpdateGameStart(float delta)
 {
 	GameEngine& game = GameEngine::Instance();
@@ -415,16 +503,22 @@ void RaceScene::UpdateGameStart(float delta)
 	this->ShowUI(delta);
 }
 
+/*
+ポーズ中の更新処理.
+*/
 void RaceScene::UpdatePause(float delta)
 {
 	this->UpdateEffects(delta);
-	this->m_pPlayerCharacters[PauseIndex]->InputOptionFunc(delta);
-	this->RankingUI();
+	this->m_pPlayerCharacters[PauseIndex]->InputOptionFunc();
+	this->GoalInformUi();
 
 	this->OptionUI();
 	this->ShowUI(delta);
 }
 
+/*
+全員ゴールした後から結果発表までの記録.
+*/
 void RaceScene::UpdateResult(float delta)
 {
 	this->PlayerUpdate(delta);
@@ -437,9 +531,7 @@ void RaceScene::UpdateResult(float delta)
 	if (m_resultWaitTime > 0) {
 		this->ShowUI(delta);
 		m_resultWaitTime -= delta;
-		this->RankingUI();
-		Time += delta;
-
+		this->GoalInformUi();
 	}
 	else
 	{
@@ -448,7 +540,6 @@ void RaceScene::UpdateResult(float delta)
 		}
 	}
 	
-	
 	//最後のランキング表示.
 	if (m_showRanking) {
 		GameEngine& game = GameEngine::Instance();
@@ -456,14 +547,16 @@ void RaceScene::UpdateResult(float delta)
 		game.Camera({ {-20, 20, -100},{0, 0, 0}, {0, 1, 0} }, 0);
 
 		if (!blackFilter.IsInAction()) {
-			this->ShowResult(delta);
+			this->RankingUI(delta);
 
 			if (m_resultMover <= 0) {
-				this->m_pPlayerCharacters[0]->InputOptionFunc(delta);
+				this->m_pPlayerCharacters[0]->InputOptionFunc();
 				OptionUI();
 			}
 		}
 	}
+
+	Time += delta;
 }
 
 /*
@@ -905,7 +998,9 @@ void RaceScene::RankingCheck()
 	}
 }
 
-
+/*
+最後にゴールした時間で順位をソートする.
+*/
 void RaceScene::RankingSortFromTime()
 {
 	for (int i = 0; i < m_pPlayerCharacters.size(); i++) {
@@ -941,6 +1036,7 @@ void RaceScene::CheckAllPlayerFinished()
 			this->m_isInResult = true;
 
 			this->CalcFinishTime();
+			this->RankingSortFromTime();
 		}
 	}
 }
@@ -964,6 +1060,7 @@ void RaceScene::CalcFinishTime()
 }
 
 /*
+周回の最高記録を更新する.
 */
 void RaceScene::SaveBestLap()
 {
@@ -991,6 +1088,11 @@ void RaceScene::SaveBestLap()
 	}
 }
 
+/*
+暗転処理およびシーン遷移.
+
+@param	delta	更新処理.
+*/
 void RaceScene::SceneChanger(float delta) 
 {
 	GameEngine& game = GameEngine::Instance();
@@ -1026,6 +1128,9 @@ void RaceScene::SceneChanger(float delta)
 	}
 }
 
+/*
+画面上にUIの表示.
+*/
 void RaceScene::ShowUI(float delta)
 {
 	GameEngine& game = GameEngine::Instance();
@@ -1192,6 +1297,14 @@ void RaceScene::ShowUI(float delta)
 	}
 }
 
+/*
+所持しているアイテムの表示.
+
+@param	pos			画面に表示させる座標.
+@param	size		表示させる文字のサイズ.
+@param	ItemsCode	所持しているアイテム,
+@param	index		プレイヤーのインデックス.
+*/
 void RaceScene::ItemUI(glm::vec2 pos, glm::vec2 size, ItemsCode id, int index)
 {
 	GameEngine& game = GameEngine::Instance();
@@ -1227,12 +1340,18 @@ void RaceScene::ItemUI(glm::vec2 pos, glm::vec2 size, ItemsCode id, int index)
 	game.AddString(pos, str, index);
 }
 
+/*
+ミニマップ表示.
+*/
 void RaceScene::DrawMapUi(int playerIndex)
 {
 	this->m_minimap.Update(m_pPlayerCharacters, playerIndex);
 }
 
-void RaceScene::RankingUI()
+/*
+ゴール後をしらせるUI.
+*/
+void RaceScene::GoalInformUi()
 {
 	GameEngine& game = GameEngine::Instance();
 	glm::vec2 windowSize = game.GetWindowSize();
@@ -1263,6 +1382,9 @@ void RaceScene::RankingUI()
 	}
 }
 
+/*
+オプション画面を開けた状態のUI.
+*/
 void RaceScene::OptionUI()
 {
 	GameEngine& game = GameEngine::Instance();
@@ -1276,7 +1398,7 @@ void RaceScene::OptionUI()
 		game.AddString(glm::vec2(windowSize.x * 0.2f, windowSize.y * 0.2f), str, 0, true);
 	}
 
-	if (resultCommand.getIndex() == 0) {
+	if (m_optionCommand.getIndex() == 0) {
 		game.FontColor(glm::vec4(1, 0, 0, 1));
 		game.ImageColor(glm::vec4(1, 1, 0, 1));
 	}
@@ -1289,7 +1411,7 @@ void RaceScene::OptionUI()
 	game.ImageScale(glm::vec2(1.2, 1));
 	game.AddImage(glm::vec2(windowSize.x * 0.4 - 50, windowSize.y -325.0f), "res/Texture/SpeedMeter.dds", 0, true);
 
-	if (resultCommand.getIndex() == 1) {
+	if (m_optionCommand.getIndex() == 1) {
 		game.FontColor(glm::vec4(1, 0, 0, 1));
 		game.ImageColor(glm::vec4(1, 1, 0, 1));
 	}
@@ -1301,7 +1423,7 @@ void RaceScene::OptionUI()
 	game.AddString(glm::vec2(windowSize.x * 0.4, windowSize.y - 200.0f), "Stage Select", 0, true);
 	game.AddImage(glm::vec2(windowSize.x * 0.4 - 50, windowSize.y - 225.0f), "res/Texture/SpeedMeter.dds", 0 ,true);
 
-	if (resultCommand.getIndex() == 2) {
+	if (m_optionCommand.getIndex() == 2) {
 		game.FontColor(glm::vec4(1, 0, 0, 1));
 		game.ImageColor(glm::vec4(1, 1, 0, 1));
 	}
@@ -1314,7 +1436,10 @@ void RaceScene::OptionUI()
 	game.AddImage(glm::vec2(windowSize.x * 0.4 - 50, windowSize.y - 125.0f), "res/Texture/SpeedMeter.dds", 0, true);
 }
 
-void RaceScene::ShowResult(float delta)
+/*
+最後の順位付けのUIの表示させる.
+*/
+void RaceScene::RankingUI(float delta)
 {
 	GameEngine& game = GameEngine::Instance();
 

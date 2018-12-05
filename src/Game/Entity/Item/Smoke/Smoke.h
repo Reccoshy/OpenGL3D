@@ -5,7 +5,7 @@ class RaceScene;
 
 class Smoke {
 public:
-	bool Init(glm::vec3 pos, float yRot, RaceScene* p);
+	bool Init(glm::vec3 pos, float rot, RaceScene* p);
 
 	void Update(float delta);
 
@@ -19,22 +19,18 @@ public:
 	}
 
 	bool IsActive() {
-		return isActive;
+		return m_isActive;
 	}
 
 private:
 
 	Entity::Entity* m_pEntity = nullptr;
 
-	RaceScene* m_pRaceScene = nullptr;
+	bool m_isActive = true;
 
-	float m_Yrot = 0.0f;
+	float m_scale = 0.0f;
 
-	bool isActive = true;
-
-	float scale = 0.0f;
-
-	float time = 0.0f;
-	float SmokeTime = 10.0f;
-	float SpawnTime = 1.0f;
+	float m_time = 0.0f;
+	float m_smokeTime = 10.0f;
+	float m_spawnTime = 1.0f;
 };

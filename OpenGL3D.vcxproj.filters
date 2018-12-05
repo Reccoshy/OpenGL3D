@@ -94,9 +94,6 @@
     <Filter Include="Game\Effects\SpeedUpEffect">
       <UniqueIdentifier>{1cc75595-7caf-4fca-a19e-4da9d81c312e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\Effects\MissileEffect">
-      <UniqueIdentifier>{d78f1412-3e95-4d74-9f22-682c90febe8a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game\Effects\PlayerRespawn">
       <UniqueIdentifier>{f1b4f544-2abc-4b28-9cba-ba4a8c51d7ee}</UniqueIdentifier>
     </Filter>
@@ -126,9 +123,6 @@
     </Filter>
     <Filter Include="Game\Scene\RaceScene">
       <UniqueIdentifier>{74d144a2-2d26-4a19-9c0e-f1eee7178b14}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game\Utilities\UITexture\RaceSceneUI">
-      <UniqueIdentifier>{e0f4471a-2da9-45ed-9e87-40a73049f0bf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

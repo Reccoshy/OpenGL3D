@@ -8,7 +8,7 @@
 @param	color	色.
 @param	emitNum	出現数.
 */
-bool CSparcleEffect::Init(glm::vec3 pos, glm::vec4 color, int emitNum)
+bool CsparkleEffect::Init(glm::vec3 pos, glm::vec4 color, int emitNum)
 {
 	GameEngine& game = GameEngine::Instance();
 	
@@ -41,7 +41,7 @@ bool CSparcleEffect::Init(glm::vec3 pos, glm::vec4 color, int emitNum)
 
 @param	delta	
 */
-void CSparcleEffect::Update(float delta)
+void CsparkleEffect::Update(float delta)
 {
 	for (int i = 0; i < m_emitNum; i++) {
 		m_potition[i] += m_velocity[i] * delta;
@@ -57,7 +57,7 @@ void CSparcleEffect::Update(float delta)
 /*
 有向グラフの取得.
 */
-bool CSparcleEffect::IsActive()
+bool CsparkleEffect::IsActive()
 {
 	return m_active;
 }
@@ -65,7 +65,7 @@ bool CSparcleEffect::IsActive()
 /*
 描画処理.
 */
-void CSparcleEffect::Draw()
+void CsparkleEffect::Draw()
 {
 	GameEngine& game = GameEngine::Instance();
 

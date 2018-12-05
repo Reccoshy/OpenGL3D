@@ -8,6 +8,17 @@
 #include "../../Entity/Goal/Goal.h"
 #include "../../../res/Sound/Sound.h"
 
+/*
+初期化処理.
+
+@param	pos			プレイヤーの初期位置.
+@param	goalNum		チェックポイントの数,
+@param	r			プレイヤーのあたり判定の大きさ.	
+@param	playerIndex	プレイヤーのインデックス.
+@param	pScene		レースシーンのポインタ.
+@param	g			チェックポイントの位置のベクター.
+@param	isPlayer	プレイヤーかどうかのフラグ.
+*/
 bool CPlayerCharacter::Init(glm::vec3 pos, int goalNum, float r, int playerIndex, RaceScene* pScene, std::vector<glm::vec3> g, bool isPlayer)
 {
 	GameEngine& game = GameEngine::Instance();
@@ -29,7 +40,7 @@ bool CPlayerCharacter::Init(glm::vec3 pos, int goalNum, float r, int playerIndex
 
 	this->loadRideInfo("res/Data/RideParameter/RideParamater.txt");
 
-	this->m_radius = 2;
+	this->m_radius = r;
 	this->m_playerIndex = playerIndex;
 	this->MaxCheckPointIndex = goalNum - 1;
 
@@ -80,6 +91,12 @@ bool CPlayerCharacter::Update(float delta)
 	return true;
 }
 
+/*
+チェックポイント経過処理.
+
+@param	passedIndex	経過したチェックポイントのインデックス.
+@param	time		経過した時点の時間.
+*/
 void CPlayerCharacter::PassCheckPoint(int passedIndex, float time)
 {
 	if (passedIndex == m_checkPointIndex) {
@@ -100,6 +117,11 @@ void CPlayerCharacter::PassCheckPoint(int passedIndex, float time)
 	}
 }
 
+/*
+周回した時の処理.
+
+@param Time	ゴールした時間.
+*/
 void CPlayerCharacter::PassGoal(float Time)
 {
 	float LapTime = Time;
@@ -115,16 +137,28 @@ void CPlayerCharacter::PassGoal(float Time)
 	if (m_lap > m_pRaceScene->GetLapNum()) {
 		this->m_autoDriveFlag = true;
 		this->FinishedRace = true;
+
+		m_FinishTime = Time;
 	}
 
 	this->PlayAudioCheck(SEUI, CRI_SOUND_PASSGAOL);
 }
 
+/*
+プレイヤーの順位を設定.
+
+@param	num	プレイヤーの順位.
+*/
 void CPlayerCharacter::SetPlayerRank(int num)
 {
 	m_rank = num;
 }
 
+/*
+アイテムの入手処理.
+
+@param	id	入手したアイテムのID(-1は手に入れていない.)
+*/
 void CPlayerCharacter::ObtainItem(int id)
 {
 	if (id == -1) {
@@ -150,10 +184,17 @@ void CPlayerCharacter::ObtainItem(int id)
 	m_type = Item::GetItemType((ItemsCode)itemId);
 }
 
+/*
+入力処理.
+*/
 void CPlayerCharacter::InputFunc(float delta)
 {
 	GameEngine& game = GameEngine::Instance();
 	GamePad gamePad = game.GetGamePad(m_playerIndex);
+
+	if (m_pRaceScene->IsFinishedRace()) {
+		return;
+	}
 
 	if (gamePad.buttonDown & GamePad::START) {
 		m_pRaceScene->TogglePause(m_playerIndex);
@@ -227,6 +268,11 @@ void CPlayerCharacter::InputFunc(float delta)
 	m_entity->Rotation(glm::quat(glm::vec3(0, glm::radians(yRot), 0)));
 }
 
+/*
+乗り物のデータ読み込み.
+
+@param	filename	乗り物読み込みのテキスト.
+*/
 bool CPlayerCharacter::loadRideInfo(const char * filename)
 {
 	FILE* fp = fopen(filename, "rb");
@@ -246,6 +292,9 @@ bool CPlayerCharacter::loadRideInfo(const char * filename)
 	return true;
 }
 
+/*
+移動処理.
+*/
 void CPlayerCharacter::MoveFunc(float delta)
 {
 	if (m_velocity > 0) {
@@ -303,6 +352,9 @@ void CPlayerCharacter::MoveFunc(float delta)
 	}
 }
 
+/*
+アイテム合成.
+*/
 void CPlayerCharacter::MixItem()
 {
 	if (m_stockItems >= 0 && itemId >= 0) {
@@ -313,11 +365,17 @@ void CPlayerCharacter::MixItem()
 	}
 }
 
+/*
+アイテムの在庫と使用前アイテムを切り替える.
+*/
 void CPlayerCharacter::SwapItemStock()
 {
 	std::swap(itemId, m_stockItems);
 }
 
+/*
+アイテム煙の出現エフェクト.
+*/
 void CPlayerCharacter::SpawnSmokes(float delta)
 {
 	if (m_smokeEmitting) {
@@ -331,15 +389,20 @@ void CPlayerCharacter::SpawnSmokes(float delta)
 			if (m_smokeEmitCount >= m_smokeEmitingEndCount) {
 				this->m_smokeEmitting = false;
 				this->m_smokeEmitCount = 0;
-				this->m_smokeTimer = 0.0f;
+				this->m_smokeTimer = m_smokeEmitInterval;
 			}
 			else {
-				this->m_smokeTimer -= this->m_smokeEmitInterval;
+				this->m_smokeTimer = this->m_smokeEmitInterval;
 			}
 		}
 	}
 }
 
+/*
+プレイヤーに対してのアイテムの状態更新.
+
+@param	delta	更新時間.
+*/
 void CPlayerCharacter::ItemStateUpdate(float delta)
 {
 	float alpha = CurrentShieldTime * 0.5f;
@@ -378,6 +441,11 @@ void CPlayerCharacter::ItemStateUpdate(float delta)
 	return;
 }
 
+/*
+復活処理.
+
+@param	delta	更新時間.
+*/
 void CPlayerCharacter::RespawnFunc(float delta)
 {
 	if (CurrentRespawnTime > 0.0 && m_dead) {
@@ -396,6 +464,12 @@ void CPlayerCharacter::RespawnFunc(float delta)
 	}
 }
 
+/*
+音声再生するかどうかのチェック.
+
+@param	audioType	音声のタイプ.
+@param	audioId		音声の再生Id.
+*/
 void CPlayerCharacter::PlayAudioCheck(int audioType, int audioId)
 {
 	if (!m_autoDriveFlag) {
@@ -406,6 +480,9 @@ void CPlayerCharacter::PlayAudioCheck(int audioType, int audioId)
 	}
 }
 
+/*
+アイテムを使用する.
+*/
 void CPlayerCharacter::UseItem()
 {
 	ItemsCode item = (ItemsCode)itemId;
@@ -586,6 +663,9 @@ void CPlayerCharacter::UseItem()
 	}
 }
 
+/*
+死亡処理.
+*/
 void CPlayerCharacter::Dead()
 {
 	if (CurrentShieldTime > 0.0) {
@@ -608,7 +688,10 @@ void CPlayerCharacter::Dead()
 	}
 }
 
-void CPlayerCharacter::InputOptionFunc(float delta)
+/*
+オプション中の入力処理.
+*/
+void CPlayerCharacter::InputOptionFunc()
 {
 	GameEngine& game = GameEngine::Instance();
 
@@ -636,7 +719,13 @@ void CPlayerCharacter::InputOptionFunc(float delta)
 	}
 }
 
-glm::vec3 CPlayerCharacter::CollisionCheckAndBounce(glm::vec3 pos, float radius, glm::vec3 movement, glm::vec3 force)
+/*
+あたり判定と反射処理.
+
+@param	pos		判定位置.
+@param	radius	判定物からの半径.
+*/
+void CPlayerCharacter::CollisionCheckAndBounce(glm::vec3 pos, float radius)
 {
 	float distance = glm::distance(this->m_entity->Position(), pos);
 
@@ -653,9 +742,15 @@ glm::vec3 CPlayerCharacter::CollisionCheckAndBounce(glm::vec3 pos, float radius,
 		this->m_velocity = 0;
 	}
 
-	return glm::vec3();
+	return;
 }
 
+/*
+自動操縦処理.
+
+@param	delta		更新時間.
+@param	character	キャラクターのポインタ.
+*/
 void CPlayerCharacter::AutoDrive(float delta, std::vector<CPlayerCharacter*> character)
 {
 	if (m_autoDriveFlag && !m_dead) {
