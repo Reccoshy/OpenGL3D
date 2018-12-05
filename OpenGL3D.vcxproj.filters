@@ -100,15 +100,6 @@
     <Filter Include="Game\Utilities\UITexture\BlackFilter">
       <UniqueIdentifier>{8596db21-45d1-4662-a5d1-0f4e9c41ef2d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\Effects\PlayerIcon">
-      <UniqueIdentifier>{56044b25-fcc3-464f-a04d-644faabf98a7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game\Utilities\UITexture\AttackInformer">
-      <UniqueIdentifier>{c81fb5f9-880d-478b-a823-9bceead8786c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game\Utilities\Shasow">
-      <UniqueIdentifier>{6ef59221-d0b3-4d36-95dd-b1d8e7648c92}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game\Entity\Item\Missile">
       <UniqueIdentifier>{42cf942e-fa9b-4825-9b9d-c64a5331fe73}</UniqueIdentifier>
     </Filter>
@@ -221,15 +212,6 @@
     </ClCompile>
     <ClCompile Include="src\Game\Utilities\UITexture\BlackFilter\BlackFilter.cpp">
       <Filter>Game\Utilities\UITexture\BlackFilter</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Game\Effects\PlayerIcon\PlayerIcon.cpp">
-      <Filter>Game\Effects\PlayerIcon</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Game\UITexture\AttackInformer\AttackInformer.cpp">
-      <Filter>Game\Utilities\UITexture\AttackInformer</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Game\Utilities\Shadow\Shadow.cpp">
-      <Filter>Game\Utilities\Shasow</Filter>
     </ClCompile>
     <ClCompile Include="src\Game\Entity\Item\Missile\Missile.cpp">
       <Filter>Game\Entity\Item\Missile</Filter>
@@ -424,15 +406,6 @@
     </ClInclude>
     <ClInclude Include="src\Game\Utilities\UITexture\BlackFilter\BlackFilter.h">
       <Filter>Game\Utilities\UITexture\BlackFilter</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Game\Effects\PlayerIcon\PlayerIcon.h">
-      <Filter>Game\Effects\PlayerIcon</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Game\UITexture\AttackInformer\AttackInformer.h">
-      <Filter>Game\Utilities\UITexture\AttackInformer</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Game\Utilities\Shadow\Shadow.h">
-      <Filter>Game\Utilities\Shasow</Filter>
     </ClInclude>
     <ClInclude Include="src\Game\Entity\Item\Missile\Missile.h">
       <Filter>Game\Entity\Item\Missile</Filter>

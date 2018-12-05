@@ -345,17 +345,11 @@ void RaceScene::Init()
 	for (int i = 0; i < 4; i++) {
 		m_pPlayerCharacters.push_back(new CPlayerCharacter);
 		
-		m_pPlayerIcons.push_back(new PlayerIcon);
-
 		bool playerCheck = false;
 		if (i < PlayerNum) {
 			playerCheck = true;
 		}
 		m_pPlayerCharacters.back()->Init(glm::vec3(i * 5, 0, 0), m_pGoals.size(), 2.0f, i, this, pos, playerCheck);
-
-		m_pPlayerIcons.back()->Init(i, 4.0f, m_pPlayerCharacters[i]->Position());
-
-		m_attackInformer[i].Init(100.0);
 	}
 
 	m_optionCommand.InitCommand(3);
@@ -445,8 +439,6 @@ void RaceScene::EndFunc()
 	game.DeleteAll(m_pSparcleEffects);
 	game.DeleteAll(m_pSpeedUpEffects);
 	game.DeleteAll(m_pRespawnEffects);
-
-	game.DeleteAll(m_pPlayerIcons);
 
 	game.RemoveGroundTexture();
 
@@ -817,10 +809,6 @@ void RaceScene::UpdateEffects(float delta)
 			i--;
 
 		}
-	}
-
-	for (int i = 0; i < m_pPlayerIcons.size(); i++) {
-		m_pPlayerIcons[i]->Update(m_pPlayerCharacters[i]->Position());
 	}
 }
 
@@ -1289,12 +1277,6 @@ void RaceScene::ShowUI(float delta)
 	game.AddString(glm::vec2(100, 700), str, 0 , true);
 
 	game.AddString(glm::vec2(10, 700), "FPS :", 0, true);
-
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < m_pMissiles.size(); j++) {
-			m_attackInformer[i].Update(i, m_pPlayerCharacters[i]->Position(), m_pMissiles[j]->Position(), m_pPlayerCharacters[i]->Yrot());
-		}
-	}
 }
 
 /*

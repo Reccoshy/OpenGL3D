@@ -137,7 +137,6 @@
     <ClCompile Include="src\GameEngine.cpp" />
     <ClCompile Include="src\Game\Effects\AccelDust\AccelDust.cpp" />
     <ClCompile Include="src\Game\Effects\ItemGetEffect\ItemGetEffect.cpp" />
-    <ClCompile Include="src\Game\Effects\PlayerIcon\PlayerIcon.cpp" />
     <ClCompile Include="src\Game\Effects\PlayerRespawn\RespawnEffect.cpp" />
     <ClCompile Include="src\Game\Effects\SpeedUpEffect\SpeedUpEffect.cpp" />
     <ClCompile Include="src\Game\Entity\EffectDestroy\EffectDestroy.cpp" />
@@ -156,11 +155,9 @@
     <ClCompile Include="src\Game\Scene\RaceScene\RaceScene.cpp" />
     <ClCompile Include="src\Game\Scene\StageSelectScene\StageSelectScene.cpp" />
     <ClCompile Include="src\Game\Scene\TitleScene\TitleScene.cpp" />
-    <ClCompile Include="src\Game\UITexture\AttackInformer\AttackInformer.cpp" />
     <ClCompile Include="src\Game\Utilities\CommandSelect\CommandSelect.cpp" />
     <ClCompile Include="src\Game\Utilities\Effects\Effects.cpp" />
     <ClCompile Include="src\Game\Utilities\MiniMap\MiniMap.cpp" />
-    <ClCompile Include="src\Game\Utilities\Shadow\Shadow.cpp" />
     <ClCompile Include="src\Game\Utilities\UITexture\BlackFilter\BlackFilter.cpp" />
     <ClCompile Include="src\Game\Utilities\UITexture\UITexture.cpp" />
     <ClCompile Include="src\GLFWEW.cpp" />
@@ -208,7 +205,6 @@
     <ClInclude Include="src\Gamepad.h" />
     <ClInclude Include="src\Game\Effects\AccelDust\AccelDust.h" />
     <ClInclude Include="src\Game\Effects\ItemGetEffect\ItemGetEffect.h" />
-    <ClInclude Include="src\Game\Effects\PlayerIcon\PlayerIcon.h" />
     <ClInclude Include="src\Game\Effects\PlayerRespawn\RespawnEffect.h" />
     <ClInclude Include="src\Game\Effects\SpeedUpEffect\SpeedUpEffect.h" />
     <ClInclude Include="src\Game\Entity\EffectDestroy\EffectDestroy.h" />
@@ -227,11 +223,9 @@
     <ClInclude Include="src\Game\Scene\RaceScene\RaceScene.h" />
     <ClInclude Include="src\Game\Scene\StageSelectScene\StageSelectScene.h" />
     <ClInclude Include="src\Game\Scene\TitleScene\TitleScene.h" />
-    <ClInclude Include="src\Game\UITexture\AttackInformer\AttackInformer.h" />
     <ClInclude Include="src\Game\Utilities\CommandSelect\CommandSelect.h" />
     <ClInclude Include="src\Game\Utilities\Effects\Effects.h" />
     <ClInclude Include="src\Game\Utilities\MiniMap\MiniMap.h" />
-    <ClInclude Include="src\Game\Utilities\Shadow\Shadow.h" />
     <ClInclude Include="src\Game\Utilities\UITexture\BlackFilter\BlackFilter.h" />
     <ClInclude Include="src\Game\Utilities\UITexture\UITexture.h" />
     <ClInclude Include="src\GLFWEW.h" />

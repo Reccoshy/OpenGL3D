@@ -14,12 +14,10 @@
 #include "../../Entity/Item/Explode/Explode.h"
 #include "../../Entity/EffectDestroy/EffectDestroy.h"
 #include "../../Utilities/MiniMap/MiniMap.h"
-#include "../../UITexture/AttackInformer/AttackInformer.h"
 #include "../../Effects/AccelDust/AccelDust.h"
 #include "../../Effects/ItemGetEffect/ItemGetEffect.h"
 #include "../../Effects/SpeedUpEffect/SpeedUpEffect.h"
 #include "../../Effects/PlayerRespawn/RespawnEffect.h"
-#include "../../Effects/PlayerIcon/PlayerIcon.h"
 #include "../../Utilities/UITexture/BlackFilter/BlackFilter.h"
 #include <vector>
 
@@ -124,9 +122,6 @@ private:
 	//死亡復活時のエフェクト.
 	std::vector<RespawnEffect*> m_pRespawnEffects;
 
-
-	std::vector<PlayerIcon*> m_pPlayerIcons;
-
 	//==============================
 	//オプション画面の変数.
 	//==============================
@@ -196,8 +191,6 @@ private:
 	};
 	//ミニマップ
 	MiniMap m_minimap;
-	//後方注意
-	AttackInformer m_attackInformer[4];
 	
 private:
 
