@@ -13,7 +13,7 @@ class CPlayerCharacter
 {
 public:
 
-	bool Init(glm::vec3 pos, int goalNum, float radius, int playerIndex, RaceScene* pScene, std::vector<glm::vec3> g, bool isPlayer);
+	bool Init(glm::vec3 pos, float radius, int playerIndex, RaceScene* pScene, std::vector<Goal*> g, bool isPlayer);
 	bool Update(float delta);
 
 	float Yrot() { return m_Yrot; }

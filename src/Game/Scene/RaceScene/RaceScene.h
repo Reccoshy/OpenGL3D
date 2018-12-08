@@ -116,7 +116,7 @@ private:
 	//アクセル中のエフェクト.
 	std::vector<AccelDust*> m_pAccelDusts;
 	//キラキラエフェクト.
-	std::vector<CsparkleEffect*> m_pSparcleEffects;
+	std::vector<CsparkleEffect*> m_pSparkleEffects;
 	//スピード上昇時エフェクト.
 	std::vector<SpeedUpEffect*> m_pSpeedUpEffects;
 	//死亡復活時のエフェクト.
@@ -147,9 +147,6 @@ private:
 	char textureFileName[100];
 	//周回最高記録保存テキスト.
 	char bestTimeFileName[100];
-
-
-	bool testing = false;
 
 
 	//プレイヤーの数.
@@ -230,11 +227,11 @@ private:
 	void CollisionChecks();
 	
 	void RankingCheck();
-	void RankingSortFromTime();
 
 	void CheckAllPlayerFinished();
 
 	void CalcFinishTime();
+	void RankingSortFromTime();
 
 	void SaveBestLap();
 

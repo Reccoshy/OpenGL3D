@@ -12,14 +12,13 @@
 初期化処理.
 
 @param	pos			プレイヤーの初期位置.
-@param	goalNum		チェックポイントの数,
 @param	r			プレイヤーのあたり判定の大きさ.	
 @param	playerIndex	プレイヤーのインデックス.
 @param	pScene		レースシーンのポインタ.
-@param	g			チェックポイントの位置のベクター.
+@param	g			チェックポイントのポインタのベクター.
 @param	isPlayer	プレイヤーかどうかのフラグ.
 */
-bool CPlayerCharacter::Init(glm::vec3 pos, int goalNum, float r, int playerIndex, RaceScene* pScene, std::vector<glm::vec3> g, bool isPlayer)
+bool CPlayerCharacter::Init(glm::vec3 pos, float r, int playerIndex, RaceScene* pScene, std::vector<Goal*> g, bool isPlayer)
 {
 	GameEngine& game = GameEngine::Instance();
 
@@ -42,7 +41,7 @@ bool CPlayerCharacter::Init(glm::vec3 pos, int goalNum, float r, int playerIndex
 
 	this->m_radius = r;
 	this->m_playerIndex = playerIndex;
-	this->MaxCheckPointIndex = goalNum - 1;
+	this->MaxCheckPointIndex = g.size() - 1;
 
 	m_pBarrier = game.AddEntity(0, this->Position(), "Cube", "res/Model/Toroid.bmp", nullptr);
 	m_pBarrier->Scale(glm::vec3(0.02f));
@@ -64,7 +63,7 @@ bool CPlayerCharacter::Init(glm::vec3 pos, int goalNum, float r, int playerIndex
 	}
 
 	for (int i = 0; i < g.size(); i++) {
-		this->m_goals.push_back(g[i]);
+		this->m_goals.push_back(g[i]->Position());
 	}
 
 	return true;
@@ -224,9 +223,6 @@ void CPlayerCharacter::InputFunc(float delta)
 		if (m_velocity < MaxBackWardSpeed) {
 			m_velocity = MaxBackWardSpeed;
 		}
-	}
-	if (gamePad.buttonDown & GamePad::B) {
-		ObtainItem((int)ItemsCode::FIRE);
 	}
 
 	if (gamePad.buttonDown & GamePad::Y) {
@@ -694,13 +690,16 @@ void CPlayerCharacter::Dead()
 void CPlayerCharacter::InputOptionFunc()
 {
 	GameEngine& game = GameEngine::Instance();
-
 	GamePad gamePad = game.GetGamePad(m_playerIndex);
 
 	if (!m_optionPressedCheck) {
-		if (gamePad.buttonDown & GamePad::START) {
-			m_pRaceScene->TogglePause(m_playerIndex);
+		
+		if (!m_pRaceScene->IsFinishedRace()) {
+			if (gamePad.buttonDown & GamePad::START) {
+				m_pRaceScene->TogglePause(m_playerIndex);
+			}
 		}
+		
 		if (gamePad.buttonDown & GamePad::A) {
 			m_pRaceScene->ActOptionCommand();
 			game.PlayAudio(SEUI, CRI_SOUND_DECISION);

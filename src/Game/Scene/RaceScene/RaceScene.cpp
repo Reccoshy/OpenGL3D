@@ -167,8 +167,8 @@ void RaceScene::SpawnEffectAccelDust(glm::vec3 pos)
 */
 void RaceScene::SpawnEffectSparkle(glm::vec3 pos, glm::vec4 color, int emitNum)
 {
-	m_pSparcleEffects.push_back(new CsparkleEffect);
-	m_pSparcleEffects.back()->Init(pos, color, emitNum);
+	m_pSparkleEffects.push_back(new CsparkleEffect);
+	m_pSparkleEffects.back()->Init(pos, color, emitNum);
 }
 
 /*
@@ -335,13 +335,6 @@ void RaceScene::Init()
 		}
 	}
 
-	game.AddEntity(0, glm::vec3(0, 0, 100), "Tree 1", "res/Model/Tree1.bmp", nullptr, true);
-
-	std::vector<glm::vec3> pos;
-	for (int i = 0; i < m_pGoals.size(); i++) {	
-		pos.push_back(glm::vec3(m_pGoals[i]->Position()));
-	}
-
 	for (int i = 0; i < 4; i++) {
 		m_pPlayerCharacters.push_back(new CPlayerCharacter);
 		
@@ -349,7 +342,7 @@ void RaceScene::Init()
 		if (i < PlayerNum) {
 			playerCheck = true;
 		}
-		m_pPlayerCharacters.back()->Init(glm::vec3(i * 5, 0, 0), m_pGoals.size(), 2.0f, i, this, pos, playerCheck);
+		m_pPlayerCharacters.back()->Init(glm::vec3(i * 5, 0, 0), 2.0f, i, this, m_pGoals, playerCheck);
 	}
 
 	m_optionCommand.InitCommand(3);
@@ -436,7 +429,7 @@ void RaceScene::EndFunc()
 	game.DeleteAll(m_pEffectExplodes);
 
 	game.DeleteAll(m_pAccelDusts);
-	game.DeleteAll(m_pSparcleEffects);
+	game.DeleteAll(m_pSparkleEffects);
 	game.DeleteAll(m_pSpeedUpEffects);
 	game.DeleteAll(m_pRespawnEffects);
 
@@ -458,10 +451,11 @@ void RaceScene::UpdateInGame(float delta)
 	this->CheckPoint();
 	this->ItemUpdate(delta);
 	this->UpdateEffects(delta);
-	this->CheckAllPlayerFinished();
 	this->CollisionChecks();
 	this->RankingCheck();
 	this->ShowUI(delta);
+
+	this->CheckAllPlayerFinished();
 
 	Time += delta;
 }
@@ -771,13 +765,13 @@ void RaceScene::UpdateEffects(float delta)
 		}
 	}
 
-	for (int i = 0; i < m_pSparcleEffects.size(); i++) {
+	for (int i = 0; i < m_pSparkleEffects.size(); i++) {
 		if (!m_pausing) {
-			m_pSparcleEffects[i]->Update(delta);
+			m_pSparkleEffects[i]->Update(delta);
 		}
 
-		if (!m_pSparcleEffects[i]->IsActive()) {
-			game.Remove(m_pSparcleEffects, i);
+		if (!m_pSparkleEffects[i]->IsActive()) {
+			game.Remove(m_pSparkleEffects, i);
 			i--;
 		}
 	}
@@ -987,30 +981,6 @@ void RaceScene::RankingCheck()
 }
 
 /*
-最後にゴールした時間で順位をソートする.
-*/
-void RaceScene::RankingSortFromTime()
-{
-	for (int i = 0; i < m_pPlayerCharacters.size(); i++) {
-		if (m_pPlayerCharacters[i]->GetFinishedRace()) {
-
-			int rank = 1;
-
-			for (int j = 0; j <= m_pPlayerCharacters.size(); j++) {
-				if (i == j)
-					continue;
-
-				if (m_pPlayerCharacters[i]->GetFinishTime() < m_pPlayerCharacters[j]->GetFinishTime()) {
-					rank++;
-				}
-			}
-
-			m_pPlayerCharacters[i]->SetPlayerRank(rank);
-		}
-	}
-}
-
-/*
 全プレイヤーがゴールしたかチェックする.
 */
 void RaceScene::CheckAllPlayerFinished()
@@ -1036,16 +1006,60 @@ void RaceScene::CalcFinishTime()
 {
 	for (int i = 0; i < m_pPlayerCharacters.size(); i++) {
 		if (!m_pPlayerCharacters[i]->GetFinishedRace()) {
+
 			while (!m_pPlayerCharacters[i]->GetFinishedRace())
 			{
 				if (m_pPlayerCharacters[i]->GetPlayerLapTime().size() > 0) {
 					float time = *m_pPlayerCharacters[i]->GetPlayerLapTime().begin();
-					m_pPlayerCharacters[i]->PassGoal(time);
+					m_pPlayerCharacters[i]->PassGoal(time * (m_pPlayerCharacters[i]->GetLap() + 1));
 				}
+
+				else break;
 			}
 		}
 	}
 }
+
+/*
+最後にゴールした時間で順位をソートする.
+*/
+void RaceScene::RankingSortFromTime()
+{
+	for (int i = 0; i < m_pPlayerCharacters.size(); i++) {
+		m_pPlayerCharacters[i]->SetPlayerRank(0);
+	}
+
+	for (int i = 0; i < m_pPlayerCharacters.size(); i++) {
+
+		int rank = 1;
+
+		for (int j = 0; j < m_pPlayerCharacters.size(); j++) {
+			if (i == j)
+				continue;
+
+			if (m_pPlayerCharacters[j]->GetFinishTime() <= 0.0f)
+				continue;
+
+			if (m_pPlayerCharacters[i]->GetFinishTime() > m_pPlayerCharacters[j]->GetFinishTime()) {
+				rank++;
+			}
+		}
+
+
+		for (int j = 0; j < m_pPlayerCharacters.size(); j++) {
+			if (i == j)
+				continue;
+			if (rank == m_pPlayerCharacters[j]->GetRank()) {
+				rank++;
+			}
+		}
+
+		printf("%dP  %drank\n", i, rank);
+
+		m_pPlayerCharacters[i]->SetPlayerRank(rank);
+	}
+}
+
 
 /*
 周回の最高記録を更新する.
@@ -1450,7 +1464,7 @@ void RaceScene::RankingUI(float delta)
 		}
 		
 		game.FontScale(glm::vec2(2));
-		game.AddString(glm::vec2(400 + m_resultMover, 50 + m_pPlayerCharacters[i]->GetRank() * 100), str, 0, true);
+		game.AddString(glm::vec2(400 + m_resultMover, 50 + rank * 100), str, 0, true);
 
 		game.ImageColor(glm::vec4(0.0f, 1.0f, 1.0f, 1.0f));
 		game.ImageScale(glm::vec2(1.7, 1));

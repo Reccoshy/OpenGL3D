@@ -52,6 +52,8 @@ void CsparkleEffect::Update(float delta)
 	if (m_time > m_lifeTime) {
 		m_active = false;
 	}
+
+	this->Draw();
 }
 
 /*

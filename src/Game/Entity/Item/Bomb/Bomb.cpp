@@ -11,7 +11,7 @@
 */
 bool Bomb::Init(glm::vec3 pos, float yRot, RaceScene* rs)
 {
-	m_pEntity = GameEngine::Instance().AddEntity(0, pos, "pPlane2", "res/Model/Player.bmp", nullptr);
+	m_pEntity = GameEngine::Instance().AddEntity(0, pos, "pPlane2", "res/Model/dainamaito.bmp", nullptr);
 
 	this->yRot = yRot;
 

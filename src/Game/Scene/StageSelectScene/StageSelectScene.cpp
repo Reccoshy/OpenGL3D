@@ -13,6 +13,9 @@ void StageSelectScene::operator()(double delta)
 	this->Update(delta);
 }
 
+/*
+èâä˙âªèàóù.
+*/
 bool StageSelectScene::Init()
 {
 	isInitialized = true;
@@ -40,6 +43,7 @@ bool StageSelectScene::Init()
 	return true;
 }
 
+
 void StageSelectScene::Update(float delta)
 {
 	this->InputFunc();
@@ -51,6 +55,9 @@ void StageSelectScene::Update(float delta)
 	this->m_time += delta;
 }
 
+/*
+èIóπèàóù.
+*/
 void StageSelectScene::EndFunc()
 {
 	GameEngine& game = GameEngine::Instance();
@@ -219,10 +226,10 @@ void StageSelectScene::ShowTextUI(float delta)
 	}
 
 	if (m_uIAdder < (float)m_menu * -windowSize.x * 0.1) {
-		m_uIAdder += windowSize.x * 0.01;
+		m_uIAdder += 10;
 	}
 	else if (m_uIAdder > (float)m_menu * -windowSize.x * 0.1) {
-		m_uIAdder -= windowSize.x * 0.01;
+		m_uIAdder -= 10;
 	}
 
 	float arrow = (int)(m_time * 50) % 20;

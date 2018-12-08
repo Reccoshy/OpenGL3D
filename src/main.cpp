@@ -39,7 +39,10 @@ int main(){
 	game.LoadTextureFromFile("res/Model/Player.bmp");
 	game.LoadTextureFromFile("res/Model/SpaceSphere.bmp");
 	game.LoadTextureFromFile("res/Model/Ground.bmp");
-	game.LoadTextureFromFile("res/Model/dainamaito.bmp");
+	if (!game.LoadTextureFromFile("res/Model/dainamaito.bmp")) {
+	
+		printf("X");
+	};
 	game.LoadTextureFromFile("res/Model/Tree1.bmp");
 
 
