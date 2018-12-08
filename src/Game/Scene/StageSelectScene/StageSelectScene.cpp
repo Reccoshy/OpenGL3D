@@ -34,7 +34,7 @@ bool StageSelectScene::Init()
 
 	game.Camera({ { 3, 3, -8 },{ 2, 1, 0 },{ 0, 1, 0 } }, 0);
 
-	m_stageSelect.InitCommand(2);
+	m_stageSelect.InitCommand(1);
 	m_playerNum.InitCommand(4);
 	m_lapSelect.InitCommand(99, 2);
 

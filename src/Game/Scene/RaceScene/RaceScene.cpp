@@ -373,6 +373,11 @@ void RaceScene::EndFunc()
 	}
 	game.DeleteAll(m_pPlayerCharacters);
 
+	for (int i = 0; i < m_pGoals.size(); i++) {
+		m_pGoals[i]->Destroy();
+	}
+	game.DeleteAll(m_pGoals);
+
 	for (int i = 0; i < m_pItems.size(); i++) {
 		m_pItems[i]->Destroy();
 	}
